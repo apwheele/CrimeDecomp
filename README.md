@@ -24,9 +24,10 @@ Serve the app from the repository root:
 python -m http.server 8000
 ```
 
-Open <http://localhost:8000/src/app/>. It has global trend, seasonal, and
-centered residual charts, city/crime detail, and a city map. The full date
-range is always shown.
+Open <http://localhost:8000/src/app/>. The root `index.html` redirects there,
+but this exact URL is the documented app address. It has global trend,
+seasonal, and centered residual charts, city/crime detail, and a Leaflet city
+map. The full date range is always shown.
 
 To refresh the pinned input data and rebuild the city-name crosswalk, read
 `src/README.md`.

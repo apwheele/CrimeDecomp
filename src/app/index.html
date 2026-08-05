@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crime decomposition explorer</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3T7XYxT4m0VNzEJx8p2e2x5P5K0=" crossorigin="">
 </head>
 <body>
   <main>
@@ -22,8 +23,7 @@
 
     <section class="controls">
       <label>Crime type<select id="crime"></select></label>
-      <label>City<select id="city"></select></label>
-      <button id="reset" type="button">Reset</button>
+      <button id="reset" type="button">Reset crime</button>
     </section>
     <p id="status" class="status">Loading all-sample model outputs...</p>
 
@@ -40,20 +40,23 @@
       </div>
       <div class="card">
         <h2>Global residual</h2>
-        <p class="caption">Observed-versus-global departure on the logit scale, centered at zero within each crime type.</p>
+        <p class="caption">Observed-versus-global departure on the logit scale, centered at zero within each crime type. The horizontal zero line is the reference.</p>
         <div id="global-residual-chart" class="chart short"></div>
       </div>
     </section>
 
     <section id="city" class="page">
       <div class="card">
+        <div class="city-controls">
+          <label>City<select id="city"></select></label>
+        </div>
         <h2 id="city-title">City detail</h2>
-        <p class="caption">Observed: this city’s reported rate. Global baseline: the national crime-specific STL curve. The city-specific departure is shown below as the overdispersion term.</p>
+        <p class="caption">Observed: this city's reported rate. Global baseline: the national crime-specific STL curve. The city-specific departure is shown below as the overdispersion term.</p>
         <div id="city-chart" class="chart"></div>
       </div>
       <div class="card">
-        <h2>City × crime × month overdispersion term</h2>
-        <p class="caption">This is the logit-scale city/crime/month departure left after the city fit; it is the requested overdispersion term, not a Pearson residual or an outlier threshold.</p>
+        <h2>City x crime x month overdispersion term</h2>
+        <p class="caption">This is the observed city-month departure from the fitted city and city-by-crime terms, on the logit scale. It is centered at zero within this city and crime type; it is not a Pearson residual.</p>
         <div id="overdispersion-chart" class="chart short"></div>
       </div>
     </section>
@@ -61,11 +64,12 @@
     <section id="map" class="page">
       <div class="card">
         <h2>City map</h2>
-        <p class="caption">Schematic latitude/longitude view. Select a dot to open that city’s detail. Color shows the selected crime’s average fitted departure from the global curve.</p>
-        <div id="map-chart" class="chart map"></div>
+        <p class="caption">Leaflet map with OpenStreetMap background tiles. Select a city marker to open its detail. Marker opacity shows the selected crime's mean absolute overdispersion.</p>
+        <div id="map-chart" class="chart map" aria-label="Leaflet city map"></div>
       </div>
     </section>
   </main>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="app.js"></script>
 </body>
 </html>

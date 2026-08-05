@@ -1,6 +1,6 @@
-# Spline trend/seasonality model and city-by-crime-time overdispersion term.
+# Smooth global decomposition plus empirical city and city-by-crime terms.
 
-rtci_model_formula <- function(time_k = 12, year_k = 5, include_city_effects = TRUE,
+rtci_model_formula <- function(time_k = 8, year_k = 5, include_city_effects = FALSE,
                                include_city_slopes = FALSE,
                                include_cell_overdispersion = FALSE) {
   terms <- c(
@@ -17,9 +17,9 @@ rtci_model_formula <- function(time_k = 12, year_k = 5, include_city_effects = T
 }
 
 rtci_fit_model <- function(data,
-                           time_k = 12,
+                           time_k = 8,
                            year_k = 5,
-                           include_city_effects = TRUE,
+                           include_city_effects = FALSE,
                            include_city_slopes = FALSE,
                            include_cell_overdispersion = FALSE,
                            nthreads = 4) {
@@ -50,26 +50,50 @@ rtci_clamp_probability <- function(x, eps = 1e-8) pmin(pmax(x, eps), 1 - eps)
 
 rtci_add_predictions <- function(model, data) {
   labels <- rtci_prediction_labels(model)
-  city_p <- stats::predict(model, newdata = data, type = "response", exclude = labels$cell)
   global_p <- stats::predict(model, newdata = data, type = "response", exclude = labels$global)
   trend_p <- stats::predict(model, newdata = data, type = "response", exclude = labels$trend)
-  city_p <- rtci_clamp_probability(city_p)
   global_p <- rtci_clamp_probability(global_p)
   trend_p <- rtci_clamp_probability(trend_p)
   observed_p <- rtci_clamp_probability((data$count + 0.5) / (data$trials + 1))
-  overdispersion_raw <- stats::qlogis(observed_p) - stats::qlogis(city_p)
   annualize <- 100000 * rtci_annualization
 
-  data |>
+  base <- data |>
     dplyr::mutate(
+      city_id = as.character(city_id),
+      global_p = global_p,
+      trend_p = trend_p,
+      observed_p = observed_p,
+      global_residual_logit_raw = stats::qlogis(observed_p) - stats::qlogis(global_p)
+    )
+  city_effects <- base |>
+    dplyr::group_by(city_id) |>
+    dplyr::summarise(
+      city_effect_logit = stats::weighted.mean(global_residual_logit_raw, population, na.rm = TRUE),
+      .groups = "drop"
+    )
+  city_crime_effects <- base |>
+    dplyr::left_join(city_effects, by = "city_id") |>
+    dplyr::mutate(city_crime_residual = global_residual_logit_raw - city_effect_logit) |>
+    dplyr::group_by(city_id, crime_type) |>
+    dplyr::summarise(
+      city_crime_effect_logit = stats::weighted.mean(city_crime_residual, population, na.rm = TRUE),
+      .groups = "drop"
+    )
+
+  base |>
+    dplyr::left_join(city_effects, by = "city_id") |>
+    dplyr::left_join(city_crime_effects, by = c("city_id", "crime_type")) |>
+    dplyr::mutate(
+      city_fitted_p = rtci_clamp_probability(stats::plogis(
+        stats::qlogis(global_p) + city_effect_logit + city_crime_effect_logit
+      )),
+      overdispersion_logit_raw = stats::qlogis(observed_p) - stats::qlogis(city_fitted_p),
       trend_rate = trend_p * annualize,
       global_rate = global_p * annualize,
-      city_fitted_rate = city_p * annualize,
+      city_fitted_rate = city_fitted_p * annualize,
       seasonal_rate_delta = (global_p - trend_p) * annualize,
-      city_minus_global_logit = stats::qlogis(city_p) - stats::qlogis(global_p),
-      global_residual_logit_raw = stats::qlogis(observed_p) - stats::qlogis(global_p),
-      overdispersion_logit_raw = overdispersion_raw,
-      overdispersion_rate_delta = (observed_p - city_p) * annualize
+      city_minus_global_logit = city_effect_logit + city_crime_effect_logit,
+      overdispersion_rate_delta = (observed_p - city_fitted_p) * annualize
     ) |>
     dplyr::group_by(crime_type) |>
     dplyr::mutate(

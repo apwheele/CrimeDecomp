@@ -19,7 +19,7 @@ include_city_effects <- as_bool(get_arg("city-effects", "false"))
 include_city_slopes <- as_bool(get_arg("city-slopes", "false"))
 include_cell_overdispersion <- as_bool(get_arg("overdispersion", "false"))
 nthreads <- as.integer(get_arg("nthreads", "4"))
-time_k <- as.integer(get_arg("time-k", "12"))
+time_k <- as.integer(get_arg("time-k", "8"))
 year_k <- as.integer(get_arg("year-k", "5"))
 
 dir.create("src/data/model", recursive = TRUE, showWarnings = FALSE)
@@ -54,6 +54,7 @@ decomposition <- results |>
     date, city_id, city_name, state, city_label, latitude, longitude,
     crime_type, population, count, observed_rate, trend_rate, global_rate,
     city_fitted_rate, seasonal_rate_delta, city_minus_global_logit,
+    city_effect_logit, city_crime_effect_logit,
     global_residual_logit, overdispersion_logit, overdispersion_rate_delta
   )
 
@@ -96,6 +97,7 @@ model_metadata <- list(
   include_city_effects = include_city_effects,
   include_city_slopes = include_city_slopes,
   include_cell_overdispersion = include_cell_overdispersion,
+  city_terms = "weighted city and city-by-crime logit intercepts after global fit",
   generated_at = format(Sys.time(), tz = "UTC")
 )
 jsonlite::write_json(model_metadata, "src/data/model/model_metadata.json", pretty = TRUE, auto_unbox = TRUE)

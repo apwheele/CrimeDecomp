@@ -29,12 +29,22 @@ the RTCI national sample. Rates are annualized from monthly counts: a monthly
 count `m` in a population `N` is shown as `12 * m / N * 100,000`. This puts
 homicide on the familiar annual rate scale rather than below one.
 
-The model estimates a crime-specific smooth long-run trend and a cyclic
-month-of-year seasonal component for murder, rape, robbery, assault, burglary,
-theft, and motor-vehicle theft. The global residual is the observed-versus-
-global departure on the logit scale, centered at zero within crime type. The
-city-level overdispersion term is retained separately in the complete app data
-and is centered at zero within city and crime type.
+The global model is an aggregated-binomial smooth decomposition. For crime
+type `c`, city `i`, and month `t`, its global probability is:
+
+`logit(p_global[c,t]) = alpha[c] + trend[c,t] + seasonal[c,month(t)]`.
+
+The city fit then adds two empirical intercept terms to that global logit:
+`city_effect[i]`, the population-weighted mean departure across crimes and
+months, and `city_crime_effect[i,c]`, the population-weighted departure left
+after the city effect. Thus:
+
+`logit(p_city[i,c,t]) = logit(p_global[c,t]) + city_effect[i] + city_crime_effect[i,c]`.
+
+The city-by-crime-by-month overdispersion term is the observed cell departure
+from this fitted city baseline. It is centered at zero within every city and
+crime type and retained at the complete time resolution. It is not a Pearson
+residual. The global residual is centered at zero within crime type.
 
 # Data coverage
 
@@ -62,4 +72,4 @@ plot_global_residual(global)
 
 All three figures use one readable panel per crime type. The complete
 city-by-crime-by-month decomposition and the city-name crosswalk are available
-in the app data; the app has city and crime selectors plus a map view.
+in the app data; the app has crime selection, city detail, and a Leaflet map.
