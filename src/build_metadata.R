@@ -3,10 +3,10 @@
 # Create the small city-name/coordinate crosswalk used by the model and app.
 # The source RTCI repository keeps this information in pre_processed.csv.
 
-source_path <- if (file.exists("data/raw/rtci_pre_processed.csv")) {
-  "data/raw/rtci_pre_processed.csv"
+source_path <- if (file.exists("src/data/raw/rtci_pre_processed.csv")) {
+  "src/data/raw/rtci_pre_processed.csv"
 } else {
-  "data/raw/rtci/data/deprecated/pre_processed.csv"
+  "src/data/raw/rtci_pre_processed.csv"
 }
 
 if (!file.exists(source_path)) stop("Metadata source does not exist: ", source_path)
@@ -29,10 +29,10 @@ metadata <- readr::read_csv(source_path, show_col_types = FALSE) |>
   dplyr::select(-priority, -source_type) |>
   dplyr::arrange(city_name, state, city_id)
 
-coords_path <- if (file.exists("data/raw/rtci_city_coords.csv")) {
-  "data/raw/rtci_city_coords.csv"
+coords_path <- if (file.exists("src/data/raw/rtci_city_coords.csv")) {
+  "src/data/raw/rtci_city_coords.csv"
 } else {
-  "data/raw/rtci/docs/app_data/unique_cities_coords.csv"
+  "src/data/raw/rtci_city_coords.csv"
 }
 if (file.exists(coords_path)) {
   coords <- readr::read_csv(coords_path, show_col_types = FALSE) |>
@@ -54,6 +54,6 @@ if (file.exists(coords_path)) {
     dplyr::select(-state_full, -latitude_coords, -longitude_coords)
 }
 
-dir.create("data/raw", recursive = TRUE, showWarnings = FALSE)
-readr::write_csv(metadata, "data/raw/agency_metadata.csv", na = "")
+dir.create("src/data/raw", recursive = TRUE, showWarnings = FALSE)
+readr::write_csv(metadata, "src/data/raw/agency_metadata.csv", na = "")
 message("Wrote ", nrow(metadata), " city metadata rows.")

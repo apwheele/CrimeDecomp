@@ -1,12 +1,11 @@
 # Spline trend/seasonality model and city-by-crime-time overdispersion term.
 
-rtci_model_formula <- function(time_k = 10, year_k = 5, include_city_effects = TRUE,
+rtci_model_formula <- function(time_k = 12, year_k = 5, include_city_effects = TRUE,
                                include_city_slopes = FALSE,
                                include_cell_overdispersion = FALSE) {
   terms <- c(
     "0 + crime_type",
     sprintf("s(time_index, by = crime_type, k = %d)", time_k),
-    sprintf("s(year, by = crime_type, k = %d)", year_k),
     "s(month_index, by = crime_type, bs = 'cc', k = 12)"
   )
   if (include_city_effects) {
@@ -18,7 +17,7 @@ rtci_model_formula <- function(time_k = 10, year_k = 5, include_city_effects = T
 }
 
 rtci_fit_model <- function(data,
-                           time_k = 10,
+                           time_k = 12,
                            year_k = 5,
                            include_city_effects = TRUE,
                            include_city_slopes = FALSE,
@@ -31,7 +30,7 @@ rtci_fit_model <- function(data,
     method = "fREML",
     discrete = TRUE,
     nthreads = nthreads,
-    gamma = 1.2,
+    gamma = 1.4,
     knots = list(month_index = c(0.5, 12.5))
   )
 }
@@ -58,7 +57,7 @@ rtci_add_predictions <- function(model, data) {
   global_p <- rtci_clamp_probability(global_p)
   trend_p <- rtci_clamp_probability(trend_p)
   observed_p <- rtci_clamp_probability((data$count + 0.5) / (data$trials + 1))
-  overdispersion_logit <- stats::qlogis(observed_p) - stats::qlogis(city_p)
+  overdispersion_raw <- stats::qlogis(observed_p) - stats::qlogis(city_p)
   annualize <- 100000 * rtci_annualization
 
   data |>
@@ -68,9 +67,22 @@ rtci_add_predictions <- function(model, data) {
       city_fitted_rate = city_p * annualize,
       seasonal_rate_delta = (global_p - trend_p) * annualize,
       city_minus_global_logit = stats::qlogis(city_p) - stats::qlogis(global_p),
-      overdispersion_logit = overdispersion_logit,
+      global_residual_logit_raw = stats::qlogis(observed_p) - stats::qlogis(global_p),
+      overdispersion_logit_raw = overdispersion_raw,
       overdispersion_rate_delta = (observed_p - city_p) * annualize
-    )
+    ) |>
+    dplyr::group_by(crime_type) |>
+    dplyr::mutate(
+      global_residual_logit = global_residual_logit_raw -
+        stats::weighted.mean(global_residual_logit_raw, population, na.rm = TRUE)
+    ) |>
+    dplyr::ungroup() |>
+    dplyr::group_by(city_id, crime_type) |>
+    dplyr::mutate(
+      overdispersion_logit = overdispersion_logit_raw -
+        stats::weighted.mean(overdispersion_logit_raw, population, na.rm = TRUE)
+    ) |>
+    dplyr::ungroup()
 }
 
 rtci_city_summary <- function(results) {

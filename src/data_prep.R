@@ -5,12 +5,12 @@ rtci_component_crimes <- c(
 )
 rtci_annualization <- 12
 
-rtci_read_raw <- function(path = "data/raw/rtci_crime_trends.csv") {
+rtci_read_raw <- function(path = "src/data/raw/rtci_crime_trends.csv") {
   if (!file.exists(path)) stop("Data file does not exist: ", path)
   readr::read_csv(path, show_col_types = FALSE, name_repair = "unique")
 }
 
-rtci_read_metadata <- function(path = "data/raw/agency_metadata.csv") {
+rtci_read_metadata <- function(path = "src/data/raw/agency_metadata.csv") {
   if (!file.exists(path)) stop("City metadata does not exist: ", path)
   readr::read_csv(path, show_col_types = FALSE)
 }
@@ -93,6 +93,7 @@ rtci_global_summary <- function(results) {
       global_rate = stats::weighted.mean(global_rate, population, na.rm = TRUE),
       city_fitted_rate = stats::weighted.mean(city_fitted_rate, population, na.rm = TRUE),
       seasonal_rate_delta = stats::weighted.mean(seasonal_rate_delta, population, na.rm = TRUE),
+      global_residual_logit = stats::weighted.mean(global_residual_logit, population, na.rm = TRUE),
       count = sum(count, na.rm = TRUE),
       population = sum(population, na.rm = TRUE),
       observed_rate = count / population * 100000 * rtci_annualization,

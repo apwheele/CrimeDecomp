@@ -9,8 +9,8 @@ get_arg <- function(name, default) {
   if (length(hit) == 0) default else sub(paste0("^--", name, "="), "", hit[[1]])
 }
 
-output <- get_arg("output", "data/raw/rtci_crime_trends.csv")
-metadata_path <- get_arg("metadata", "data/raw/source_metadata.json")
+output <- get_arg("output", "src/data/raw/rtci_crime_trends.csv")
+metadata_path <- get_arg("metadata", "src/data/raw/source_metadata.json")
 source_commit <- get_arg("commit", "1d5a1ebfdc8ea641eca2b5112d21b4e76aa82964")
 source_url <- paste0(
   "https://raw.githubusercontent.com/AH-Datalytics/rtci/",
@@ -41,16 +41,16 @@ if (!file.exists(metadata_path)) {
   message("Wrote metadata: ", metadata_path)
 }
 
-metadata_source <- "data/raw/rtci_pre_processed.csv"
+metadata_source <- "src/data/raw/rtci_pre_processed.csv"
 metadata_url <- paste0(
   "https://raw.githubusercontent.com/AH-Datalytics/rtci/", source_commit,
   "/data/deprecated/pre_processed.csv"
 )
-coords_source <- "data/raw/rtci_city_coords.csv"
+coords_source <- "src/data/raw/rtci_city_coords.csv"
 coords_url <- paste0(
   "https://raw.githubusercontent.com/AH-Datalytics/rtci/", source_commit,
   "/docs/app_data/unique_cities_coords.csv"
 )
 if (!file.exists(metadata_source)) download.file(metadata_url, metadata_source, mode = "wb", quiet = FALSE)
 if (!file.exists(coords_source)) download.file(coords_url, coords_source, mode = "wb", quiet = FALSE)
-source("scripts/build_metadata.R")
+source("src/build_metadata.R")
