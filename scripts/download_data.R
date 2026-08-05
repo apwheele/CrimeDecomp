@@ -21,10 +21,11 @@ source_url <- paste0(
 dir.create(dirname(output), recursive = TRUE, showWarnings = FALSE)
 dir.create(dirname(metadata_path), recursive = TRUE, showWarnings = FALSE)
 
-if (file.exists(output)) {
+if (file.exists(output) && file.exists(metadata_path)) {
   message("Snapshot already exists; leaving it unchanged: ", output)
+  quit(save = "no", status = 0)
 } else {
-  download.file(source_url, output, mode = "wb", quiet = FALSE)
+  if (!file.exists(output)) download.file(source_url, output, mode = "wb", quiet = FALSE)
 }
 
 metadata <- list(
@@ -37,4 +38,3 @@ metadata <- list(
 )
 jsonlite::write_json(metadata, metadata_path, pretty = TRUE, auto_unbox = TRUE)
 message("Wrote metadata: ", metadata_path)
-
