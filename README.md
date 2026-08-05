@@ -1,64 +1,47 @@
-# Crime decomposition
+# Monthly crime decomposition
 
-This project estimates a stacked, aggregated-binomial spline decomposition of
-monthly crime counts. It separates crime-specific global trends, cyclic monthly
-seasonality, agency-level departures, and unusually large monthly residuals.
+This project estimates a global STL-style decomposition of monthly crime rates
+for every city in the RTCI national sample. It also writes the complete
+city-by-crime-by-month overdispersion term for inspection in the app.
 
-The initial snapshot uses the Real-Time Crime Index component data published at
-<https://github.com/AH-Datalytics/rtci>. The source commit is pinned in
-`data/raw/source_metadata.json`.
+## Run it
 
-## Quick start
-
-Create the conda environment from `environment.yml` if it is not available:
+The only command needed after the pinned data snapshot is available is:
 
 ```powershell
-conda env create -f environment.yml
-conda activate crime-decomp
+conda run -n r2026 Rscript scripts/run_model.R
 ```
 
-The one-time data snapshot is already in this workspace. To recreate it from
-the pinned source commit, delete the local CSV and run:
+The script uses every `size == all`, `sample == 1` city. There is no population
+threshold. Rates are annualized from monthly counts by multiplying by 12.
 
-```powershell
-conda run -n crime-decomp Rscript scripts/download_data.R
-```
+Outputs are written to `app/data/` and `output/model/`:
 
-Run the initial model for agencies with populations of at least 250,000:
+- `global_stl.csv`: observed, trend, seasonal, and global rates
+- `decomposition.csv`: every city × crime × month, including `overdispersion_logit`
+- `cities.csv`: city names and coordinates
 
-```powershell
-conda run -n crime-decomp Rscript scripts/run_model.R
-```
-
-Useful options include `--min-population=100000`, `--min-population=0`,
-`--overdispersion=true`, `--outlier-threshold=3`, and `--nthreads=2`. The
-deliverable fit leaves the agency-month random effect off for runtime; enable
-it on a focused sample with `--overdispersion=true` as the practical stacked-
-data analogue of the `(1|Row)` term in the motivating model.
-
-Render the paper to both formats:
-
-```powershell
-quarto render paper/paper.qmd --to pdf --output-dir output/paper
-quarto render paper/paper.qmd --to gfm --output-dir output/paper
-```
-
-Start the local visualization app after running the model:
+Open the app locally:
 
 ```powershell
 python -m http.server 8000 --directory app
 ```
 
-Open <http://localhost:8000>. The app uses native SVG and browser controls;
-there is no Plotly dependency.
+Then visit <http://localhost:8000>. It has three views: Global STL, City
+detail, and City map. The controls only select crime type and city; the full
+date range is always shown.
 
-## Model
+## Optional focused model terms
 
-For agency `i`, crime type `c`, and month `t`, the response is modeled as
-`Y_ict ~ Binomial(N_it, p_ict)` with a logit link. The linear predictor
-contains crime-specific smooths of the continuous month index and year, a
-cyclic smooth of month, agency and agency-by-crime random effects, and a
-regularized agency-by-crime random time slope. The optional agency-month random
-effect is the overdispersion/residual term. Predictions excluding agency terms
-provide the global baseline, while predictions retaining agency terms provide
-the agency departure from that baseline.
+For smaller exploratory samples, `--city-effects=true --city-slopes=true`
+adds pooled city effects and city-by-crime time slopes. The explicit cell-level
+random effect can be requested with `--overdispersion=true`, but the default
+deliverable retains the complete city × crime × month overdispersion term as
+an interpretable logit departure without an arbitrary threshold.
+
+## Paper
+
+The rendered paper is [output/paper/paper.pdf](G:\CrimeDecomp\output\paper\paper.pdf)
+and [output/paper/paper.md](G:\CrimeDecomp\output\paper\paper.md). Render it
+again with Quarto from the project-specific R environment.
+

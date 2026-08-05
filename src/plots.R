@@ -1,5 +1,3 @@
-# Paper plots. The theme is intentionally kept close to the supplied theme.
-
 theme_andy <- function() {
   ggplot2::theme_bw() %+replace% ggplot2::theme(
     text = ggplot2::element_text(size = 16),
@@ -8,51 +6,42 @@ theme_andy <- function() {
   )
 }
 
-plot_global_trends <- function(global) {
+plot_global_stl <- function(global) {
   ggplot2::ggplot(global, ggplot2::aes(x = date)) +
-    ggplot2::geom_line(ggplot2::aes(y = observed_rate), alpha = 0.35, linewidth = 0.4) +
-    ggplot2::geom_line(ggplot2::aes(y = global_rate), linewidth = 1.05, colour = "#1b5e75") +
+    ggplot2::geom_line(ggplot2::aes(y = observed_rate, colour = "Observed"), linewidth = .45, alpha = .55) +
+    ggplot2::geom_line(ggplot2::aes(y = trend_rate, colour = "Trend"), linewidth = 1) +
+    ggplot2::geom_line(ggplot2::aes(y = global_rate, colour = "Trend + season"), linewidth = 1) +
     ggplot2::facet_wrap(~crime_type, scales = "free_y", ncol = 2) +
-    ggplot2::labs(
-      title = "Global monthly trends",
-      subtitle = "Thin: observed rate; thick: global spline",
-      x = NULL, y = "Rate per 100,000"
-    ) +
+    ggplot2::scale_colour_manual(values = c(Observed = "#999999", Trend = "#1a657c", `Trend + season` = "#d77942")) +
+    ggplot2::labs(title = "Global STL-style decomposition", x = NULL, y = "Annualized rate per 100,000", colour = NULL) +
     theme_andy()
 }
 
-plot_agency_deviations <- function(decomposition, agency_summary, n = 12) {
-  chosen <- agency_summary |>
-    dplyr::group_by(crime_type) |>
-    dplyr::slice_max(max_abs_deviation, n = max(1, ceiling(n / 7)), with_ties = FALSE) |>
-    dplyr::ungroup()
-  selected <- decomposition |>
-    dplyr::semi_join(chosen, by = c("agency_id", "crime_type"))
-
-  ggplot2::ggplot(selected, ggplot2::aes(x = date, y = deviation_logit, group = agency_id)) +
+plot_seasonal <- function(global) {
+  ggplot2::ggplot(global, ggplot2::aes(x = date, y = seasonal_rate_delta)) +
     ggplot2::geom_hline(yintercept = 0, colour = "grey50") +
-    ggplot2::geom_line(ggplot2::aes(colour = agency_id), alpha = 0.8) +
+    ggplot2::geom_line(colour = "#d77942", linewidth = .8) +
     ggplot2::facet_wrap(~crime_type, scales = "free_y", ncol = 2) +
-    ggplot2::guides(colour = "none") +
-    ggplot2::labs(
-      title = "Agency departures from global spline",
-      x = NULL, y = "Fitted logit departure"
-    ) +
+    ggplot2::labs(title = "Seasonal component", x = NULL, y = "Annualized rate change from trend") +
     theme_andy()
 }
 
-plot_residuals <- function(decomposition) {
-  ggplot2::ggplot(decomposition, ggplot2::aes(x = date, y = pearson_residual)) +
-    ggplot2::geom_hline(yintercept = -3, linetype = "dashed", colour = "#b33a3a") +
-    ggplot2::geom_hline(yintercept = 0, linetype = "solid", colour = "grey50") +
-    ggplot2::geom_hline(yintercept = 3, linetype = "dashed", colour = "#b33a3a") +
-    ggplot2::geom_point(ggplot2::aes(colour = outlier_flag), alpha = 0.35, size = 0.55) +
-    ggplot2::facet_wrap(~crime_type, ncol = 2) +
-    ggplot2::scale_colour_manual(values = c(`FALSE` = "#555555", `TRUE` = "#b33a3a")) +
-    ggplot2::labs(
-      title = "Monthly residual diagnostics",
-      subtitle = "Red: |Pearson residual| >= 3",
-      x = NULL, y = "Pearson residual", colour = "Outlier"
-    ) +
+plot_city_detail <- function(decomposition, city_id, crime_type) {
+  d <- decomposition[decomposition$city_id == city_id & decomposition$crime_type == crime_type, ]
+  ggplot2::ggplot(d, ggplot2::aes(x = date)) +
+    ggplot2::geom_line(ggplot2::aes(y = observed_rate, colour = "Observed"), alpha = .55) +
+    ggplot2::geom_line(ggplot2::aes(y = global_rate, colour = "Global baseline"), linewidth = 1) +
+    ggplot2::scale_colour_manual(values = c(Observed = "#999999", `Global baseline` = "#1a657c")) +
+    ggplot2::labs(title = paste0(unique(d$city_label), " — ", crime_type), x = NULL, y = "Annualized rate per 100,000", colour = NULL) +
     theme_andy()
 }
+
+plot_city_overdispersion <- function(decomposition, city_id, crime_type) {
+  d <- decomposition[decomposition$city_id == city_id & decomposition$crime_type == crime_type, ]
+  ggplot2::ggplot(d, ggplot2::aes(x = date, y = overdispersion_logit)) +
+    ggplot2::geom_hline(yintercept = 0, colour = "grey50") +
+    ggplot2::geom_line(colour = "#ae3e3e", linewidth = .8) +
+    ggplot2::labs(title = "City × crime × month overdispersion", x = NULL, y = "Logit overdispersion term") +
+    theme_andy()
+}
+

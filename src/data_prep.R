@@ -1,44 +1,45 @@
-# Data preparation for the monthly crime decomposition.
+# Prepare every city in the RTCI national sample for the decomposition.
 
 rtci_component_crimes <- c(
   "murder", "rape", "robbery", "assault", "burglary", "theft", "motor"
 )
+rtci_annualization <- 12
 
-rtci_read_raw <- function(path) {
+rtci_read_raw <- function(path = "data/raw/rtci_crime_trends.csv") {
   if (!file.exists(path)) stop("Data file does not exist: ", path)
   readr::read_csv(path, show_col_types = FALSE, name_repair = "unique")
 }
 
+rtci_read_metadata <- function(path = "data/raw/agency_metadata.csv") {
+  if (!file.exists(path)) stop("City metadata does not exist: ", path)
+  readr::read_csv(path, show_col_types = FALSE)
+}
+
 rtci_prepare_stacked <- function(raw,
-                                  min_population = 100000,
-                                  sample_only = TRUE) {
-  required <- c("id", "size", "year", "month", "population", "sample",
-                paste0(rtci_component_crimes, "_total"))
-  missing <- setdiff(required, names(raw))
-  if (length(missing) > 0) {
-    stop("The source data is missing columns: ", paste(missing, collapse = ", "))
-  }
-
-  keep_sample <- if (sample_only) !is.na(raw$sample) & raw$sample == 1 else TRUE
-  monthly <- raw[raw$size == "all" & keep_sample &
-                   !is.na(raw$population) & raw$population >= min_population, , drop = FALSE]
-  if (nrow(monthly) == 0) stop("No rows remain after the population/sample filters.")
-
-  monthly$date <- as.Date(sprintf("%04d-%02d-01", monthly$year, monthly$month))
-  monthly <- monthly[order(monthly$date, monthly$id), , drop = FALSE]
-
+                                 metadata,
+                                 sample_only = TRUE,
+                                 min_population = NULL) {
   count_cols <- paste0(rtci_component_crimes, "_total")
+  required <- c("id", "size", "year", "month", "population", "sample", count_cols)
+  missing <- setdiff(required, names(raw))
+  if (length(missing) > 0) stop("Source data missing: ", paste(missing, collapse = ", "))
+
+  keep <- raw$size == "all" & !is.na(raw$population) & raw$population > 0
+  if (sample_only) keep <- keep & !is.na(raw$sample) & raw$sample == 1
+  if (!is.null(min_population)) keep <- keep & raw$population >= min_population
+  monthly <- raw[keep, , drop = FALSE]
+  if (nrow(monthly) == 0) stop("No city rows remain after the sample filters.")
+  monthly$date <- as.Date(sprintf("%04d-%02d-01", monthly$year, monthly$month))
+
   stacked <- tidyr::pivot_longer(
     monthly,
     cols = tidyselect::all_of(count_cols),
     names_to = "crime_type",
     values_to = "count",
     names_pattern = "(.*)_total$"
-  )
-
-  stacked <- stacked |>
+  ) |>
     dplyr::transmute(
-      agency_id = as.character(id),
+      city_id = as.character(id),
       date,
       year = as.numeric(year),
       month_index = as.numeric(month),
@@ -46,39 +47,41 @@ rtci_prepare_stacked <- function(raw,
       crime_type = factor(as.character(crime_type), levels = rtci_component_crimes),
       count = as.numeric(count)
     ) |>
-    dplyr::filter(
-      !is.na(count), is.finite(count), count >= 0,
-      !is.na(population), population > 0,
-      count <= population
+    dplyr::filter(!is.na(count), is.finite(count), count >= 0, count <= population) |>
+    dplyr::left_join(
+      metadata |>
+        dplyr::select(city_id, city_name, city_state, state, latitude, longitude),
+      by = "city_id"
     ) |>
     dplyr::mutate(
+      city_name = dplyr::coalesce(city_name, ""),
+      city_name = ifelse(city_name == "" | city_name == city_id,
+                         paste0("Unknown agency (", city_id, ")"), city_name),
+      state = dplyr::coalesce(state, ""),
+      city_label = ifelse(state == "", city_name, paste0(city_name, ", ", state)),
       trials = population,
-      observed_rate = count / trials * 100000,
+      observed_rate = count / trials * 100000 * rtci_annualization,
       time_index = as.numeric(date - min(date)) / 30.4375,
-      agency_id = factor(agency_id),
-      agency_crime = interaction(agency_id, crime_type, drop = TRUE),
-      # One overdispersion shock per agency-month, shared across crimes in
-      # the stacked row. This avoids seven residual parameters for one month.
-      row_id = interaction(agency_id, date, drop = TRUE)
+      city_id = factor(city_id),
+      city_crime = interaction(city_id, crime_type, drop = TRUE),
+      cell_id = interaction(city_id, crime_type, date, drop = TRUE)
     )
 
-  if (nrow(stacked) == 0) stop("No valid count observations remain after preparation.")
+  if (nrow(stacked) == 0) stop("No valid city-month-crime observations remain.")
   stacked
 }
 
 rtci_validate_stacked <- function(data) {
   checks <- list(
     rows = nrow(data),
-    agencies = dplyr::n_distinct(data$agency_id),
+    cities = dplyr::n_distinct(data$city_id),
     crime_types = dplyr::n_distinct(data$crime_type),
     date_min = min(data$date),
     date_max = max(data$date),
     invalid_counts = sum(data$count < 0 | data$count > data$trials | is.na(data$count)),
-    missing_population = sum(is.na(data$population) | data$population <= 0)
+    missing_names = sum(is.na(data$city_name) | data$city_name == "")
   )
-  if (checks$invalid_counts > 0 || checks$missing_population > 0) {
-    stop("Prepared data failed validation.")
-  }
+  if (checks$invalid_counts > 0 || checks$missing_names > 0) stop("Prepared data failed validation.")
   checks
 }
 
@@ -86,12 +89,14 @@ rtci_global_summary <- function(results) {
   results |>
     dplyr::group_by(date, crime_type) |>
     dplyr::summarise(
+      trend_rate = stats::weighted.mean(trend_rate, population, na.rm = TRUE),
       global_rate = stats::weighted.mean(global_rate, population, na.rm = TRUE),
-      fitted_rate = stats::weighted.mean(fitted_rate, population, na.rm = TRUE),
-      mean_pearson_residual = stats::weighted.mean(pearson_residual, population, na.rm = TRUE),
+      city_fitted_rate = stats::weighted.mean(city_fitted_rate, population, na.rm = TRUE),
+      seasonal_rate_delta = stats::weighted.mean(seasonal_rate_delta, population, na.rm = TRUE),
       count = sum(count, na.rm = TRUE),
       population = sum(population, na.rm = TRUE),
-      observed_rate = count / population * 100000,
+      observed_rate = count / population * 100000 * rtci_annualization,
+      remainder_rate = observed_rate - global_rate,
       .groups = "drop"
     ) |>
     dplyr::arrange(crime_type, date)

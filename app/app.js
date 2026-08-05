@@ -1,78 +1,48 @@
 (() => {
-  const state = { global: [], decomposition: [], crime: '', agency: '', start: '', end: '', threshold: 3 };
+  const state = { global: [], decomposition: [], cities: [], crime: "murder", city: "", page: "overview" };
   const $ = id => document.getElementById(id);
-  const parseCsv = text => {
-    const rows = []; let row = [], cell = '', quoted = false;
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i], next = text[i + 1];
-      if (ch === '"' && quoted && next === '"') { cell += '"'; i++; }
-      else if (ch === '"') quoted = !quoted;
-      else if (ch === ',' && !quoted) { row.push(cell); cell = ''; }
-      else if ((ch === '\n' || ch === '\r') && !quoted) { if (ch === '\r' && next === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; }
+  const csv = text => {
+    const rows = []; let row = [], cell = "", quote = false;
+    for (let i = 0; i < text.length; i++) { const ch = text[i], next = text[i + 1];
+      if (ch === '"' && quote && next === '"') { cell += '"'; i++; }
+      else if (ch === '"') quote = !quote;
+      else if (ch === ',' && !quote) { row.push(cell); cell = ""; }
+      else if ((ch === '\n' || ch === '\r') && !quote) { if (ch === '\r' && next === '\n') i++; row.push(cell); rows.push(row); row=[]; cell=""; }
       else cell += ch;
     }
-    if (cell.length || row.length) { row.push(cell); rows.push(row); }
-    const headers = rows.shift().map(x => x.trim());
-    return rows.filter(r => r.length > 1).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ''])));
+    if (cell || row.length) { row.push(cell); rows.push(row); }
+    const heads = rows.shift().map(x => x.trim());
+    return rows.filter(r => r.length > 1).map(r => Object.fromEntries(heads.map((h,i) => [h, r[i] ?? ""])));
   };
-  const num = x => Number(x);
-  const fmt = x => Number.isFinite(x) ? x.toFixed(2) : '—';
-  const scale = (x, a, b, c, d) => c + (x - a) * (d - c) / ((b - a) || 1);
-  const linePath = (rows, key, x0, x1, ymin, ymax) => rows.map((r, i) => {
-    const x = scale(new Date(r.date), x0, x1, 62, 1000), y = scale(num(r[key]), ymax, ymin, 34, 286);
-    return `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`;
-  }).join(' ');
-  const svgBase = (title, ymin, ymax, x0, x1, yLabel) => {
-    let s = `<svg viewBox="0 0 1040 330" role="img"><text x="62" y="20" class="chart-title">${title}</text>`;
-    [0, .25, .5, .75, 1].forEach(t => { const y = 34 + t * 252, v = ymax - t * (ymax - ymin); s += `<line x1="62" x2="1000" y1="${y}" y2="${y}" class="grid"/><text x="55" y="${y + 4}" text-anchor="end" class="axis-label">${fmt(v)}</text>`; });
-    s += `<line x1="62" x2="1000" y1="286" y2="286" class="axis"/><text x="15" y="160" transform="rotate(-90 15 160)" class="axis-label">${yLabel}</text>`;
-    s += `<text x="62" y="310" class="axis-label">${x0.toISOString().slice(0, 10)}</text><text x="1000" y="310" text-anchor="end" class="axis-label">${x1.toISOString().slice(0, 10)}</text>`;
-    return s;
-  };
-  const finishSvg = (s, legend) => `${s}<text x="780" y="20" class="legend">${legend}</text></svg>`;
+  const n = x => Number(x); const f = x => Number.isFinite(x) ? x.toFixed(2) : "—";
+  const extent = (rows, key) => { const x=rows.map(r=>n(r[key])).filter(Number.isFinite); return [Math.min(...x),Math.max(...x)]; };
+  const scale = (x,a,b,c,d) => c + (x-a)*(d-c)/((b-a)||1);
+  const path = (rows,key,x0,x1,y0,y1) => rows.map((r,i) => ` ${i?'L':'M'}${scale(new Date(r.date),x0,x1,66,1010).toFixed(1)},${scale(n(r[key]),y1,y0,38,290).toFixed(1)}`).join("");
+  const base = (title, ymin, ymax, x0, x1, ylabel, height=330) => { let s=`<svg viewBox="0 0 1060 ${height}"><text x="66" y="22" class="chart-title">${title}</text>`; [0,.25,.5,.75,1].forEach(t=>{const y=38+t*(height-72),v=ymax-t*(ymax-ymin);s+=`<line x1="66" x2="1010" y1="${y}" y2="${y}" class="grid"/><text x="58" y="${y+4}" text-anchor="end" class="axis-label">${f(v)}</text>`;}); s+=`<line x1="66" x2="1010" y1="${height-40}" y2="${height-40}" class="axis"/><text x="17" y="${height/2}" transform="rotate(-90 17 ${height/2})" class="axis-label">${ylabel}</text><text x="66" y="${height-14}" class="axis-label">${x0.toISOString().slice(0,10)}</text><text x="1010" y="${height-14}" text-anchor="end" class="axis-label">${x1.toISOString().slice(0,10)}</text>`; return s; };
+  const line = (rows,key,x0,x1,ymin,ymax,color,height=330) => `<path d="${rows.map((r,i)=>` ${i?'L':'M'}${scale(new Date(r.date),x0,x1,66,1010).toFixed(1)},${scale(n(r[key]),ymax,ymin,38,height-40).toFixed(1)}`).join("")}" fill="none" stroke="${color}" class="legend-line"/>`;
+  const finish = (s, items) => `${s}${items.map((x,i)=>`<line x1="${790+i*120}" x2="${815+i*120}" y1="22" y2="22" stroke="${x[1]}" class="legend-line"/><text x="${822+i*120}" y="26" class="legend">${x[0]}</text>`).join("")}</svg>`;
 
   function renderGlobal() {
-    const rows = state.global.filter(r => r.crime_type === state.crime && (!state.start || r.date >= state.start) && (!state.end || r.date <= state.end));
-    const agency = state.decomposition.filter(r => r.crime_type === state.crime && r.agency_id === state.agency && (!state.start || r.date >= state.start) && (!state.end || r.date <= state.end));
-    if (!rows.length) { $('global-chart').innerHTML = '<p class="empty">No global rows match these filters.</p>'; return; }
-    const x0 = new Date(rows[0].date), x1 = new Date(rows[rows.length - 1].date);
-    const all = rows.flatMap(r => [num(r.observed_rate), num(r.global_rate)]).concat(agency.map(r => num(r.fitted_rate))).filter(Number.isFinite);
-    const ymax = Math.max(...all) * 1.08;
-    let out = svgBase(`Global baseline and ${state.agency || 'selected agency'}`, 0, ymax, x0, x1, 'Rate per 100,000');
-    out += `<path d="${linePath(rows, 'observed_rate', x0, x1, 0, ymax)}" fill="none" stroke="#9aa8aa" stroke-width="1"/><path d="${linePath(rows, 'global_rate', x0, x1, 0, ymax)}" fill="none" stroke="#1b5e75" stroke-width="3"/>`;
-    if (agency.length) out += `<path d="${linePath(agency, 'fitted_rate', x0, x1, 0, ymax)}" fill="none" stroke="#d87941" stroke-width="2"/>`;
-    $('global-chart').innerHTML = finishSvg(out, 'observed  ·  global baseline  ·  agency fit');
+    const rows=state.global.filter(r=>r.crime_type===state.crime); if(!rows.length)return;
+    const x0=new Date(rows[0].date),x1=new Date(rows[rows.length-1].date), all=rows.flatMap(r=>[n(r.observed_rate),n(r.trend_rate),n(r.global_rate)]), ymax=Math.max(...all)*1.08;
+    let s=base(`${state.crime} — global annualized rate`,0,ymax,x0,x1,"Rate per 100,000"); s+=line(rows,"observed_rate",x0,x1,0,ymax,"#9aa8aa")+line(rows,"trend_rate",x0,x1,0,ymax,"#1a657c")+line(rows,"global_rate",x0,x1,0,ymax,"#d77942"); $("global-chart").innerHTML=finish(s,[["observed","#9aa8aa"],["trend","#1a657c"],["trend + season","#d77942"]]);
+    const ymax2=Math.max(...rows.map(r=>Math.abs(n(r.seasonal_rate_delta))),.1)*1.15; let q=base(`${state.crime} — seasonal effect`, -ymax2,ymax2,x0,x1,"Annualized rate change",270); q+=line(rows,"seasonal_rate_delta",x0,x1,-ymax2,ymax2,"#d77942",270); $("seasonal-chart").innerHTML=finish(q,[["seasonal effect","#d77942"]]);
   }
 
-  function renderResiduals() {
-    const rows = state.decomposition.filter(r => r.crime_type === state.crime && r.agency_id === state.agency && (!state.start || r.date >= state.start) && (!state.end || r.date <= state.end));
-    if (!rows.length) { $('residual-chart').innerHTML = '<p class="empty">No agency rows match these filters.</p>'; return; }
-    const x0 = new Date(rows[0].date), x1 = new Date(rows[rows.length - 1].date), threshold = Number(state.threshold) || 3;
-    const ymax = Math.max(threshold * 1.25, ...rows.map(r => Math.abs(num(r.pearson_residual))).filter(Number.isFinite)) * 1.05;
-    let out = svgBase(`Monthly Pearson residuals for ${state.agency}`, -ymax, ymax, x0, x1, 'Residual');
-    [-threshold, threshold].forEach(v => { const y = scale(v, ymax, -ymax, 34, 286); out += `<line x1="62" x2="1000" y1="${y}" y2="${y}" stroke="#b33a3a" stroke-dasharray="5 4"/>`; });
-    rows.forEach(r => { const x = scale(new Date(r.date), x0, x1, 62, 1000), y = scale(num(r.pearson_residual), ymax, -ymax, 34, 286), c = Math.abs(num(r.pearson_residual)) >= threshold ? '#b33a3a' : '#1b5e75'; out += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${c}"/>`; });
-    $('residual-chart').innerHTML = finishSvg(out, `threshold ±${threshold}`);
+  function renderCity() {
+    const rows=state.decomposition.filter(r=>r.city_id===state.city&&r.crime_type===state.crime); const selected=state.cities.find(r=>r.city_id===state.city); const name=selected?selected.city_label:state.city; if(!rows.length){$("city-title").textContent=`${name} — ${state.crime}`;$("city-chart").innerHTML='<p class="caption">No valid component count rows are available for this city and crime type.</p>';$("overdispersion-chart").innerHTML='';return;}
+    $("city-title").textContent=`${name} — ${state.crime}`; const x0=new Date(rows[0].date),x1=new Date(rows[rows.length-1].date),all=rows.flatMap(r=>[n(r.observed_rate),n(r.city_fitted_rate),n(r.global_rate)]),ymax=Math.max(...all)*1.08;
+    let s=base(`${name} — annualized rate`,0,ymax,x0,x1,"Rate per 100,000"); s+=line(rows,"observed_rate",x0,x1,0,ymax,"#9aa8aa")+line(rows,"global_rate",x0,x1,0,ymax,"#1a657c"); $("city-chart").innerHTML=finish(s,[["observed","#9aa8aa"],["global baseline","#1a657c"]]);
+    const yd=extent(rows,"overdispersion_logit"), ymin=Math.min(yd[0]*1.1,-.2), ymaxd=Math.max(yd[1]*1.1,.2); let q=base(`${name} — city × crime × month overdispersion`,ymin,ymaxd,x0,x1,"Logit overdispersion",270); q+=line(rows,"overdispersion_logit",x0,x1,ymin,ymaxd,"#ae3e3e",270); $("overdispersion-chart").innerHTML=finish(q,[["overdispersion term","#ae3e3e"]]);
   }
 
-  function renderTable() {
-    const threshold = Number(state.threshold) || 3;
-    const rows = state.decomposition.filter(r => r.crime_type === state.crime && r.agency_id === state.agency && (!state.start || r.date >= state.start) && (!state.end || r.date <= state.end) && Math.abs(num(r.pearson_residual)) >= threshold).sort((a, b) => Math.abs(num(b.pearson_residual)) - Math.abs(num(a.pearson_residual))).slice(0, 50);
-    $('outliers').querySelector('tbody').innerHTML = rows.length ? rows.map(r => `<tr><td>${r.date}</td><td>${r.agency_id}</td><td>${r.crime_type}</td><td>${fmt(num(r.observed_rate))}</td><td>${fmt(num(r.fitted_rate))}</td><td>${fmt(num(r.pearson_residual))}</td></tr>`).join('') : '<tr><td colspan="6" class="empty">No flagged months for the current filters.</td></tr>';
+  function renderMap() {
+    const lookup=Object.fromEntries(state.citySummary.filter(r=>r.crime_type===state.crime).map(r=>[r.city_id,r])); const points=state.cities.filter(r=>Number.isFinite(n(r.latitude))&&Number.isFinite(n(r.longitude))); let s='<svg viewBox="0 0 900 560"><rect x="20" y="25" width="860" height="500" rx="12" fill="#eef4f3" stroke="#d6e0e2"/><text x="40" y="54" class="chart-title">US city map — click a city</text>';
+    points.forEach(r=>{const x=scale(n(r.longitude),-125,-66,45,855),y=scale(n(r.latitude),25,50,495,80),v=lookup[r.city_id]?n(lookup[r.city_id].mean_city_minus_global_logit):0,c=v>=0?'#d77942':'#1a657c',rad=r.city_id===state.city?6:4;s+=`<circle class="dot" data-city="${r.city_id}" cx="${x}" cy="${y}" r="${rad}" fill="${c}"/><title>${r.city_label}: ${f(v)} logit</title>`;}); s+='</svg>';
+    $("map-chart").innerHTML=s; $("map-chart").querySelectorAll(".dot").forEach(el=>el.addEventListener("click",()=>{state.city=el.dataset.city; $("city").value=state.city; showPage("city");}));
   }
-
-  function update() { renderGlobal(); renderResiduals(); renderTable(); $('status').textContent = `${state.global.length.toLocaleString()} global rows and ${state.decomposition.length.toLocaleString()} agency-month-crime rows loaded.`; }
-  function setup() {
-    const crimes = [...new Set(state.global.map(r => r.crime_type))]; state.crime = crimes[0];
-    $('crime').innerHTML = crimes.map(x => `<option>${x}</option>`).join('');
-    const agencies = [...new Set(state.decomposition.map(r => r.agency_id))].sort(); state.agency = agencies[0];
-    $('agency').innerHTML = agencies.map(x => `<option>${x}</option>`).join('');
-    const ds = state.global.map(r => r.date).sort(); state.start = ds[0]; state.end = ds[ds.length - 1]; $('start').value = state.start; $('end').value = state.end;
-    $('crime').value = state.crime; $('agency').value = state.agency;
-    [['crime', 'crime'], ['agency', 'agency'], ['start', 'start'], ['end', 'end'], ['threshold', 'threshold']].forEach(([id, key]) => $(id).addEventListener('change', e => { state[key] = e.target.value; update(); }));
-    $('reset').addEventListener('click', () => { $('crime').value = crimes[0]; $('agency').value = agencies[0]; $('start').value = ds[0]; $('end').value = ds[ds.length - 1]; $('threshold').value = 3; state.crime = crimes[0]; state.agency = agencies[0]; state.start = ds[0]; state.end = ds[ds.length - 1]; state.threshold = 3; update(); });
-    update();
+  function showPage(page){state.page=page;document.querySelectorAll(".page").forEach(x=>x.classList.toggle("active",x.id===page));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===page)); if(page==="overview")renderGlobal(); if(page==="city")renderCity(); if(page==="map")renderMap();}
+  function setup(){ const crimes=[...new Set(state.global.map(r=>r.crime_type))];state.crime=crimes[0];$("crime").innerHTML=crimes.map(x=>`<option value="${x}">${x}</option>`).join(""); const cities=state.cities.slice().sort((a,b)=>a.city_label.localeCompare(b.city_label));state.city=cities[0].city_id;$("city").innerHTML=cities.map(x=>`<option value="${x.city_id}">${x.city_label}</option>`).join("");$("crime").addEventListener("change",e=>{state.crime=e.target.value;renderGlobal();renderCity();renderMap();});$("city").addEventListener("change",e=>{state.city=e.target.value;renderCity();});$("reset").addEventListener("click",()=>{state.crime=crimes[0];state.city=cities[0].city_id;$("crime").value=state.crime;$("city").value=state.city;showPage("overview");});document.querySelectorAll(".tab").forEach(x=>x.addEventListener("click",()=>showPage(x.dataset.page)));showPage("overview");$("status").textContent=`${state.cities.length.toLocaleString()} cities · ${state.decomposition.length.toLocaleString()} city-month-crime observations · annualized rates`;
   }
-  Promise.all(['global_trends.csv', 'decomposition.csv'].map(f => fetch(`data/${f}`).then(r => r.text()).then(parseCsv))).then(([global, decomposition]) => { state.global = global; state.decomposition = decomposition; setup(); }).catch(err => { $('status').textContent = `Could not load model outputs. Run scripts/run_model.R first. ${err}`; });
+  Promise.all(["global_stl.csv","decomposition.csv","cities.csv","city_summary.csv"].map(f=>fetch(`data/${f}`).then(r=>r.text()).then(csv))).then(([global,decomposition,cities,summary])=>{state.global=global;state.decomposition=decomposition;state.cities=cities;state.citySummary=summary;setup();}).catch(e=>$("status").textContent=`Could not load model outputs: ${e}. Run scripts/run_model.R first.`);
 })();
-

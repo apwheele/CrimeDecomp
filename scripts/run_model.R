@@ -11,72 +11,93 @@ get_arg <- function(name, default) {
 as_bool <- function(x) tolower(x) %in% c("1", "true", "yes", "y")
 
 input <- get_arg("input", "data/raw/rtci_crime_trends.csv")
-min_population <- as.numeric(get_arg("min-population", "250000"))
+metadata_path <- get_arg("metadata", "data/raw/agency_metadata.csv")
 sample_only <- as_bool(get_arg("sample-only", "true"))
-include_overdispersion <- as_bool(get_arg("overdispersion", "false"))
-outlier_threshold <- as.numeric(get_arg("outlier-threshold", "3"))
-nthreads <- as.integer(get_arg("nthreads", "2"))
-time_k <- as.integer(get_arg("time-k", "12"))
+min_population_arg <- get_arg("min-population", "")
+min_population <- if (min_population_arg == "") NULL else as.numeric(min_population_arg)
+include_city_effects <- as_bool(get_arg("city-effects", "true"))
+include_city_slopes <- as_bool(get_arg("city-slopes", "false"))
+include_cell_overdispersion <- as_bool(get_arg("overdispersion", "false"))
+nthreads <- as.integer(get_arg("nthreads", "4"))
+time_k <- as.integer(get_arg("time-k", "10"))
 year_k <- as.integer(get_arg("year-k", "5"))
 
 dir.create("output/model", recursive = TRUE, showWarnings = FALSE)
 dir.create("app/data", recursive = TRUE, showWarnings = FALSE)
 
 raw <- rtci_read_raw(input)
-data <- rtci_prepare_stacked(raw, min_population = min_population, sample_only = sample_only)
+metadata <- rtci_read_metadata(metadata_path)
+data <- rtci_prepare_stacked(raw, metadata, sample_only, min_population)
 validation <- rtci_validate_stacked(data)
-message("Prepared ", validation$rows, " stacked observations from ",
-        validation$agencies, " agencies.")
+message("Prepared ", validation$rows, " observations from ", validation$cities, " cities.")
 
 model <- rtci_fit_model(
   data,
   time_k = time_k,
   year_k = year_k,
-  include_overdispersion = include_overdispersion,
+  include_city_effects = include_city_effects,
+  include_city_slopes = include_city_slopes,
+  include_cell_overdispersion = include_cell_overdispersion,
   nthreads = nthreads
 )
-results <- rtci_add_predictions(model, data, outlier_threshold = outlier_threshold)
-
+results <- rtci_add_predictions(model, data)
 global <- rtci_global_summary(results)
-agency_summary <- results |>
-  dplyr::group_by(agency_id, crime_type) |>
-  dplyr::summarise(
-    n_months = dplyr::n(),
-    mean_deviation = mean(deviation_logit, na.rm = TRUE),
-    max_abs_deviation = max(abs(deviation_logit), na.rm = TRUE),
-    outlier_months = sum(outlier_flag, na.rm = TRUE),
-    mean_abs_residual = mean(abs(pearson_residual), na.rm = TRUE),
-    .groups = "drop"
-  ) |>
-  dplyr::arrange(crime_type, dplyr::desc(max_abs_deviation))
+city_summary <- rtci_city_summary(results)
 
 decomposition <- results |>
   dplyr::mutate(
-    agency_id = as.character(agency_id),
+    city_id = as.character(city_id),
     crime_type = as.character(crime_type),
     date = as.character(date)
   ) |>
   dplyr::select(
-    date, agency_id, crime_type, population, count, observed_rate,
-    global_rate, fitted_rate, deviation_logit, logit_residual,
-    pearson_residual, outlier_flag
+    date, city_id, city_name, state, city_label, latitude, longitude,
+    crime_type, population, count, observed_rate, trend_rate, global_rate,
+    city_fitted_rate, seasonal_rate_delta, city_minus_global_logit,
+    overdispersion_logit, overdispersion_rate_delta
   )
 
+city_catalog <- raw |>
+  dplyr::filter(size == "all", !is.na(population), population > 0,
+                if (sample_only) !is.na(sample) & sample == 1 else TRUE,
+                if (is.null(min_population)) TRUE else population >= min_population) |>
+  dplyr::transmute(city_id = as.character(id), population = as.numeric(population)) |>
+  dplyr::distinct(city_id, .keep_all = TRUE) |>
+  dplyr::left_join(metadata |>
+                     dplyr::select(city_id, city_name, state, latitude, longitude),
+                   by = "city_id") |>
+  dplyr::mutate(
+    city_name = dplyr::coalesce(city_name, ""),
+    city_name = ifelse(city_name == "" | city_name == city_id,
+                       paste0("Unknown agency (", city_id, ")"), city_name),
+    state = dplyr::coalesce(state, ""),
+    city_label = ifelse(state == "", city_name, paste0(city_name, ", ", state))
+  ) |>
+  dplyr::select(city_id, city_name, state, city_label, latitude, longitude, population)
+cities <- city_catalog
+
 readr::write_csv(decomposition, "output/model/decomposition.csv")
-readr::write_csv(global, "output/model/global_trends.csv")
-readr::write_csv(agency_summary |> dplyr::mutate(agency_id = as.character(agency_id)),
-                 "output/model/agency_summary.csv")
+readr::write_csv(global, "output/model/global_stl.csv")
+readr::write_csv(city_summary |> dplyr::mutate(city_id = as.character(city_id)),
+                 "output/model/city_summary.csv")
+readr::write_csv(cities |> dplyr::mutate(city_id = as.character(city_id)), "output/model/cities.csv")
 readr::write_csv(decomposition, "app/data/decomposition.csv")
-readr::write_csv(global, "app/data/global_trends.csv")
-readr::write_csv(agency_summary |> dplyr::mutate(agency_id = as.character(agency_id)),
-                 "app/data/agency_summary.csv")
+readr::write_csv(global, "app/data/global_stl.csv")
+readr::write_csv(city_summary |> dplyr::mutate(city_id = as.character(city_id)), "app/data/city_summary.csv")
+readr::write_csv(cities |> dplyr::mutate(city_id = as.character(city_id)), "app/data/cities.csv")
 
-metadata <- rtci_model_metadata(model, data, include_overdispersion)
-metadata$min_population <- min_population
-metadata$outlier_threshold <- outlier_threshold
-jsonlite::write_json(metadata, "output/model/model_metadata.json", pretty = TRUE, auto_unbox = TRUE)
+model_metadata <- list(
+  formula = paste(deparse(stats::formula(model)), collapse = " "),
+  rows = nrow(data),
+  cities = dplyr::n_distinct(data$city_id),
+  crime_types = levels(data$crime_type),
+  min_population = min_population,
+  annualization = rtci_annualization,
+  include_city_effects = include_city_effects,
+  include_city_slopes = include_city_slopes,
+  include_cell_overdispersion = include_cell_overdispersion,
+  generated_at = format(Sys.time(), tz = "UTC")
+)
+jsonlite::write_json(model_metadata, "output/model/model_metadata.json", pretty = TRUE, auto_unbox = TRUE)
 writeLines(capture.output(summary(model)), "output/model/model_summary.txt")
-saveRDS(list(global = global, agency_summary = agency_summary),
-        "output/model/analysis_results.rds")
-
-message("Model outputs written to output/model and app/data.")
+message("Wrote global_stl.csv, decomposition.csv, city_summary.csv, and cities.csv.")

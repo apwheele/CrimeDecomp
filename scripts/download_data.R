@@ -21,9 +21,9 @@ source_url <- paste0(
 dir.create(dirname(output), recursive = TRUE, showWarnings = FALSE)
 dir.create(dirname(metadata_path), recursive = TRUE, showWarnings = FALSE)
 
-if (file.exists(output) && file.exists(metadata_path)) {
+snapshot_exists <- file.exists(output) && file.exists(metadata_path)
+if (snapshot_exists) {
   message("Snapshot already exists; leaving it unchanged: ", output)
-  quit(save = "no", status = 0)
 } else {
   if (!file.exists(output)) download.file(source_url, output, mode = "wb", quiet = FALSE)
 }
@@ -36,5 +36,21 @@ metadata <- list(
   file_size_bytes = file.info(output)$size,
   md5 = unname(tools::md5sum(output))
 )
-jsonlite::write_json(metadata, metadata_path, pretty = TRUE, auto_unbox = TRUE)
-message("Wrote metadata: ", metadata_path)
+if (!file.exists(metadata_path)) {
+  jsonlite::write_json(metadata, metadata_path, pretty = TRUE, auto_unbox = TRUE)
+  message("Wrote metadata: ", metadata_path)
+}
+
+metadata_source <- "data/raw/rtci_pre_processed.csv"
+metadata_url <- paste0(
+  "https://raw.githubusercontent.com/AH-Datalytics/rtci/", source_commit,
+  "/data/deprecated/pre_processed.csv"
+)
+coords_source <- "data/raw/rtci_city_coords.csv"
+coords_url <- paste0(
+  "https://raw.githubusercontent.com/AH-Datalytics/rtci/", source_commit,
+  "/docs/app_data/unique_cities_coords.csv"
+)
+if (!file.exists(metadata_source)) download.file(metadata_url, metadata_source, mode = "wb", quiet = FALSE)
+if (!file.exists(coords_source)) download.file(coords_url, coords_source, mode = "wb", quiet = FALSE)
+source("scripts/build_metadata.R")

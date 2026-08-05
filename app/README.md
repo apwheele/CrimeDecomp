@@ -7,7 +7,7 @@ serve this directory over HTTP:
 python -m http.server 8000 --directory app
 ```
 
-Open <http://localhost:8000>. A local server is needed because browsers block
-`fetch()` for local files. The charts are native SVG; no Plotly or other chart
-library is used.
-
+Open <http://localhost:8000>. The app shows the full date range, named cities,
+global STL components, city detail, the city × crime × month overdispersion
+term, and a clickable latitude/longitude map. The charts are native SVG; no
+Plotly or other chart library is used.
