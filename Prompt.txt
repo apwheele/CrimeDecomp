@@ -1,0 +1,92 @@
+# Overview
+
+I want to write a paper about doing a STL type decomposition with monthly crime data in cities over time. The main motivation is to understand the major trends in different types of crime, and then to look at residual deviations across cities and crime types.
+
+The type of model I want to use is a logit, I used it in this paper for homicide rates, but I want to use it for general crime patterns as well:
+
+@article{wheeler2018monitoring,
+  title={Monitoring volatile homicide trends across US cities},
+  author={Wheeler, Andrew P and Kovandzic, Tomislav V},
+  journal={Homicide Studies},
+  volume={22},
+  number={2},
+  pages={119--144},
+  year={2018},
+  publisher={SAGE Publications Sage CA: Los Angeles, CA}
+}
+
+That PDF is in this folder as well.
+
+
+## Stat modeling
+
+The model (in R code) for that paper is:
+
+```
+HomRanBin <- glmer(cbind(Homicide,Pop1 - Homicide) ~ (1|Year) + (1|ORI) + (1|Row), binomial, data=BigCit)
+```
+
+I want to use this same idea (aggregated logit binomial model), 
+
+So this uses a discrete model for year and ORI effect. I want STL smooth for time period (year+month), a smooth term for year, and a seasonal term for months. Use splines to estimate these effects. (So seasonal should be a cyclical.) 
+
+The `(1|Row)` is the overdispersion term in this equation, and essentially gets you the residuals in the STL type framework.
+
+See the writing of Gavin Simpson on smoothing splines, https://fromthebottomoftheheap.net/. He has many excellent posts on this. So there should be a global smooth, and then compare others to the global, https://fromthebottomoftheheap.net/2017/10/11/difference-splines-i/, so I can look at deviations.
+
+You can make modeling changes if you want (use mgcv or glmer), high level goal are:
+
+ - I want to see overall trends, and be able to see city level deviations
+ - I want to see them broken down by crime type (have a single big stacked model if possible)
+ - I want to be able to filter out outliers by month and by curve
+
+## Environment Set Up
+
+You have access to conda, if not, this is how the conda powershell is started on windows
+
+```
+%windir%\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy ByPass -NoExit -Command "& 'D:\Python\shell\condabin\conda-hook.ps1' ; conda activate 'D:\Python' "
+```
+
+Create a new conda environment with R, see https://andrewpwheeler.com/2022/04/08/managing-r-environments-using-conda/ how to do that.
+
+Also make a github repo (private).
+
+## Data
+
+Use the monthly data in https://github.com/AH-Datalytics/rtci for this project.
+
+It should have a CSV of crime data to download. Only download once for now (later we will make it automated so it will auto-update with the newer data)
+
+## Paper and Outputs
+
+Write the paper in quarto. Render to both PDF and markdown. Can have the artifacts generated in other scripts and the paper just load in the tables/graphs generated. So if you cite other sources, should make a bibtex file.
+
+For the paper graphs, use ggplot2, here is my theme:
+
+```
+library(ggplot2)
+
+# custom theme
+theme_andy <- function(){
+  theme_bw() %+replace% theme(
+     text = element_text(size = 16),
+     panel.grid.major= element_line(linetype = "longdash"),
+     panel.grid.minor= element_blank()
+) }
+
+p <- ...ggplot .... + theme_andy()
+# Save graph
+png(file="Highres.png",bg="transparent",height=4,width=6,units="in",res=1000)
+p
+dev.off()
+```
+
+The paper code should be simple and import functions from src. So any data prep can be done in a separate file.
+
+Also create a way for me to visualize the web application. I may do something like just uploading the table to R2 and using a WASM based web application (or just javascript, use your best judgement). I have various websites I can deploy that to). So for now can just be a local stack for me to visualize the changes.
+
+I do not want plotly junk for the data viz.
+
+
+

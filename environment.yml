@@ -1,0 +1,21 @@
+name: crime-decomp
+channels:
+  - conda-forge
+dependencies:
+  - r-base=4.5
+  - r-mgcv
+  - r-tidyverse
+  - r-data.table
+  - r-jsonlite
+  - r-shiny
+  - r-testthat
+  - r-knitr
+  - r-rmarkdown
+  - r-ggplot2
+  - r-readr
+  - r-tidyr
+  - r-dplyr
+  - r-lubridate
+  - r-openssl
+  - quarto
+
