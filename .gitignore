@@ -13,6 +13,7 @@ paper/paper_files/
 paper/output/
 paper/*_cache/
 output/paper/paper_files/**/*.pdf
+output/paper/paper_final.pdf
 *.log
 *.aux
 *.toc

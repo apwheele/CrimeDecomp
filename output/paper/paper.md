@@ -44,10 +44,11 @@ Here (f_c) is the crime-specific global time curve, (g_c) is a smooth
 year term, and (h_c) is a cyclic cubic spline for month. Agency and
 agency-by-crime random effects provide partial pooling. The regularized
 agency-by-crime random time slope (q\_{ic}) estimates a persistent
-departure from the global curve. The agency-month term (r\_{it}),
-enabled in the primary fit and shared across the stacked crime types, is
-the overdispersion term analogous to the `(1|Row)` term in the
-motivating model.
+departure from the global curve. The optional agency-month term
+(r\_{it}), shared across the stacked crime types, is the overdispersion
+term analogous to the `(1|Row)` term in the motivating model. The published
+deliverable fit leaves this term off for runtime on the full sample; focused
+runs can enable it with `--overdispersion=true`.
 
 The global baseline is obtained by predicting with agency and
 observation terms excluded. Agency departures are the difference between

@@ -30,11 +30,11 @@ Run the initial model for agencies with populations of at least 250,000:
 conda run -n crime-decomp Rscript scripts/run_model.R
 ```
 
-Useful options include `--min-population=100000`, `--min-population=0`, `--overdispersion=false`,
-`--outlier-threshold=3`, and `--nthreads=2`. The agency-month random effect is
-enabled by default as the practical stacked-data analogue of the `(1|Row)`
-term in the motivating model; disable it for a quick exploratory fit on a very
-large sample.
+Useful options include `--min-population=100000`, `--min-population=0`,
+`--overdispersion=true`, `--outlier-threshold=3`, and `--nthreads=2`. The
+deliverable fit leaves the agency-month random effect off for runtime; enable
+it on a focused sample with `--overdispersion=true` as the practical stacked-
+data analogue of the `(1|Row)` term in the motivating model.
 
 Render the paper to both formats:
 
@@ -58,7 +58,7 @@ For agency `i`, crime type `c`, and month `t`, the response is modeled as
 `Y_ict ~ Binomial(N_it, p_ict)` with a logit link. The linear predictor
 contains crime-specific smooths of the continuous month index and year, a
 cyclic smooth of month, agency and agency-by-crime random effects, and a
-regularized agency-by-crime random time slope. The agency-month random effect
-is the overdispersion/residual term. Predictions excluding agency terms
+regularized agency-by-crime random time slope. The optional agency-month random
+effect is the overdispersion/residual term. Predictions excluding agency terms
 provide the global baseline, while predictions retaining agency terms provide
 the agency departure from that baseline.
