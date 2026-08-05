@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crime decomposition explorer</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIINfQ3T7XYxT4m0VNzEJx8p2e2x5P5K0=" crossorigin="">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <main>
@@ -51,7 +51,7 @@
           <label>City<select id="city"></select></label>
         </div>
         <h2 id="city-title">City detail</h2>
-        <p class="caption">Observed: this city's reported rate. Global baseline: the national crime-specific STL curve. The city-specific departure is shown below as the overdispersion term.</p>
+        <p class="caption">Observed: this city's reported rate. Global baseline: the national crime-specific STL curve. City fitted: the same baseline including the city's random intercept. The remaining city x crime x month departure is shown below.</p>
         <div id="city-chart" class="chart"></div>
       </div>
       <div class="card">
@@ -69,7 +69,7 @@
       </div>
     </section>
   </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="app.js"></script>
 </body>
 </html>

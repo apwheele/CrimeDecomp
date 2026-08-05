@@ -9,30 +9,37 @@ theme_andy <- function() {
   )
 }
 
+crime_label <- function(x) {
+  dplyr::recode(x, motor = "Motor Vehicle Theft", .default = tools::toTitleCase(x))
+}
+
 plot_global_trend <- function(global) {
+  global <- global |> dplyr::mutate(crime_label = crime_label(as.character(crime_type)))
   ggplot2::ggplot(global, ggplot2::aes(x = date, y = trend_rate)) +
     ggplot2::geom_line(colour = "#1a657c", linewidth = .7) +
-    ggplot2::facet_wrap(~crime_type, scales = "free_y", ncol = 2) +
+    ggplot2::facet_wrap(~crime_label, scales = "free_y", ncol = 2) +
     ggplot2::labs(title = "Global trend by crime type", x = NULL,
                   y = "Annualized rate per 100,000") +
     theme_andy()
 }
 
 plot_global_seasonal <- function(global) {
+  global <- global |> dplyr::mutate(crime_label = crime_label(as.character(crime_type)))
   ggplot2::ggplot(global, ggplot2::aes(x = date, y = seasonal_rate_delta)) +
     ggplot2::geom_hline(yintercept = 0, colour = "grey55") +
     ggplot2::geom_line(colour = "#d77942", linewidth = .7) +
-    ggplot2::facet_wrap(~crime_type, scales = "free_y", ncol = 2) +
+    ggplot2::facet_wrap(~crime_label, scales = "free_y", ncol = 2) +
     ggplot2::labs(title = "Global seasonal component by crime type", x = NULL,
                   y = "Annualized change from trend") +
     theme_andy()
 }
 
 plot_global_residual <- function(global) {
+  global <- global |> dplyr::mutate(crime_label = crime_label(as.character(crime_type)))
   ggplot2::ggplot(global, ggplot2::aes(x = date, y = global_residual_logit)) +
     ggplot2::geom_hline(yintercept = 0, colour = "grey55") +
     ggplot2::geom_line(colour = "#ae3e3e", linewidth = .7) +
-    ggplot2::facet_wrap(~crime_type, scales = "free_y", ncol = 2) +
+    ggplot2::facet_wrap(~crime_label, scales = "free_y", ncol = 2) +
     ggplot2::labs(title = "Centered global residual by crime type", x = NULL,
                   y = "Centered residual (logit scale)") +
     theme_andy()

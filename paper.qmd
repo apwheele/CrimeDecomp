@@ -26,25 +26,41 @@ global$date <- as.Date(global$date)
 
 This is a descriptive decomposition of monthly crime counts for every city in
 the RTCI national sample. Rates are annualized from monthly counts: a monthly
-count `m` in a population `N` is shown as `12 * m / N * 100,000`. This puts
-homicide on the familiar annual rate scale rather than below one.
+count Y in population N is displayed as 12 times Y divided by N, multiplied by
+100,000. This puts homicide on the familiar annual rate scale rather than
+below one.
 
-The global model is an aggregated-binomial smooth decomposition. For crime
-type `c`, city `i`, and month `t`, its global probability is:
+The project uses one aggregated-binomial mixed model. For crime type (c),
+city (i), and month (t),
 
-`logit(p_global[c,t]) = alpha[c] + trend[c,t] + seasonal[c,month(t)]`.
+$$
+Y_{ict} \sim \operatorname{Binomial}(N_i,p_{ict}),
+$$
 
-The city fit then adds two empirical intercept terms to that global logit:
-`city_effect[i]`, the population-weighted mean departure across crimes and
-months, and `city_crime_effect[i,c]`, the population-weighted departure left
-after the city effect. Thus:
+$$
+\operatorname{logit}(p_{ict}) = \alpha_c + f_c(t) + s_c(m_t) + b_i,
+\qquad b_i \sim N(0,\sigma_b^2).
+$$
 
-`logit(p_city[i,c,t]) = logit(p_global[c,t]) + city_effect[i] + city_crime_effect[i,c]`.
+Here alpha is the crime-specific intercept, f is a smooth crime-specific time
+trend, s is a cyclic month-of-year effect, and b is the city random intercept.
+The global prediction excludes b; the city prediction includes it.
 
-The city-by-crime-by-month overdispersion term is the observed cell departure
-from this fitted city baseline. It is centered at zero within every city and
-crime type and retained at the complete time resolution. It is not a Pearson
-residual. The global residual is centered at zero within crime type.
+For the requested city-by-crime-by-month overdispersion term, the observed
+probability is stabilized as
+
+$$
+\tilde p_{ict}=\frac{Y_{ict}+0.5}{N_i+1},
+\qquad
+o_{ict}=\operatorname{logit}(\tilde p_{ict})-
+\operatorname{logit}(p_{ict})-\bar o_{ic},
+$$
+
+where the barred o term is the population-weighted mean within city i and
+crime type c. Therefore the overdispersion term is centered at zero for
+every city and crime type. It is not a Pearson residual. The global residual is
+constructed analogously from the global prediction and centered within crime
+type.
 
 # Data coverage
 
@@ -70,6 +86,9 @@ plot_global_seasonal(global)
 plot_global_residual(global)
 ```
 
-All three figures use one readable panel per crime type. The complete
-city-by-crime-by-month decomposition and the city-name crosswalk are available
-in the app data; the app has crime selection, city detail, and a Leaflet map.
+# Reading the trend and residual together
+
+The trend is a smooth long-run level, while the residual is a short-run
+departure from that level. Thus a declining murder trend can coexist with
+positive recent residuals: recent observations can be above the currently
+declining baseline even while the baseline itself remains below earlier years.

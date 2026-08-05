@@ -21,6 +21,7 @@
   };
   const n = x => Number(x);
   const f = x => Number.isFinite(x) ? x.toFixed(2) : "-";
+  const crimeLabel = crime => ({ motor: "Motor Vehicle Theft" }[crime] || crime[0].toUpperCase() + crime.slice(1));
   const scale = (x, a, b, c, d) => c + (x - a) * (d - c) / ((b - a) || 1);
   const line = (rows, key, x0, x1, ymin, ymax, color, height = 330) =>
     `<path d="${rows.map((r, i) => ` ${i ? 'L' : 'M'}${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[key]), ymax, ymin, 38, height - 40).toFixed(1)}`).join("")}" fill="none" stroke="${color}" class="legend-line"/>`;
@@ -34,7 +35,19 @@
       const zeroY = scale(0, ymax, ymin, 38, height - 40);
       s += `<line x1="66" x2="1010" y1="${zeroY}" y2="${zeroY}" class="zero-line"/>`;
     }
-    s += `<line x1="66" x2="1010" y1="${height - 40}" y2="${height - 40}" class="axis"/><text x="17" y="${height / 2}" transform="rotate(-90 17 ${height / 2})" class="axis-label">${ylabel}</text><text x="66" y="${height - 14}" class="axis-label">${x0.toISOString().slice(0, 10)}</text><text x="1010" y="${height - 14}" text-anchor="end" class="axis-label">${x1.toISOString().slice(0, 10)}</text>`;
+    s += `<line x1="66" x2="1010" y1="${height - 40}" y2="${height - 40}" class="axis"/><text x="17" y="${height / 2}" transform="rotate(-90 17 ${height / 2})" class="axis-label">${ylabel}</text>`;
+    let quarter = new Date(Date.UTC(x0.getUTCFullYear(), Math.floor(x0.getUTCMonth() / 3) * 3, 1));
+    while (quarter <= x1) {
+      const x = scale(quarter, x0, x1, 66, 1010);
+      s += `<line x1="${x}" x2="${x}" y1="${height - 40}" y2="${height - 34}" class="x-tick"/>`;
+      quarter.setUTCMonth(quarter.getUTCMonth() + 3);
+    }
+    for (let year = x0.getUTCFullYear(); year <= x1.getUTCFullYear(); year++) {
+      const tick = new Date(Date.UTC(year, 0, 1));
+      if (tick < x0 || tick > x1) continue;
+      const x = scale(tick, x0, x1, 66, 1010);
+      s += `<text x="${x}" y="${height - 14}" text-anchor="middle" class="axis-label">${year}</text>`;
+    }
     return s;
   };
   const finish = (s, items) => {
@@ -49,11 +62,11 @@
     const x0 = new Date(rows[0].date), x1 = new Date(rows[rows.length - 1].date);
     const all = rows.flatMap(r => [n(r.observed_rate), n(r.trend_rate), n(r.global_rate)]).filter(Number.isFinite);
     const ymax = Math.max(...all) * 1.08;
-    let s = base(`${state.crime} - global annualized rate`, 0, ymax, x0, x1, "Rate per 100,000");
+    let s = base(`${crimeLabel(state.crime)} - global annualized rate`, 0, ymax, x0, x1, "Rate per 100,000");
     s += line(rows, "observed_rate", x0, x1, 0, ymax, "#9aa8aa") + line(rows, "trend_rate", x0, x1, 0, ymax, "#1a657c") + line(rows, "global_rate", x0, x1, 0, ymax, "#d77942");
     $("global-chart").innerHTML = finish(s, [["observed", "#9aa8aa"], ["trend", "#1a657c"], ["trend + season", "#d77942"]]);
     const seasonalMax = Math.max(...rows.map(r => Math.abs(n(r.seasonal_rate_delta))).filter(Number.isFinite), .1) * 1.15;
-    let q = base(`${state.crime} - seasonal effect`, -seasonalMax, seasonalMax, x0, x1, "Annualized rate change", 270);
+    let q = base(`${crimeLabel(state.crime)} - seasonal effect`, -seasonalMax, seasonalMax, x0, x1, "Annualized rate change", 270);
     q += line(rows, "seasonal_rate_delta", x0, x1, -seasonalMax, seasonalMax, "#d77942", 270);
     $("seasonal-chart").innerHTML = finish(q, [["seasonal effect", "#d77942"]]);
     const residualValues = rows.map(r => Math.abs(n(r.global_residual_logit))).filter(Number.isFinite);
@@ -61,7 +74,7 @@
       $("global-residual-chart").innerHTML = '<p class="caption">Global residual data are missing. Rerun <code>src/run_model.R</code>.</p>';
     } else {
       const residualMax = Math.max(...residualValues, .05) * 1.15;
-      let z = base(`${state.crime} - global residual`, -residualMax, residualMax, x0, x1, "Centered logit residual", 270);
+      let z = base(`${crimeLabel(state.crime)} - global residual`, -residualMax, residualMax, x0, x1, "Centered logit residual", 270);
       z += line(rows, "global_residual_logit", x0, x1, -residualMax, residualMax, "#ae3e3e", 270);
       $("global-residual-chart").innerHTML = finish(z, [["global residual", "#ae3e3e"]]);
     }
@@ -72,18 +85,18 @@
     const selected = state.cities.find(r => r.city_id === state.city);
     const name = selected ? selected.city_label : state.city;
     if (!rows.length) {
-      $("city-title").textContent = `${name} - ${state.crime}`;
+      $("city-title").textContent = `${name} - ${crimeLabel(state.crime)}`;
       $("city-chart").innerHTML = '<p class="caption">No valid component count rows are available for this city and crime type.</p>';
       $("overdispersion-chart").innerHTML = "";
       return;
     }
-    $("city-title").textContent = `${name} - ${state.crime}`;
+    $("city-title").textContent = `${name} - ${crimeLabel(state.crime)}`;
     const x0 = new Date(rows[0].date), x1 = new Date(rows[rows.length - 1].date);
     const all = rows.flatMap(r => [n(r.observed_rate), n(r.city_fitted_rate), n(r.global_rate)]).filter(Number.isFinite);
     const ymax = Math.max(...all) * 1.08;
     let s = base(`${name} - annualized rate`, 0, ymax, x0, x1, "Rate per 100,000");
-    s += line(rows, "observed_rate", x0, x1, 0, ymax, "#9aa8aa") + line(rows, "global_rate", x0, x1, 0, ymax, "#1a657c");
-    $("city-chart").innerHTML = finish(s, [["observed", "#9aa8aa"], ["global baseline", "#1a657c"]]);
+    s += line(rows, "observed_rate", x0, x1, 0, ymax, "#9aa8aa") + line(rows, "global_rate", x0, x1, 0, ymax, "#1a657c") + line(rows, "city_fitted_rate", x0, x1, 0, ymax, "#d77942");
+    $("city-chart").innerHTML = finish(s, [["observed", "#9aa8aa"], ["global baseline", "#1a657c"], ["city fitted", "#d77942"]]);
     const values = rows.map(r => n(r.overdispersion_logit)).filter(Number.isFinite);
     const ymin = Math.min(...values, -.2) * 1.1, ymaxd = Math.max(...values, .2) * 1.1;
     let q = base(`${name} - city x crime x month overdispersion`, ymin, ymaxd, x0, x1, "Centered logit overdispersion", 270);
@@ -121,7 +134,7 @@
     const cities = state.cities.slice().sort((a, b) => a.city_label.localeCompare(b.city_label));
     state.crime = crimes[0];
     state.city = cities[0].city_id;
-    $("crime").innerHTML = crimes.map(x => `<option value="${x}">${x}</option>`).join("");
+    $("crime").innerHTML = crimes.map(x => `<option value="${x}">${crimeLabel(x)}</option>`).join("");
     $("city").innerHTML = cities.map(x => `<option value="${x.city_id}">${x.city_label}</option>`).join("");
     $("crime").addEventListener("change", e => { state.crime = e.target.value; renderGlobal(); renderCity(); if (document.getElementById("map").classList.contains("active")) renderMap(); });
     $("city").addEventListener("change", e => { state.city = e.target.value; renderCity(); });

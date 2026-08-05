@@ -22,9 +22,9 @@ select { min-width:190px; } button { cursor:pointer; font-weight:800; } #reset {
 .caption { margin:0 0 12px; font-size:.92rem; }
 .chart { min-height:350px; overflow-x:auto; } .chart.short { min-height:230px; } .chart.map { min-height:580px; overflow:hidden; }
 svg { display:block; width:100%; min-width:760px; height:360px; } .map svg { min-width:0; height:570px; }
-.grid { stroke:#e3eaeb; stroke-dasharray:4 5; } .axis { stroke:#8da2a7; } .zero-line { stroke:var(--ink); stroke-width:2.5; opacity:.65; }
+.grid { stroke:#e3eaeb; stroke-dasharray:4 5; } .axis { stroke:#8da2a7; } .x-tick { stroke:#8da2a7; stroke-width:1; } .zero-line { stroke:var(--ink); stroke-width:2.5; opacity:.65; }
 .axis-label,.legend { fill:var(--muted); font-size:12px; } .chart-title { fill:var(--ink); font-size:17px; font-weight:800; }
 .legend-line { stroke-width:3; } .dot { cursor:pointer; stroke:#fff; stroke-width:1; }
 .tooltip { position:fixed; pointer-events:none; background:var(--ink); color:#fff; padding:7px 9px; border-radius:6px; font-size:12px; display:none; }
-#map-chart { height:570px; width:100%; }
+#map-chart { height:570px; width:100%; position:relative; }
 .leaflet-container { font:inherit; }

@@ -32,10 +32,10 @@ crosswalk supplies city names, states, and map coordinates for the ORI ids.
 conda run -n r2026 Rscript -e "source('src/data_prep.R'); testthat::test_file('src/test-data-prep.R')"
 ```
 
-The model is a binomial smooth decomposition with a crime-specific smooth time
-trend and cyclic month effect. City detail adds population-weighted city and
-city-by-crime logit intercepts after the global fit. Rates are annualized from
-monthly counts. The global residual is centered at zero within crime type; the
-city-by-crime-by-month overdispersion term is the observed cell departure from
-the fitted city terms, centered at zero within each city and crime type.
-Neither is a Pearson residual.
+The model is one aggregated-binomial mixed model with a crime-specific smooth
+time trend, cyclic month effect, and mean-zero city random intercept.
+Global predictions exclude that random effect; city predictions include it.
+Rates are annualized from monthly counts. The global residual is centered at
+zero within crime type; the city-by-crime-by-month overdispersion term is the
+observed cell departure from the city prediction, centered at zero within each
+city and crime type. Neither is a Pearson residual.
