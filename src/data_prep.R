@@ -62,6 +62,7 @@ rtci_prepare_stacked <- function(raw,
       trials = population,
       observed_rate = count / trials * 100000 * rtci_annualization,
       time_index = as.numeric(date - min(date)) / 30.4375,
+      time_period = factor(date),
       city_id = factor(city_id),
       city_crime = interaction(city_id, crime_type, drop = TRUE),
       cell_id = interaction(city_id, crime_type, date, drop = TRUE)
@@ -79,9 +80,14 @@ rtci_validate_stacked <- function(data) {
     date_min = min(data$date),
     date_max = max(data$date),
     invalid_counts = sum(data$count < 0 | data$count > data$trials | is.na(data$count)),
-    missing_names = sum(is.na(data$city_name) | data$city_name == "")
+    missing_names = sum(is.na(data$city_name) | data$city_name == ""),
+    cities_missing_coordinates = dplyr::n_distinct(data$city_id[is.na(data$latitude) | is.na(data$longitude)])
   )
   if (checks$invalid_counts > 0 || checks$missing_names > 0) stop("Prepared data failed validation.")
+  if (checks$cities_missing_coordinates > 0) {
+    stop(checks$cities_missing_coordinates,
+         " modeled cities have no cached coordinates; run src/download_data.R and src/build_metadata.R.")
+  }
   checks
 }
 
@@ -93,11 +99,15 @@ rtci_global_summary <- function(results) {
       global_rate = stats::weighted.mean(global_rate, population, na.rm = TRUE),
       city_fitted_rate = stats::weighted.mean(city_fitted_rate, population, na.rm = TRUE),
       seasonal_rate_delta = stats::weighted.mean(seasonal_rate_delta, population, na.rm = TRUE),
-      global_residual_logit = stats::weighted.mean(global_residual_logit, population, na.rm = TRUE),
+      time_effect_logit = dplyr::first(time_effect_logit),
+      time_effect_rate_delta = dplyr::first(time_effect_rate_delta),
+      global_time_rate = dplyr::first(global_time_rate),
       count = sum(count, na.rm = TRUE),
       population = sum(population, na.rm = TRUE),
       observed_rate = count / population * 100000 * rtci_annualization,
-      remainder_rate = observed_rate - global_rate,
+      observed_minus_global_rate = observed_rate - global_rate,
+      global_residual_rate = time_effect_rate_delta,
+      remainder_rate = time_effect_rate_delta,
       .groups = "drop"
     ) |>
     dplyr::arrange(crime_type, date)

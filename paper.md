@@ -1,35 +1,603 @@
-# Monthly crime trends: a global STL-style decomposition
+# Monthly crime trends: global patterns and city departures
+Andrew P. Wheeler
 
-This descriptive analysis decomposes monthly crime counts for every city in
-the RTCI national sample into a smooth crime-specific trend, a cyclic seasonal
-component, and residual departures.
+\usepackage{float}
 
-Rates are annualized from monthly counts. A monthly count (Y) in population
-(N) is displayed as (12Y/N \times 100,000). The current sample contains
-458,392 valid city-month-crime observations from 586 cities, with no population
-threshold. The average observed murder rate is about 7.92 per 100,000.
+# Introduction
 
-The project uses one aggregated-binomial mixed model:
+Crime trends are often summarized with two numbers and a percent change.
+That is convenient, but it makes normal volatility look important and
+hides whether a change is temporary or sustained. Prior work has shown
+how time-series graphs, prediction intervals, and fan charts give a more
+honest picture of crime trends than binary before-and-after comparisons
+([Wheeler 2016](#ref-wheeler2016); [Wheeler and Kovandzic
+2018](#ref-wheeler2018); [Yim, Riddell, and Wheeler
+2020](#ref-yim2020)). Those tools answer whether a recent observation is
+unusual. Here I address a related question: *what part of a city’s
+change is shared with other cities, and what part is local?*
+
+There are at least three patterns worth separating. Crime can follow a
+gradual trend shared across the country, a city can have a persistently
+different trajectory or seasonal pattern, and an individual month can
+depart sharply from both. Lumping those patterns into one residual term
+makes a short-lived spike look like a new trend (or smooths away a local
+trend that is actually different).
+
+I use monthly reported crime from the Real-Time Crime Index (RTCI) ([AH
+Datalytics 2026](#ref-rtci)) and fit a hierarchical binomial model
+separately for seven offenses. The model has a smooth trend and seasonal
+pattern shared across the sample, but it also gives every city its own
+partially pooled trend and season. Two additional terms separate monthly
+movement shared by all cities from the remaining city-month variation.
+
+The goal is descriptive. The model provides a practical way to compare
+the national pattern, sustained city departures, and unusual months. It
+is not a test of why crime changed, and it is not a forecasting model.
+
+# Data and rate construction
+
+I use 458,392 city-month-offense observations from 586 RTCI cities. I do
+not impose a population threshold. For the figures, a monthly count $Y$
+and population $N$ are displayed as $12(Y/N)100{,}000$. This is an
+annualized rate per 100,000: it preserves the observed monthly count but
+puts cities on a familiar scale.
+
+The analysis uses a pinned RTCI snapshot rather than a file that changes
+every time the code runs. I also cache the source metadata and city
+crosswalk. This makes the paper and application reproducible while
+keeping the reported counts separate from the model-generated output.
+Data preparation uses R and the tidyverse ([R Core Team
+2026](#ref-R2026); [Wickham et al. 2019](#ref-tidyverse2019)).
+
+# Model
+
+The practical goal is to distinguish level, trend, season, common
+monthly movement, and local monthly noise. I fit a separate
+aggregated-binomial generalized linear mixed model for each offense.
+This is equivalent to a stacked model with no coefficients shared across
+offenses, but it avoids building all seven random-effect systems at the
+same time. For city $i$ in month $t$,
 
 $$
-Y_{ict} \sim \operatorname{Binomial}(N_i,p_{ict}),
-\qquad
-\operatorname{logit}(p_{ict}) = \alpha_c + f_c(t) + s_c(m_t) + b_i,
-\quad b_i \sim N(0,\sigma_b^2).
+Y_{it} \sim \operatorname{Binomial}(N_{it},p_{it}),
 $$
 
-The smooth trend and cyclic seasonal effect are global crime-specific terms;
-the city random intercept is included for city predictions and excluded for
-global predictions. The city-by-crime-by-month overdispersion term is the
-observed cell departure from the city prediction, centered at zero within each
-city and crime type. It is not a Pearson residual.
+$$
+\operatorname{logit}(p_{it}) =
+\alpha + \mathbf B(t)^\mathsf{T}\boldsymbol\beta
++ \mathbf F(m_t)^\mathsf{T}\boldsymbol\gamma
++ b_i + \mathbf B(t)^\mathsf{T}\mathbf u_i
++ \mathbf F(m_t)^\mathsf{T}\mathbf v_i + a_t + e_{it}.
+$$
 
-The PDF contains three global figures, each with one panel per crime type:
+The global intercept is $\alpha$. The vector $\mathbf B(t)$ contains
+five natural cubic spline basis functions evaluated at time $t$, with
+boundary and interior knots fixed from the complete analysis period. Its
+fixed coefficients $\boldsymbol\beta$ define the smooth global long-run
+trajectory. The vector $\mathbf F(m_t)$ contains sine and cosine pairs
+for the first three annual harmonics; $\boldsymbol\gamma$ therefore
+defines a smooth seasonal curve that joins continuously from December to
+January. Natural cubic regression splines provide a low-rank
+representation of gradual change, while paired Fourier terms provide a
+direct cyclic representation of seasonality ([S. N. Wood
+2017](#ref-wood2017)).
 
-1. Global trend.
-2. Global seasonal component.
-3. Centered global residual.
+The city random intercept $b_i \sim N(0,\sigma_b^2)$ captures persistent
+between-city differences in level. Each city also has its own
+trend-basis coefficients $\mathbf u_i$ and seasonal-basis coefficients
+$\mathbf v_i$:
 
-A declining murder trend and positive recent residuals are compatible. The
-trend is the smooth long-run baseline; a positive residual means recent
-observations are above that declining baseline.
+$$
+\mathbf u_i \sim N(\mathbf 0,\sigma_u^2\mathbf I_5), \qquad
+\mathbf v_i \sim N(\mathbf 0,\sigma_v^2\mathbf I_6).
+$$
+
+Thus the city trend is the global trend plus
+$\mathbf B(t)^\mathsf{T}\mathbf u_i$, and the city seasonal curve is the
+global seasonal curve plus $\mathbf F(m_t)^\mathsf{T}\mathbf v_i$. These
+are the city-varying smooth terms: partial pooling shrinks weakly
+supported departures toward the global curves instead of fitting an
+unrelated curve to every city. This global-plus-deviation construction
+follows the logic of factor-smooth comparisons described by Simpson
+([2017](#ref-simpson2017)) and hierarchical GAMs more generally
+([Pedersen et al. 2019](#ref-pedersen2019)), implemented here through
+explicit low-rank random coefficients.
+
+The time-period intercept $a_t \sim N(0,\sigma_a^2)$ is shared by all
+cities observed in month $t$. It captures nonsmooth national monthly
+departures after the global trend and cyclic seasonal curve have been
+fitted. The final term is an observation-level random effect,
+$e_{it} \sim N(0,\sigma_e^2)$, unique to city $i$ in month $t$. It
+accommodates extra-binomial variation without changing the binomial
+response distribution. The distinction matters. The term $a_t$ moves
+every city in a given month, whereas $e_{it}$ belongs to one city and
+one month.
+
+In the fitted `glmmTMB` model, the corresponding computational
+specification is
+
+``` r
+cbind(count, trials - count) ~ 1 +
+  trend_b1 + ... + trend_b5 +
+  season_s1 + season_c1 + ... + season_s3 + season_c3 +
+  (1 | city_id) + (1 | time_period) +
+  homdiag(0 + trend_b1 + ... + trend_b5 | city_trend_group) +
+  homdiag(0 + season_s1 + ... + season_c3 | city_season_group) +
+  (1 | cell_id)
+```
+
+Here `homdiag` assigns one estimated variance to all coefficients in a
+basis block, sets their correlations to zero, and allows the
+coefficients to vary by city. Despite their names, `city_trend_group`
+and `city_season_group` do not combine cities into artificial groups.
+Each is a one-to-one copy of `city_id` with the same 586 levels. The
+copies let `glmmTMB` represent the city intercept, city trend
+coefficients, and city seasonal coefficients as three independent
+covariance blocks; every city still receives its own five trend and six
+seasonal coefficients. `homdiag` is a parsimonious ridge penalty:
+replacing it with `diag` would estimate a separate variance for each
+basis coefficient, while an unstructured block would also estimate their
+correlations. The homogeneous assumption is computationally stable but
+depends on the scaling of the chosen basis. The natural-spline knots and
+boundary knots are cached with each fitted object, as are the three
+seasonal harmonics, so later predictions use exactly the estimation
+bases. Models are estimated by restricted maximum likelihood with
+`glmmTMB`, whose Template Model Builder backend uses automatic
+differentiation and sparse random-effect calculations ([Brooks et al.
+2017](#ref-brooks2017); [Kristensen et al. 2016](#ref-kristensen2016)).
+Each complete fitted model is saved and reload-verified before the next
+offense begins.
+
+Predictions are reported at four levels. The global curve contains the
+intercept and fixed trend and seasonal basis terms. The city curve
+additionally contains $b_i+\mathbf B(t)^\mathsf{T}\mathbf u_i+
+\mathbf F(m_t)^\mathsf{T}\mathbf v_i$. The shared time-period remainder
+adds $a_t$, and the final fitted value adds $e_{it}$. There is no
+continuity correction or constructed “stabilized probability”; zeros are
+valid binomial outcomes and all displayed components come directly from
+the fitted model.
+
+## Computational implementation
+
+I first implemented the model with `mgcv` factor smooths through
+`gamm4`: global thin-plate and cyclic smooths were combined with
+city-specific `fs` trend and seasonal smooths, while `lme4` represented
+the city, time-period, and observation-level intercepts ([S. N. Wood
+2011](#ref-wood2011), [2017](#ref-wood2017); [S. Wood and Scheipl
+2025](#ref-gamm4); [Bates et al. 2015](#ref-bates2015)). That model
+worked on reduced sets of cities and years. The full offense data were a
+different problem. Linux runs used more than 20 GB of memory before
+completing, and Windows runs repeatedly terminated inside the sparse
+`Matrix` factorization. A model that works only on a large rented
+machine is not a useful default for this project.
+
+The final implementation retains the structure that motivated the
+factor-smooth model—a global intercept, global trend and season, city
+random intercepts, city-varying trend and season, a common month effect,
+and an observation-level effect—but changes its computational
+representation. The explicit five-column natural-spline and six-column
+Fourier bases make the size of each city’s coefficient block fixed and
+transparent. Fitting those blocks with `glmmTMB` reduced the full model
+to a sparse random-coefficient problem that could be estimated and
+reload-verified one offense at a time. This is not a general claim that
+`mgcv` factor smooths are infeasible. It is a practical result for this
+combination of 586 cities, hundreds of thousands of city-month
+observations, two city-varying bases, and an observation-level random
+effect.
+
+# Global trends
+
+<a href="#fig-global-trend" class="quarto-xref">Figure 1</a> shows the
+gradual change shared across cities after removing seasonal,
+city-specific, and monthly variation. I use a separate vertical scale
+for each offense; otherwise property crime would flatten the lower-rate
+murder and rape series. Figures are produced with `ggplot2` ([Wickham
+2016](#ref-wickham2016)). From January 2017 through May 2026, the fitted
+burglary trend declined by 62.7%, robbery by 56.5%, murder by 35.9%, and
+theft by 32.5%. Assault was the exception: its fitted global trend ended
+9.3% above its January 2017 level. These endpoint comparisons summarize
+the curves; they are not causal estimates. The paths between the
+endpoints are more useful than the percentage alone.
+
+<img src="paper_files/figure-commonmark/fig-global-trend-1.png"
+style="width:100.0%" data-fig-pos="H" />
+# Global seasonal patterns
+
+<a href="#fig-global-seasonal" class="quarto-xref">Figure 2</a> answers
+a simple question: after accounting for the long-run trend, which months
+tend to be higher or lower? Values above zero are months above the
+fitted trend, and values below zero are months below it. The effect is
+displayed on the annualized rate scale, so its magnitude depends on the
+baseline rate for the offense as well as the logit-scale seasonal curve.
+
+<img src="paper_files/figure-commonmark/fig-global-seasonal-1.png"
+style="width:100.0%" data-fig-pos="H" />
+# A city example: Philadelphia
+
+## Robbery
+
+Philadelphia robbery illustrates what each layer adds. The global curve
+is the robbery pattern shared across the sample. The city curve adds
+Philadelphia’s level, trend, and seasonal departures. The observed
+series is much noisier because it also includes shared monthly movement
+and the Philadelphia-specific city-month residual.
+
+<img src="paper_files/figure-commonmark/unnamed-chunk-2-1.png"
+style="width:100.0%" data-fig-pos="H"
+alt="Observed robbery rate and fitted global and Philadelphia curves." />
+
+Across the series, Philadelphia’s fitted city curve differs from the
+global curve by an average of 2.01 on the logit scale. That average
+includes the city intercept. The departure ranges from 1.83 in March
+2017 to 2.23 in October 2022; movement within that range reflects the
+city-specific trend and seasonal deviations. The largest fitted monthly
+row residual occurs in July 2020. It is not folded back into either
+smooth curve, which keeps an unusual month from being mistaken for a
+persistent local trajectory.
+<a href="#fig-city-components" class="quarto-xref">Figure 3</a> compares
+like components directly. The trend panel removes intercepts and centers
+both curves, so it compares shape rather than level. The seasonal panel
+superimposes Philadelphia’s fitted seasonal pattern on the global
+pattern. The residual panel compares the time-period effect shared by
+the full sample with Philadelphia’s total monthly residual,
+$a_t+e_{it}$. Shaded ribbons around the Philadelphia trend and seasonal
+curves are approximate 95% pointwise conditional intervals for the
+city-specific coefficient deviations.
+
+<img src="paper_files/figure-commonmark/fig-city-components-1.png"
+style="width:100.0%" data-fig-pos="H" />
+## Burglary
+
+Philadelphia burglary provides a useful contrast because several abrupt
+2020 changes are visible in the reported series but should not be
+absorbed into the city’s long-run trend. In the pinned RTCI source file,
+Philadelphia reported 722 burglaries in May, 1,347 in June, and 986 in
+October 2020. Those counts correspond to annualized monthly rates of
+554.5, 1034.6, and 757.3 per 100,000, respectively. These values are
+calculated directly from RTCI’s reported count and population fields,
+rather than from a model-generated artifact.
+
+<a href="#fig-philly-burglary-rate" class="quarto-xref">Figure 4</a>
+shows that the partially pooled city curve remains smooth through these
+spikes. This is intentional: the smooth trend and season describe
+persistent structure, while isolated city-month departures belong to the
+residual term. The largest fitted Philadelphia burglary row residual
+occurs in June 2020.
+
+<img src="paper_files/figure-commonmark/fig-philly-burglary-rate-1.png"
+style="width:100.0%" data-fig-pos="H" />
+<a href="#fig-philly-burglary-components"
+class="quarto-xref">Figure 5</a> separates the same series into trend,
+season, and residual components. The centered trend panel removes
+Philadelphia’s city intercept; the seasonal panel compares like Fourier
+components; and the bottom panel shows how the city-month term isolates
+the abrupt burglary departures from the residual movement shared by the
+national sample.
+
+<img
+src="paper_files/figure-commonmark/fig-philly-burglary-components-1.png"
+style="width:100.0%" data-fig-pos="H" />
+# Shared time period variation
+
+<a href="#fig-global-residual" class="quarto-xref">Figure 6</a> shows
+the fitted common time-period effect $a_t$. I transform it from the
+logit scale to a change in the annualized global rate. This isolates
+monthly movement shared across the sample after accounting for trend and
+season; it does not include the city-specific effect $e_{it}$. A
+positive monthly effect can therefore occur during a declining trend
+whenever that month is above its still-declining baseline.
+
+<img src="paper_files/figure-commonmark/fig-global-residual-1.png"
+style="width:100.0%" data-fig-pos="H" />
+
+The common time-period term separates abrupt movement from gradual
+change. April 2020 is a prominent negative departure for rape, assault,
+and theft; motor vehicle theft has a large positive shared departure in
+October 2023. Their timing does not identify a cause.
+
+# Cities with unusually different trends
+
+A large city intercept only says that a city has a different average
+level. It does not show that the city is moving in a different
+direction. To find unusual trend shapes, I center each city’s spline
+departure over time and summarize it with its root-mean-square (RMS)
+magnitude. City-offense pairs with fewer than 60 months were excluded.
+Log RMS was then standardized within each offense using its median and
+median absolute deviation. Thus, every offense contributes its two most
+unusual city trends, rather than allowing the largest deviations from
+one offense to dominate the comparison. The ranking excludes city
+intercepts, seasonal effects, shared time-period shocks, and
+observation-level effects.
+
+For each selected city, the conditional variances of its spline
+coefficients were propagated through the centered trend basis. The
+shaded region is the resulting estimate plus or minus 1.96 pointwise
+standard errors. Because `glmmTMB` supplies diagonal conditional
+variances for these `homdiag` blocks, the calculation omits posterior
+covariance among basis coefficients and conditions on the fitted global
+curve and variance parameters. The ribbons are therefore approximate
+pointwise uncertainty intervals, not simultaneous bands or intervals for
+a new city’s trajectory.
+
+| Offense             | First city                            | Second city                               |
+|:--------------------|:--------------------------------------|:------------------------------------------|
+| Murder              | Portland, OR (RMS 0.287; score 3.58)  | Baltimore, MD (RMS 0.237; score 3.14)     |
+| Rape                | Paulding, GA (RMS 0.787; score 4.58)  | State College, PA (RMS 0.684; score 4.19) |
+| Robbery             | Arlington, VA (RMS 0.561; score 4.17) | Livingston, LA (RMS 0.398; score 3.18)    |
+| Assault             | Scranton, PA (RMS 0.855; score 4.82)  | Euclid, OH (RMS 0.596; score 3.82)        |
+| Burglary            | San Mateo, CA (RMS 0.574; score 4.06) | Palatine, IL (RMS 0.554; score 3.96)      |
+| Theft               | Vallejo, CA (RMS 0.574; score 5.08)   | Upper Darby, PA (RMS 0.539; score 4.88)   |
+| Motor Vehicle Theft | Tulare, CA (RMS 0.952; score 4.92)    | Burlington, VT (RMS 0.900; score 4.75)    |
+
+Two cities with the largest standardized trend departures within each
+offense. RMS is calculated on the centered logit-scale spline departure;
+score is the within-offense robust standardized log RMS.
+
+<a href="#fig-trend-outliers-a" class="quarto-xref">Figure 7</a> and
+<a href="#fig-trend-outliers-b" class="quarto-xref">Figure 8</a> compare
+each selected city’s centered trend with the corresponding global trend.
+Centering removes both the global intercept and the city random
+intercept, so separation between the lines represents trajectory rather
+than average crime level.
+
+<img src="paper_files/figure-commonmark/fig-trend-outliers-a-1.png"
+style="width:100.0%" data-fig-pos="H" />
+<img src="paper_files/figure-commonmark/fig-trend-outliers-b-1.png"
+style="width:100.0%" data-fig-pos="H" />
+# Cities with different seasonal patterns
+
+I rank seasonal departures separately from trend departures. For each
+city-offense pair, I evaluate its six city-specific Fourier coefficients
+over the 12 months and summarized by the RMS departure from the global
+seasonal curve. Log RMS was standardized within offense by its median
+and median absolute deviation. The two leading cities are retained
+separately for every offense. This metric excludes city intercepts,
+long-run trend departures, common monthly shocks, and observation-level
+effects. Seasonal ribbons use the same diagonal conditional-variance
+propagation through the centered Fourier basis and have the same
+pointwise, conditional interpretation as the trend ribbons.
+
+| Offense             | First city                              | Second city                                  |
+|:--------------------|:----------------------------------------|:---------------------------------------------|
+| Murder              | Chicago, IL (RMS 0.087; score 4.37)     | St Louis, MO (RMS 0.065; score 3.79)         |
+| Rape                | Paulding, GA (RMS 0.051; score 4.31)    | Colorado Springs, CO (RMS 0.048; score 4.18) |
+| Robbery             | Minneapolis, MN (RMS 0.109; score 4.08) | Salt Lake City, UT (RMS 0.078; score 3.22)   |
+| Assault             | Cincinnati, OH (RMS 0.069; score 3.91)  | Newark, NJ (RMS 0.057; score 3.24)           |
+| Burglary            | Shawnee, KS (RMS 0.110; score 4.48)     | Utica, NY (RMS 0.097; score 3.94)            |
+| Theft               | Burlington, VT (RMS 0.120; score 4.26)  | Manchester, NH (RMS 0.081; score 3.00)       |
+| Motor Vehicle Theft | Owensboro, KY (RMS 0.069; score 3.79)   | Galveston, TX (RMS 0.062; score 3.43)        |
+
+Two cities with the largest standardized seasonal departures within each
+offense. RMS is calculated from the city-specific Fourier departure over
+the 12 months; score is the within-offense robust standardized log RMS.
+
+<a href="#fig-seasonal-outliers-a" class="quarto-xref">Figure 9</a> and
+<a href="#fig-seasonal-outliers-b" class="quarto-xref">Figure 10</a>
+superimpose every selected city’s fitted seasonal curve on the
+corresponding offense-wide curve.
+
+<img src="paper_files/figure-commonmark/fig-seasonal-outliers-a-1.png"
+style="width:100.0%" data-fig-pos="H" />
+<img src="paper_files/figure-commonmark/fig-seasonal-outliers-b-1.png"
+style="width:100.0%" data-fig-pos="H" />
+# Cities with unusually large monthly residuals
+
+Trend and seasonal rankings describe persistent shapes. They are not
+designed to identify one unusual month. For that task, I retain the
+month with the largest absolute fitted observation-level effect
+$|e_{it}|$ within each city and offense. I then select the two cities
+with the largest values separately for each offense. Ranking one maximum
+per city ensures that a single city cannot occupy both positions for an
+offense. Because $e_{it}$ is on the common logit scale within each
+offense, the ordering does not depend on city population or on
+converting the effect to an annualized rate. It does, however, identify
+fitted residual extremes rather than raw-count anomalies.
+
+| Offense             | First city-month                           | Second city-month                      |
+|:--------------------|:-------------------------------------------|:---------------------------------------|
+| Murder              | Las Vegas, NV (Oct 2017; e = +0.99)        | San Antonio, TX (Jun 2022; e = +0.79)  |
+| Rape                | Bismarck, ND (May 2025; e = +0.56)         | Riverside, CA (Dec 2019; e = +0.48)    |
+| Robbery             | Washington, DC (Jul 2023; e = +0.55)       | Indianapolis, IN (Jun 2019; e = -0.54) |
+| Assault             | Bismarck, ND (May 2025; e = +1.31)         | Indianapolis, IN (Jun 2019; e = -1.24) |
+| Burglary            | St. Clair Shores, MI (Dec 2024; e = +2.08) | Bismarck, ND (May 2025; e = +1.89)     |
+| Theft               | Bismarck, ND (May 2025; e = +1.64)         | Washoe, NV (Jun 2017; e = +1.52)       |
+| Motor Vehicle Theft | Washoe, NV (Jun 2017; e = +1.63)           | Bismarck, ND (May 2025; e = +1.57)     |
+
+Two cities with the largest absolute fitted city-month residual within
+each offense. The displayed month is the selected city’s most extreme
+observation-level effect; e is the signed logit-scale residual.
+
+<a href="#fig-residual-outliers-a" class="quarto-xref">Figure 11</a> and
+<a href="#fig-residual-outliers-b" class="quarto-xref">Figure 12</a>
+show the complete city-month residual series for each selected city,
+with the ranked month marked in red. These plots exclude the global
+trend, global season, city intercept, city-specific trend and season,
+and shared time-period effect. Their vertical scales are symmetric
+around zero within each panel so positive and negative departures can be
+compared directly.
+
+<img src="paper_files/figure-commonmark/fig-residual-outliers-a-1.png"
+style="width:100.0%" data-fig-pos="H" />
+<img src="paper_files/figure-commonmark/fig-residual-outliers-b-1.png"
+style="width:100.0%" data-fig-pos="H" />
+
+# Discussion
+
+The main lesson is to avoid forcing every change into one story. The
+global smooth describes movement shared across the sample. A changing
+gap between a city and that smooth indicates a different local
+trajectory. The residual term then identifies months that neither smooth
+explains. Philadelphia burglary in 2020 is a clear example: June and
+October are important observations, but they should not redefine the
+city’s long-run curve.
+
+This distinction extends the practical monitoring argument in my earlier
+work. Percent changes can make ordinary low-count variation look
+dramatic, while a single national series can hide substantial
+differences among cities ([Wheeler 2016](#ref-wheeler2016); [Wheeler and
+Kovandzic 2018](#ref-wheeler2018)). Fan charts address uncertainty
+around a forecast ([Yim, Riddell, and Wheeler 2020](#ref-yim2020)). The
+present model instead separates smooth common movement, sustained city
+departures, and local monthly residuals. These are complementary tasks,
+not competing definitions of a crime trend.
+
+Partial pooling is what makes the city comparisons useful. If I
+estimated an unconstrained curve for every city, the noisiest series
+would tend to look the most distinctive. The shared variance parameters
+let well-supported city patterns depart from the global curve while
+pulling unstable patterns toward it ([Pedersen et al.
+2019](#ref-pedersen2019); [Simpson 2017](#ref-simpson2017)). This is
+especially important when comparing 586 cities with very different
+populations and crime counts.
+
+The results are not causal effects or forecasts. Reported crime depends
+on reporting practices, agency participation, revisions, and population
+denominators. The binomial model gives counts and population a coherent
+link, but it does not mean that residents have independent and identical
+risks. The observation-level random effect accommodates extra variation;
+it does not tell us why a particular month is unusual. I therefore view
+the estimates as a monitoring and comparison tool. They show where to
+look next, not what caused the pattern.
+
+# Reproducibility and acknowledgments
+
+The code, initial paper, and web application were created in OpenAI
+Codex using Luna and Sol, with substantive review and direction from the
+author. Generated metadata records the exact model formulas and
+settings, while source data, geocoding results, and manual coordinate
+overrides are cached in the repository.
+
+# References
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-rtci" class="csl-entry">
+
+AH Datalytics. 2026. “Real-Time Crime Index: Reported Crime Trends
+Data.” <https://github.com/AH-Datalytics/rtci>.
+
+</div>
+
+<div id="ref-bates2015" class="csl-entry">
+
+Bates, Douglas, Martin Mächler, Ben Bolker, and Steve Walker. 2015.
+“Fitting Linear Mixed-Effects Models Using Lme4.” *Journal of
+Statistical Software* 67 (1): 1–48.
+<https://doi.org/10.18637/jss.v067.i01>.
+
+</div>
+
+<div id="ref-brooks2017" class="csl-entry">
+
+Brooks, Mollie E., Kasper Kristensen, Koen J. van Benthem, Arni
+Magnusson, Casper W. Berg, Anders Nielsen, Hans J. Skaug, Martin
+Mächler, and Benjamin M. Bolker. 2017. “glmmTMB Balances Speed and
+Flexibility Among Packages for Zero-Inflated Generalized Linear Mixed
+Modeling.” *The R Journal* 9 (2): 378–400.
+<https://doi.org/10.32614/RJ-2017-066>.
+
+</div>
+
+<div id="ref-kristensen2016" class="csl-entry">
+
+Kristensen, Kasper, Anders Nielsen, Casper W. Berg, Hans Skaug, and
+Bradley M. Bell. 2016. “TMB: Automatic Differentiation and Laplace
+Approximation.” *Journal of Statistical Software* 70 (5): 1–21.
+<https://doi.org/10.18637/jss.v070.i05>.
+
+</div>
+
+<div id="ref-pedersen2019" class="csl-entry">
+
+Pedersen, Eric J., David L. Miller, Gavin L. Simpson, and Noam Ross.
+2019. “Hierarchical Generalized Additive Models in Ecology: An
+Introduction with Mgcv.” *PeerJ* 7: e6876.
+<https://doi.org/10.7717/peerj.6876>.
+
+</div>
+
+<div id="ref-R2026" class="csl-entry">
+
+R Core Team. 2026. *R: A Language and Environment for Statistical
+Computing*. Vienna, Austria: R Foundation for Statistical Computing.
+<https://www.R-project.org/>.
+
+</div>
+
+<div id="ref-simpson2017" class="csl-entry">
+
+Simpson, Gavin L. 2017. “Comparing Smooths in Factor-Smooth Interactions
+i.”
+<https://fromthebottomoftheheap.net/2017/10/11/difference-splines-i/>.
+
+</div>
+
+<div id="ref-wheeler2016" class="csl-entry">
+
+Wheeler, Andrew P. 2016. “Tables and Graphs for Monitoring Temporal
+Crime Trends: Translating Theory into Practical Crime Analysis Advice.”
+*International Journal of Police Science & Management* 18 (3): 159–72.
+<https://doi.org/10.1177/1461355716642781>.
+
+</div>
+
+<div id="ref-wheeler2018" class="csl-entry">
+
+Wheeler, Andrew P., and Tomislav V. Kovandzic. 2018. “Monitoring
+Volatile Homicide Trends Across u.s. Cities.” *Homicide Studies* 22 (2):
+119–44. <https://doi.org/10.1177/1088767917740171>.
+
+</div>
+
+<div id="ref-wickham2016" class="csl-entry">
+
+Wickham, Hadley. 2016. *Ggplot2: Elegant Graphics for Data Analysis*.
+Springer-Verlag New York. <https://doi.org/10.1007/978-3-319-24277-4>.
+
+</div>
+
+<div id="ref-tidyverse2019" class="csl-entry">
+
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
+D’Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
+“Welcome to the Tidyverse.” *Journal of Open Source Software* 4 (43):
+1686. <https://doi.org/10.21105/joss.01686>.
+
+</div>
+
+<div id="ref-wood2011" class="csl-entry">
+
+Wood, Simon N. 2011. “Fast Stable Restricted Maximum Likelihood and
+Marginal Likelihood Estimation of Semiparametric Generalized Linear
+Models.” *Journal of the Royal Statistical Society: Series B* 73 (1):
+3–36. <https://doi.org/10.1111/j.1467-9868.2010.00749.x>.
+
+</div>
+
+<div id="ref-wood2017" class="csl-entry">
+
+———. 2017. *Generalized Additive Models: An Introduction with r*. 2nd
+ed. Chapman; Hall/CRC.
+
+</div>
+
+<div id="ref-gamm4" class="csl-entry">
+
+Wood, Simon, and Fabian Scheipl. 2025. *Gamm4: Generalized Additive
+Mixed Models Using Mgcv and Lme4*.
+<https://doi.org/10.32614/CRAN.package.gamm4>.
+
+</div>
+
+<div id="ref-yim2020" class="csl-entry">
+
+Yim, Ha-Neul, Jordan R. Riddell, and Andrew P. Wheeler. 2020. “Is the
+Recent Increase in National Homicide Abnormal? Testing the Application
+of Fan Charts in Monitoring National Homicide Trends over Time.”
+*Journal of Criminal Justice* 66: 101656.
+<https://doi.org/10.1016/j.jcrimjus.2019.101656>.
+
+</div>
+
+</div>

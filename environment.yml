@@ -3,7 +3,10 @@ channels:
   - conda-forge
 dependencies:
   - r-base=4.5
+  - r-matrix>=1.7.6
   - r-mgcv
+  - r-gamm4
+  - r-glmmtmb
   - r-tidyverse
   - r-data.table
   - r-jsonlite
@@ -18,4 +21,3 @@ dependencies:
   - r-lubridate
   - r-openssl
   - quarto
-

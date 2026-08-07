@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crime decomposition explorer</title>
+  <link rel="icon" href="data:,">
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <main>
@@ -16,9 +16,9 @@
     </header>
 
     <nav class="tabs" aria-label="Views">
-      <button class="tab active" data-page="overview">Global STL</button>
+      <button class="tab active" data-page="overview">Global patterns</button>
       <button class="tab" data-page="city">City detail</button>
-      <button class="tab" data-page="map">City map</button>
+      <button class="tab" data-page="all-cities">All-city curves</button>
     </nav>
 
     <section class="controls">
@@ -29,18 +29,18 @@
 
     <section id="overview" class="page active">
       <div class="card">
-        <h2>Global STL-style decomposition</h2>
-        <p class="caption">Observed rate is the population-weighted monthly rate. Trend is the smooth long-run curve. Global rate is trend plus the cyclic monthly seasonal effect.</p>
+        <h2>Global model decomposition</h2>
+        <p class="caption">Observed is the population-weighted monthly sample rate, and sample fitted aggregates the city-specific structural curves using population weights. Global trend and global plus season describe a reference city whose random effects equal zero; they need not match the sample level because cities have different intercepts and the logit transformation is nonlinear.</p>
         <div id="global-chart" class="chart"></div>
       </div>
       <div class="card">
         <h2>Seasonal component</h2>
-        <p class="caption">Seasonal effect is the change in annualized rate associated with the month-of-year spline, relative to the long-run trend.</p>
+        <p class="caption">Seasonal effect is the change in annualized rate associated with the three-harmonic Fourier curve, relative to the long-run trend.</p>
         <div id="seasonal-chart" class="chart short"></div>
       </div>
       <div class="card">
-        <h2>Global residual</h2>
-        <p class="caption">Observed-versus-global departure on the logit scale, centered at zero within each crime type. The horizontal zero line is the reference.</p>
+        <h2>Shared time period effect</h2>
+        <p class="caption">This is the fitted <code>(1 | time_period)</code> effect shared by all cities in a month, transformed to an annualized rate change. It is distinct from the city-by-month effect. The horizontal zero line is the reference.</p>
         <div id="global-residual-chart" class="chart short"></div>
       </div>
     </section>
@@ -48,28 +48,44 @@
     <section id="city" class="page">
       <div class="card">
         <div class="city-controls">
-          <label>City<select id="city"></select></label>
+          <label>State<select id="state-select"></select></label>
+          <label>City<select id="city-select"></select></label>
         </div>
         <h2 id="city-title">City detail</h2>
-        <p class="caption">Observed: this city's reported rate. Global baseline: the national crime-specific STL curve. City fitted: the same baseline including the city's random intercept. The remaining city x crime x month departure is shown below.</p>
+        <p class="caption">Observed is this city's reported rate. Global baseline contains the crime-specific intercept, trend, and season. City fitted additionally contains the city random intercept and the city's trend and seasonal deviations.</p>
         <div id="city-chart" class="chart"></div>
       </div>
       <div class="card">
-        <h2>City x crime x month overdispersion term</h2>
-        <p class="caption">This is the observed city-month departure from the fitted city and city-by-crime terms, on the logit scale. It is centered at zero within this city and crime type; it is not a Pearson residual.</p>
-        <div id="overdispersion-chart" class="chart short"></div>
+        <h2>City and US-wide trends</h2>
+        <p class="caption">The city and US-wide spline trends are centered separately on the logit scale. Centering removes the city intercept so differences between the curves represent differences in long-run trajectory rather than average crime level.</p>
+        <div id="city-trend-chart" class="chart short"></div>
+      </div>
+      <div class="card">
+        <h2>City and US-wide seasonal patterns</h2>
+        <p class="caption">The curves compare the city's fitted Fourier seasonal component with the component shared across the RTCI sample. Intercepts, long-run trends, shared time-period effects, and city-month effects are excluded.</p>
+        <div id="city-season-chart" class="chart short"></div>
+      </div>
+      <div class="card">
+        <h2>City and US-wide residuals</h2>
+        <p class="caption">The US-wide residual is the shared <code>(1 | time_period)</code> effect. The city residual adds this city's <code>(1 | cell_id)</code> observation-level effect, matching the residual comparison in the paper.</p>
+        <div id="city-residual-chart" class="chart short"></div>
       </div>
     </section>
 
-    <section id="map" class="page">
+    <section id="all-cities" class="page">
       <div class="card">
-        <h2>City map</h2>
-        <p class="caption">Leaflet map with OpenStreetMap background tiles. Select a city marker to open its detail. Marker opacity shows the selected crime's mean absolute overdispersion.</p>
-        <div id="map-chart" class="chart map" aria-label="Leaflet city map"></div>
+        <h2>City-specific trends across the sample</h2>
+        <p class="caption">Each grey line is a centered city-specific spline trend; the blue line is the centered global trend. The shaded band contains the middle 80% of city curves at each time point. Hover over a city line to identify it. Centering removes city intercepts so this view compares trend shapes.</p>
+        <div id="all-trends-chart" class="chart all-city-chart"></div>
+      </div>
+      <div class="card">
+        <h2>City-specific seasonal patterns across the sample</h2>
+        <p class="caption">Each grey line is a city's centered Fourier seasonal curve; the blue line is the global seasonal curve. The shaded band contains the middle 80% of city curves. Hover over a city line to identify it. Trend, intercept, and residual terms are excluded.</p>
+        <div id="all-seasons-chart" class="chart all-city-chart"></div>
       </div>
     </section>
   </main>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <div id="chart-tooltip" class="tooltip" role="status"></div>
   <script src="app.js"></script>
 </body>
 </html>

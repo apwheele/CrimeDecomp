@@ -1,0 +1,3 @@
+city_id,city_name,state,latitude,longitude,source
+AL0011200,Hoover,AL,33.38795,-86.80636,FBI Crime Data Explorer agency crosswalk
+MI6367300,Pontiac,MI,42.6389216,-83.2910468,retired Pontiac ORI matched to RTCI city coordinate cache

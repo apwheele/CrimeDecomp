@@ -1,6 +1,7 @@
 .Rhistory
 .RData
 .Rproj.user/
+__pycache__/
 tmp/
 src/data/raw/rtci_pre_processed.csv
 src/data/raw/rtci_city_coords.csv
@@ -12,3 +13,5 @@ paper_files/
 *.aux
 *.toc
 *.out
+
+/.quarto/
