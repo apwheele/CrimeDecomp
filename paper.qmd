@@ -167,7 +167,21 @@ residual_outlier_table <- function(data) {
     mutate(offense = as.character(offense))
 }
 residual_table <- residual_outlier_table(residual_outliers)
-latest_residual_table <- residual_outlier_table(latest_residual_outliers)
+latest_residual_table <- latest_residual_outliers |>
+  mutate(
+    predicted_count = city_time_fitted_rate * population / (12 * 100000),
+    offense = factor(crime_label(crime_type), levels = crime_label(crime_order))
+  ) |>
+  arrange(offense, desc(abs(overdispersion_logit))) |>
+  transmute(
+    offense = as.character(offense),
+    city = city_label,
+    residual = sprintf("%+.2f", overdispersion_logit),
+    predicted_count = sprintf("%.1f", predicted_count),
+    observed_count = format(round(count), big.mark = ",", scientific = FALSE),
+    predicted_rate = sprintf("%.1f", city_time_fitted_rate),
+    observed_rate = sprintf("%.1f", observed_rate)
+  )
 ```
 
 # Introduction
@@ -699,11 +713,23 @@ the global and city-specific trends, seasonal terms, city intercept, and shared
 time-period effect. The ranking is descriptive: it does not attach a separate
 hypothesis test to each city or account for revisions to the most recent data.
 
+For each selected city, @tbl-latest-residual-outliers compares the observed
+outcome with the model-predicted mean before adding $e_{it}$. The prediction
+therefore includes the city's intercept, trend, and seasonal terms plus the
+shared time-period effect, but not the observation-level residual used to rank
+the city. Counts are monthly. Rates are annualized from that month's count or
+fitted mean and expressed per 100,000 residents.
+
 ```{r}
-#| tbl-cap: "Two cities with the largest absolute fitted city-month residual in the most recent available month for each offense. The signed e value is on the model's logit scale."
+#| label: tbl-latest-residual-outliers
+#| tbl-cap: "Observed outcomes and model-predicted means for the two cities with the largest absolute fitted city-month residual in the most recent available month for each offense. Count columns are monthly; rate columns are annualized per 100,000 residents; e is the signed logit-scale residual."
 knitr::kable(
   latest_residual_table,
-  col.names = c("Offense", "First city", "Second city")
+  col.names = c(
+    "Offense", "City", "$e$", "Pred. count", "Obs. count",
+    "Pred. rate", "Obs. rate"
+  ),
+  escape = FALSE
 )
 ```
 
