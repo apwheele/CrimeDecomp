@@ -178,7 +178,10 @@ latest_residual_table <- latest_residual_outliers |>
     city = city_label,
     residual = sprintf("%+.2f", overdispersion_logit),
     predicted_count = sprintf("%.1f", predicted_count),
-    observed_count = format(round(count), big.mark = ",", scientific = FALSE),
+    observed_count = format(
+      round(count), big.mark = ",", trim = TRUE, nsmall = 0,
+      scientific = FALSE
+    ),
     predicted_rate = sprintf("%.1f", city_time_fitted_rate),
     observed_rate = sprintf("%.1f", observed_rate)
   )
@@ -729,6 +732,7 @@ knitr::kable(
     "Offense", "City", "$e$", "Pred. count", "Obs. count",
     "Pred. rate", "Obs. rate"
   ),
+  align = c("l", "l", "r", "r", "r", "r", "r"),
   escape = FALSE
 )
 ```
