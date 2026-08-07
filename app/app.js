@@ -256,8 +256,14 @@
       if (value < ymin) ymin = value;
       if (value > ymax) ymax = value;
     });
-    const padding = Math.max((ymax - ymin) * 0.08, 0.02);
-    ymin -= padding; ymax += padding;
+    if (options.symmetric) {
+      const limit = Math.max(Math.abs(ymin), Math.abs(ymax), 0.02) * 1.08;
+      ymin = -limit;
+      ymax = limit;
+    } else {
+      const padding = Math.max((ymax - ymin) * 0.08, 0.02);
+      ymin -= padding; ymax += padding;
+    }
     let xmin = Infinity, xmax = -Infinity;
     rows.forEach(row => {
       const value = options.x(row);
@@ -299,7 +305,7 @@
       const x = xScale(tick.value);
       svg += `<line x1="${x}" x2="${x}" y1="320" y2="326" class="x-tick"/><text x="${x}" y="345" text-anchor="middle" class="axis-label">${esc(tick.label)}</text>`;
     });
-    svg += '<line x1="735" x2="760" y1="22" y2="22" class="city-key"/><text x="767" y="26" class="legend">cities</text><rect x="830" y="15" width="25" height="12" class="band-key"/><text x="862" y="26" class="legend">middle 80%</text><line x1="950" x2="975" y1="22" y2="22" class="global-key"/><text x="982" y="26" class="legend">global</text></svg>';
+    svg += `<line x1="735" x2="760" y1="22" y2="22" class="city-key"/><text x="767" y="26" class="legend">${esc(options.cityLabel || "cities")}</text><rect x="830" y="15" width="25" height="12" class="band-key"/><text x="862" y="26" class="legend">middle 80%</text><line x1="950" x2="975" y1="22" y2="22" class="global-key"/><text x="982" y="26" class="legend">${esc(options.globalLabel || "global")}</text></svg>`;
     container.innerHTML = svg;
     bindCurveHover(container);
   }
@@ -308,6 +314,7 @@
     if (state.loadedCurvesCrime !== state.crime) {
       $("all-trends-chart").innerHTML = '<p class="caption">Loading city trends...</p>';
       $("all-seasons-chart").innerHTML = '<p class="caption">Loading city seasonal curves...</p>';
+      $("all-residuals-chart").innerHTML = '<p class="caption">Loading city-month residuals...</p>';
       return;
     }
     const trendExtent = state.cityTrends.reduce((extent, row) => {
@@ -329,6 +336,16 @@
       globalKey: "global_season_centered", ylabel: "Seasonal component (logit)",
       ticks: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
         .map((label, index) => ({ value: index + 1, label }))
+    });
+    const residualRows = state.decomposition.map(row => ({
+      ...row,
+      residual_zero: 0
+    }));
+    renderCurveCollection("all-residuals-chart", residualRows, {
+      title: `${crimeLabel(state.crime)} - city-specific monthly residuals`,
+      x: row => new Date(row.date).getTime(), cityKey: "overdispersion_logit",
+      globalKey: "residual_zero", ylabel: "City-month residual (logit)",
+      ticks: trendTicks, symmetric: true, cityLabel: "residuals", globalLabel: "zero"
     });
   }
 
