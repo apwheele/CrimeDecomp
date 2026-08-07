@@ -1,6 +1,0 @@
-theme_bw() +
-  theme(
-    text = element_text(size = 16),
-    panel.grid.major = element_line(linetype = "longdash"),
-    panel.grid.minor = element_blank()
-  )
