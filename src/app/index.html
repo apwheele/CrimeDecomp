@@ -83,6 +83,11 @@
         <p class="caption">Each grey line is a city's centered Fourier seasonal curve; the blue line is the global seasonal curve. The shaded band contains the middle 80% of city curves. Hover over a city line to identify it. Trend, intercept, and residual terms are excluded.</p>
         <div id="all-seasons-chart" class="chart all-city-chart"></div>
       </div>
+      <div class="card">
+        <h2>City-specific monthly residuals across the sample</h2>
+        <p class="caption">Each grey line is one city's fitted observation-level residual <em>e</em><sub>it</sub>; the blue line marks zero. The shaded band contains the middle 80% of city residuals in each month. Hover over a line to identify the city. The smooth trends, seasonal terms, city intercepts, and shared time-period effect are excluded.</p>
+        <div id="all-residuals-chart" class="chart all-city-chart"></div>
+      </div>
     </section>
   </main>
   <div id="chart-tooltip" class="tooltip" role="status"></div>

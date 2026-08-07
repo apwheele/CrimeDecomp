@@ -123,8 +123,10 @@ its component panels compare city and US-wide trend, season, and residuals in
 the same form as the paper's Philadelphia example. The residual comparison is
 `time_effect_logit` versus `time_effect_logit + overdispersion_logit`.
 The all-city page loads crime-specific trend and seasonal curve files generated
-by `src/build_city_examples.R`. The redirect is implemented by the server, so
-a root `index.html` is unnecessary.
+by `src/build_city_examples.R` and uses the partitioned decomposition to plot
+the observation-level city-month residual `overdispersion_logit` around zero.
+The redirect is implemented by the server, so a root `index.html` is
+unnecessary.
 
 ## Known issues and history
 

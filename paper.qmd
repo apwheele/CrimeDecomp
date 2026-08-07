@@ -114,6 +114,16 @@ residual_outliers <- decomposition |>
   mutate(crime_type = factor(crime_type, levels = crime_order)) |>
   arrange(crime_type, desc(abs(overdispersion_logit))) |>
   mutate(crime_type = as.character(crime_type))
+latest_residual_outliers <- decomposition |>
+  filter(is.finite(overdispersion_logit)) |>
+  group_by(crime_type) |>
+  filter(date == max(date, na.rm = TRUE)) |>
+  slice_max(abs(overdispersion_logit), n = 2, with_ties = FALSE) |>
+  ungroup() |>
+  mutate(crime_type = factor(crime_type, levels = crime_order)) |>
+  arrange(crime_type, desc(abs(overdispersion_logit))) |>
+  mutate(crime_type = as.character(crime_type))
+latest_residual_month <- max(latest_residual_outliers$date, na.rm = TRUE)
 outlier_table <- function(data, metric, digits = 3) {
   data |>
     group_by(crime_type) |>
@@ -136,24 +146,28 @@ outlier_table <- function(data, metric, digits = 3) {
 }
 trend_table <- outlier_table(trend_outliers, "trend_rms")
 seasonal_table <- outlier_table(seasonal_outliers, "seasonal_rms")
-residual_table <- residual_outliers |>
-  group_by(crime_type) |>
-  arrange(desc(abs(overdispersion_logit)), .by_group = TRUE) |>
-  mutate(
-    rank = paste("City", row_number()),
-    result = sprintf(
-      "%s (%s; e = %+.2f)", city_label, format(date, "%b %Y"),
-      overdispersion_logit
-    )
-  ) |>
-  ungroup() |>
-  transmute(
-    offense = crime_label(crime_type), rank, result
-  ) |>
-  tidyr::pivot_wider(names_from = rank, values_from = result) |>
-  mutate(offense = factor(offense, levels = crime_label(crime_order))) |>
-  arrange(offense) |>
-  mutate(offense = as.character(offense))
+residual_outlier_table <- function(data) {
+  data |>
+    group_by(crime_type) |>
+    arrange(desc(abs(overdispersion_logit)), .by_group = TRUE) |>
+    mutate(
+      rank = paste("City", row_number()),
+      result = sprintf(
+        "%s (%s; e = %+.2f)", city_label, format(date, "%b %Y"),
+        overdispersion_logit
+      )
+    ) |>
+    ungroup() |>
+    transmute(
+      offense = crime_label(crime_type), rank, result
+    ) |>
+    tidyr::pivot_wider(names_from = rank, values_from = result) |>
+    mutate(offense = factor(offense, levels = crime_label(crime_order))) |>
+    arrange(offense) |>
+    mutate(offense = as.character(offense))
+}
+residual_table <- residual_outlier_table(residual_outliers)
+latest_residual_table <- residual_outlier_table(latest_residual_outliers)
 ```
 
 # Introduction
@@ -667,6 +681,62 @@ plot_residual_outlier_comparison(
 plot_residual_outlier_comparison(
   decomposition,
   filter(residual_outliers, crime_type %in% crime_order[5:7])
+)
+```
+
+\clearpage
+
+# Most recent month residual outliers
+
+The preceding ranking asks which cities had the most unusual fitted month at
+any point in the series. For a current monitoring question, I instead restrict
+the comparison to the latest available observation within each offense. All
+seven offenses currently end in `r format(latest_residual_month, "%B %Y")`.
+Within that single monthly cross-section, I rank cities by the absolute fitted
+observation-level effect $|e_{it}|$ and retain the two largest values for each
+offense. This identifies the clearest recent local departures after removing
+the global and city-specific trends, seasonal terms, city intercept, and shared
+time-period effect. The ranking is descriptive: it does not attach a separate
+hypothesis test to each city or account for revisions to the most recent data.
+
+```{r}
+#| tbl-cap: "Two cities with the largest absolute fitted city-month residual in the most recent available month for each offense. The signed e value is on the model's logit scale."
+knitr::kable(
+  latest_residual_table,
+  col.names = c("Offense", "First city", "Second city")
+)
+```
+
+@fig-latest-residual-outliers-a and @fig-latest-residual-outliers-b retain each
+selected city's full residual history for context, while the red point marks
+the latest observation used in the ranking. Consequently, earlier residuals
+shown in these panels do not influence which cities were selected.
+
+```{r}
+#| label: fig-latest-residual-outliers-a
+#| fig-width: 7
+#| fig-height: 8.2
+#| out-width: 100%
+#| fig-pos: H
+#| fig-cap: "The two largest absolute fitted city-month residuals in the most recent month within murder, rape, robbery, and assault. Lines provide each selected city's full residual history for context; red points mark the latest month used for ranking. Panels are centered at zero and use city-specific symmetric vertical scales."
+plot_residual_outlier_comparison(
+  decomposition,
+  filter(latest_residual_outliers, crime_type %in% crime_order[1:4])
+)
+```
+
+\clearpage
+
+```{r}
+#| label: fig-latest-residual-outliers-b
+#| fig-width: 7
+#| fig-height: 8.2
+#| out-width: 100%
+#| fig-pos: H
+#| fig-cap: "The two largest absolute fitted city-month residuals in the most recent month within burglary, theft, and motor vehicle theft. Lines provide each selected city's full residual history for context; red points mark the latest month used for ranking. Panels are centered at zero and use city-specific symmetric vertical scales."
+plot_residual_outlier_comparison(
+  decomposition,
+  filter(latest_residual_outliers, crime_type %in% crime_order[5:7])
 )
 ```
 

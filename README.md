@@ -67,7 +67,8 @@ server. Use `--port=8080` if port 8000 is occupied. The app has global trend,
 seasonal, and time-period-effect charts; state-filtered city detail; and an
 interactive all-city view with centered trend and seasonal curves. Hovering an
 all-city curve identifies the city, while a shaded band summarizes the middle
-80% of city curves. City detail mirrors the paper example with observed/global/
+80% of city curves. The all-city view also plots each city's observation-level
+monthly residual around a zero reference line. City detail mirrors the paper example with observed/global/
 city rates followed by city-versus-US-wide trend, season, and residual panels.
 The full date range is always shown.
 

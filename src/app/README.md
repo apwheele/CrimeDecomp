@@ -20,5 +20,7 @@ then fetches the selected crime's partitioned decomposition and all-city curve
 CSVs on demand from `src/data/app/`. City detail uses state-first filtering. The
 detail view compares city and US-wide trend, season, and residual components in
 the same order and on the same logit component scale as the paper example. The
-all-city tab overlays faint city-specific trend and seasonal curves, provides
-hover labels, and displays the middle 80% envelope around the global curve.
+all-city tab overlays faint city-specific trend, seasonal, and observation-level
+monthly residual curves, provides hover labels, and displays the middle 80%
+envelope. The residual panel uses zero as its reference because the global,
+city, seasonal, trend, and shared time-period terms have been removed.
