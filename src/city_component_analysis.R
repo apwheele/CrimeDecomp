@@ -134,6 +134,45 @@ rtci_write_city_component_examples <- function(requests,
   combined
 }
 
+rtci_write_latest_residual_se <- function(
+    crimes,
+    output = "src/data/model/latest_residual_se.csv") {
+  pieces <- lapply(crimes, function(crime) {
+    model <- readRDS(file.path(
+      "src/data/model/models", paste0(crime, "_glmmtmb.rds")
+    ))
+    record <- readRDS(file.path("src/data/model/parts", paste0(crime, ".rds")))
+    latest <- record$results |>
+      dplyr::filter(is.finite(overdispersion_logit)) |>
+      dplyr::filter(date == max(date, na.rm = TRUE)) |>
+      dplyr::slice_max(abs(overdispersion_logit), n = 2, with_ties = FALSE)
+    random <- glmmTMB::ranef(model, condVar = TRUE)$cond$cell_id
+    indices <- match(as.character(latest$cell_id), rownames(random))
+    conditional_variance <- attr(random, "condVar")
+    if (is.null(conditional_variance) || anyNA(indices)) {
+      stop("Conditional cell-effect variances are unavailable for ", crime, ".")
+    }
+    variances <- conditional_variance[1, 1, indices]
+    if (any(!is.finite(variances)) || any(variances < 0)) {
+      stop("Invalid conditional cell-effect variances for ", crime, ".")
+    }
+    result <- latest |>
+      dplyr::transmute(
+        crime_type = as.character(crime_type),
+        city_id = as.character(city_id),
+        date = as.Date(date),
+        overdispersion_logit = overdispersion_logit,
+        overdispersion_logit_se = sqrt(variances)
+      )
+    rm(model, record, random)
+    invisible(gc())
+    result
+  })
+  combined <- dplyr::bind_rows(pieces)
+  readr::write_csv(combined, output)
+  combined
+}
+
 rtci_trend_deviation_summary <- function(model, results, crime_type) {
   basis <- attr(model, "rtci_basis_spec")
   if (is.null(basis)) stop("Model has no cached RTCI basis specification.")

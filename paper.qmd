@@ -50,6 +50,9 @@ seasonal_deviations <- read_csv(
 trend_deviations <- read_csv(
   "src/data/model/city_trend_deviations.csv", show_col_types = FALSE
 )
+latest_residual_se <- read_csv(
+  "src/data/model/latest_residual_se.csv", show_col_types = FALSE
+)
 global$date <- as.Date(global$date)
 decomposition$date <- as.Date(decomposition$date)
 if (!"global_residual_rate" %in% names(global) && "remainder_rate" %in% names(global)) {
@@ -122,7 +125,16 @@ latest_residual_outliers <- decomposition |>
   ungroup() |>
   mutate(crime_type = factor(crime_type, levels = crime_order)) |>
   arrange(crime_type, desc(abs(overdispersion_logit))) |>
-  mutate(crime_type = as.character(crime_type))
+  mutate(crime_type = as.character(crime_type)) |>
+  left_join(
+    latest_residual_se |>
+      mutate(date = as.Date(date)) |>
+      select(crime_type, city_id, date, overdispersion_logit_se),
+    by = c("crime_type", "city_id", "date")
+  )
+if (any(!is.finite(latest_residual_outliers$overdispersion_logit_se))) {
+  stop("Latest residual standard errors are incomplete.")
+}
 latest_residual_month <- max(latest_residual_outliers$date, na.rm = TRUE)
 outlier_table <- function(data, metric, digits = 3) {
   data |>
@@ -177,6 +189,7 @@ latest_residual_table <- latest_residual_outliers |>
     offense = as.character(offense),
     city = city_label,
     residual = sprintf("%+.2f", overdispersion_logit),
+    residual_se = sprintf("%.2f", overdispersion_logit_se),
     predicted_count = sprintf("%.1f", predicted_count),
     observed_count = format(
       round(count), big.mark = ",", trim = TRUE, nsmall = 0,
@@ -722,17 +735,21 @@ therefore includes the city's intercept, trend, and seasonal terms plus the
 shared time-period effect, but not the observation-level residual used to rank
 the city. Counts are monthly. Rates are annualized from that month's count or
 fitted mean and expressed per 100,000 residents.
+The reported standard error for $e_{it}$ is the conditional standard deviation
+of the fitted random effect, holding the estimated fixed effects and variance
+parameters fixed. It describes uncertainty after partial pooling and is not a
+standard error for the raw observed-minus-predicted difference.
 
 ```{r}
 #| label: tbl-latest-residual-outliers
-#| tbl-cap: "Observed outcomes and model-predicted means for the two cities with the largest absolute fitted city-month residual in the most recent available month for each offense. Count columns are monthly; rate columns are annualized per 100,000 residents; e is the signed logit-scale residual."
+#| tbl-cap: "Observed outcomes and model-predicted means for the two cities with the largest absolute fitted city-month residual in the most recent available month for each offense. Pred. n and Obs. n are monthly counts; rate columns are annualized per 100,000 residents; e is the signed logit-scale residual."
 knitr::kable(
   latest_residual_table,
   col.names = c(
-    "Offense", "City", "$e$", "Pred. count", "Obs. count",
+    "Offense", "City", "$e$", "SE($e$)", "Pred. n", "Obs. n",
     "Pred. rate", "Obs. rate"
   ),
-  align = c("l", "l", "r", "r", "r", "r", "r"),
+  align = c("l", "l", "r", "r", "r", "r", "r", "r"),
   escape = FALSE
 )
 ```
@@ -793,6 +810,21 @@ most distinctive. The shared variance parameters let well-supported city
 patterns depart from the global curve while pulling unstable patterns toward
 it [@pedersen2019; @simpson2017]. This is especially important when comparing
 586 cities with very different populations and crime counts.
+
+A useful future extension would turn the residual screen into a formal
+multiple-testing procedure. For each city-month effect, one could calculate a
+standardized statistic from $e_{it}$ and its conditional standard error,
+convert that statistic to a two-sided p-value, and then apply a false discovery
+rate (FDR) correction across a prespecified family of cities and offenses. This
+would address the fact that, when hundreds of cities are screened at once, some
+apparently unusual residuals will occur by chance. Similar multiplicity issues
+arise when the spatial point pattern test is used to identify local differences
+across many areas; my prior work examined corrected local proportion tests, and
+the Buffalo shooting analysis applied an FDR correction to the local spatial
+comparisons [@wheeler2018sppt; @drake2023; @benjamini1995]. Because the proposed
+tests would use shrunken random-effect estimates rather than independent raw
+contrasts, their calibration should first be checked with simulation or a
+parametric bootstrap.
 
 The results are not causal effects or forecasts. Reported crime depends on
 reporting practices, agency participation, revisions, and population

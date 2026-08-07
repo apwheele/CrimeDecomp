@@ -78,6 +78,8 @@ wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp
 - Metadata and exact formulas: `src/data/model/model_metadata.json`
 - Exact paper comparison components and approximate conditional interval bounds:
   `src/data/model/city_component_examples.csv`
+- Latest-month residual outlier conditional standard errors:
+  `src/data/model/latest_residual_se.csv`
 - City trend ranking: `src/data/model/city_trend_deviations.csv`
 - City seasonal ranking: `src/data/model/city_seasonal_deviations.csv`
 - All-city app curves: `src/data/app/city_trends_<crime>.csv` and

@@ -25,5 +25,7 @@ requests <- dplyr::bind_rows(
 ) |>
   dplyr::distinct()
 examples <- rtci_write_city_component_examples(requests)
+latest_residual_se <- rtci_write_latest_residual_se(rtci_component_crimes)
 rtci_write_all_city_curves(rtci_component_crimes)
 message("Wrote ", nrow(examples), " city-component rows.")
+message("Wrote ", nrow(latest_residual_se), " latest residual standard errors.")
