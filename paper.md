@@ -394,19 +394,42 @@ offense, the ordering does not depend on city population or on
 converting the effect to an annualized rate. It does, however, identify
 fitted residual extremes rather than raw-count anomalies.
 
-| Offense             | First city-month                           | Second city-month                      |
-|:--------------------|:-------------------------------------------|:---------------------------------------|
-| Murder              | Las Vegas, NV (Oct 2017; e = +0.99)        | San Antonio, TX (Jun 2022; e = +0.79)  |
-| Rape                | Bismarck, ND (May 2025; e = +0.56)         | Riverside, CA (Dec 2019; e = +0.48)    |
-| Robbery             | Washington, DC (Jul 2023; e = +0.55)       | Indianapolis, IN (Jun 2019; e = -0.54) |
-| Assault             | Bismarck, ND (May 2025; e = +1.31)         | Indianapolis, IN (Jun 2019; e = -1.24) |
-| Burglary            | St. Clair Shores, MI (Dec 2024; e = +2.08) | Bismarck, ND (May 2025; e = +1.89)     |
-| Theft               | Bismarck, ND (May 2025; e = +1.64)         | Washoe, NV (Jun 2017; e = +1.52)       |
-| Motor Vehicle Theft | Washoe, NV (Jun 2017; e = +1.63)           | Bismarck, ND (May 2025; e = +1.57)     |
+For each selected city-month,
+<a href="#tbl-residual-outliers" class="quarto-xref">Table 1</a>
+compares the observed outcome with the model-predicted mean before
+adding $e_{it}$. The prediction therefore includes the city’s intercept,
+trend, and seasonal terms plus the shared time-period effect, but not
+the observation-level residual used to rank the city. Both observed and
+predicted counts are monthly.
 
-Two cities with the largest absolute fitted city-month residual within
-each offense. The displayed month is the selected city’s most extreme
-observation-level effect; e is the signed logit-scale residual.
+<div class="cell-output-display">
+
+| Offense             | City                 | Month |  $e$ | Pred. n | Obs. n |
+|:--------------------|:---------------------|:------|-----:|--------:|-------:|
+| Murder              | Las Vegas, NV        | 10/17 | +1.0 |    13.5 |     71 |
+| Murder              | San Antonio, TX      | 06/22 | +0.8 |    19.7 |     71 |
+| Rape                | Bismarck, ND         | 05/25 | +0.6 |     4.8 |     39 |
+| Rape                | Riverside, CA        | 12/19 | +0.5 |    11.7 |     45 |
+| Robbery             | Washington, DC       | 07/23 | +0.6 |   252.5 |    475 |
+| Robbery             | Indianapolis, IN     | 06/19 | -0.5 |   212.7 |     90 |
+| Assault             | Bismarck, ND         | 05/25 | +1.3 |    15.1 |    101 |
+| Assault             | Indianapolis, IN     | 06/19 | -1.2 |   476.8 |     96 |
+| Burglary            | St. Clair Shores, MI | 12/24 | +2.1 |    10.1 |    129 |
+| Burglary            | Bismarck, ND         | 05/25 | +1.9 |    18.5 |    165 |
+| Theft               | Bismarck, ND         | 05/25 | +1.6 |   131.9 |    772 |
+| Theft               | Washoe, NV           | 06/17 | +1.5 |    56.1 |    342 |
+| Motor Vehicle Theft | Washoe, NV           | 06/17 | +1.6 |    12.2 |    105 |
+| Motor Vehicle Theft | Bismarck, ND         | 05/25 | +1.6 |    15.3 |    114 |
+
+</div>
+
+Bismarck, North Dakota appears for five different offenses in May 2025,
+with each observed count far above its model-predicted mean. That
+synchronized cross-offense pattern is more consistent with a reporting
+or data-processing issue than with simultaneous spikes in five distinct
+crime types. These rows should therefore be treated as a data-quality
+flag, not as evidence by themselves of a sudden broad-based increase in
+crime.
 
 <a href="#fig-residual-outliers-a" class="quarto-xref">Figure 11</a> and
 <a href="#fig-residual-outliers-b" class="quarto-xref">Figure 12</a>
@@ -436,7 +459,7 @@ does not attach a separate hypothesis test to each city or account for
 revisions to the most recent data.
 
 For each selected city,
-<a href="#tbl-latest-residual-outliers" class="quarto-xref">Table 1</a>
+<a href="#tbl-latest-residual-outliers" class="quarto-xref">Table 2</a>
 compares the observed outcome with the model-predicted mean before
 adding $e_{it}$. The prediction therefore includes the city’s intercept,
 trend, and seasonal terms plus the shared time-period effect, but not

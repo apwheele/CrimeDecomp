@@ -1,8 +1,9 @@
 # Monthly crime decomposition
 
-The three deliverables are in the repository root:
+The four deliverables are in the repository root:
 
 - `paper.pdf`
+- `paper.docx`
 - `paper.qmd`
 - `paper.md`
 
@@ -45,11 +46,12 @@ basis specification, are saved separately as
 `src/data/model/models/<crime>_glmmtmb.rds`. For example, reload the murder model
 with `readRDS("src/data/model/models/murder_glmmtmb.rds")`. This directory is
 excluded from Git because fitted objects can be large.
-After all model outputs are assembled, the runner renders both `paper.pdf` and
-`paper.md` automatically, saves the Markdown PNGs under
-`output/markdown/images/`. The Markdown build uses 192 DPI figures and
-GitHub-compatible fenced display-math blocks; the PDF continues to use vector
-figures. Pass
+After all model outputs are assembled, the runner renders `paper.pdf`,
+`paper.docx`, and `paper.md` automatically, and saves the Markdown PNGs under
+`output/markdown/images/`. The Word document embeds its figures so it can be
+uploaded as a single file. The Word and Markdown builds use 192 DPI figures,
+the Markdown build uses GitHub-compatible fenced display-math blocks, and the
+PDF continues to use vector figures. Pass
 `--render-report=false` only when a data-only run is intended.
 The WSL sequential wrapper intentionally performs a data-only merge because
 Quarto is installed on Windows; afterward run
