@@ -18,8 +18,10 @@ same command resumes them. Run `conda run --no-capture-output -n r2026 Rscript
 src/model_status.R` in another terminal to see which fits are running or done.
 Full fitted objects are stored in `src/data/model/models/` as one compressed RDS
 file per crime and are excluded from Git.
-Successful completion also renders `paper.qmd` to `paper.pdf` and `paper.md`;
-use `--render-report=false` to suppress that step.
+Successful completion also renders `paper.qmd` to `paper.pdf` and `paper.md`.
+The Markdown figures are exported at 192 DPI, and its display equations are
+written in GitHub's fenced `math` format. Use `--render-report=false` to suppress
+that step.
 The WSL wrapper suppresses rendering and builds the paper's exact city trend,
 seasonal, and residual comparison files after merging. Render with Windows
 Quarto afterward.

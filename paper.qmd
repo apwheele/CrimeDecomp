@@ -9,7 +9,10 @@ format:
     geometry: margin=0.8in
     header-includes:
       - \usepackage{float}
-  gfm: default
+  gfm:
+    fig-dpi: 192
+    filters:
+      - src/github-math.lua
 execute:
   echo: false
   warning: false
@@ -307,11 +310,11 @@ building all `r analysis_offenses` random-effect systems at the same time. For c
 month $t$,
 
 $$
-Y_{it} \sim \operatorname{Binomial}(N_{it},p_{it}),
+Y_{it} \sim \mathrm{Binomial}(N_{it},p_{it}),
 $$
 
 $$
-\operatorname{logit}(p_{it}) =
+\mathrm{logit}(p_{it}) =
 \alpha + \mathbf B(t)^\mathsf{T}\boldsymbol\beta
 + \mathbf F(m_t)^\mathsf{T}\boldsymbol\gamma
 + b_i + \mathbf B(t)^\mathsf{T}\mathbf u_i

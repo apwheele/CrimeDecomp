@@ -43,3 +43,34 @@ testthat::test_that("output freshness follows content signatures", {
     "input or model signature changed"
   )
 })
+
+testthat::test_that("GitHub paper artifacts use compatible math and sharp figures", {
+  project_root <- if (file.exists("paper.qmd")) {
+    "."
+  } else if (file.exists(file.path("..", "paper.qmd"))) {
+    ".."
+  } else {
+    stop("Could not locate paper.qmd from the test working directory.")
+  }
+  project_file <- function(...) file.path(project_root, ...)
+
+  qmd <- readLines(project_file("paper.qmd"), warn = FALSE)
+  markdown <- readLines(project_file("paper.md"), warn = FALSE)
+  testthat::expect_true(any(grepl("fig-dpi: 192", qmd, fixed = TRUE)))
+  testthat::expect_false(any(grepl("\\operatorname", c(qmd, markdown), fixed = TRUE)))
+  testthat::expect_equal(sum(trimws(markdown) == "```math"), 3L)
+  testthat::expect_false(any(trimws(markdown) == "$$"))
+
+  image_paths <- list.files(
+    project_file("output", "markdown", "images"),
+    pattern = "[.]png$",
+    full.names = TRUE
+  )
+  png_width <- function(path) {
+    header <- readBin(path, what = "raw", n = 24L)
+    if (length(header) < 24L) return(NA_real_)
+    sum(as.integer(header[17:20]) * 256^(3:0))
+  }
+  testthat::expect_equal(length(image_paths), 15L)
+  testthat::expect_true(all(vapply(image_paths, png_width, numeric(1)) >= 1344))
+})

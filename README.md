@@ -47,7 +47,9 @@ with `readRDS("src/data/model/models/murder_glmmtmb.rds")`. This directory is
 excluded from Git because fitted objects can be large.
 After all model outputs are assembled, the runner renders both `paper.pdf` and
 `paper.md` automatically, saves the Markdown PNGs under
-`output/markdown/images/`. Pass
+`output/markdown/images/`. The Markdown build uses 192 DPI figures and
+GitHub-compatible fenced display-math blocks; the PDF continues to use vector
+figures. Pass
 `--render-report=false` only when a data-only run is intended.
 The WSL sequential wrapper intentionally performs a data-only merge because
 Quarto is installed on Windows; afterward run

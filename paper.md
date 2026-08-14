@@ -61,17 +61,16 @@ This is equivalent to a stacked model with no coefficients shared across
 offenses, but it avoids building all 7 random-effect systems at the same
 time. For city $i$ in month $t$,
 
-$$
-Y_{it} \sim \operatorname{Binomial}(N_{it},p_{it}),
-$$
-
-$$
-\operatorname{logit}(p_{it}) =
+```math
+Y_{it} \sim \mathrm{Binomial}(N_{it},p_{it}),
+```
+```math
+\mathrm{logit}(p_{it}) =
 \alpha + \mathbf B(t)^\mathsf{T}\boldsymbol\beta
 + \mathbf F(m_t)^\mathsf{T}\boldsymbol\gamma
 + b_i + \mathbf B(t)^\mathsf{T}\mathbf u_i
 + \mathbf F(m_t)^\mathsf{T}\mathbf v_i + a_t + e_{it}.
-$$
+```
 
 The global intercept is $\alpha$. The vector $\mathbf B(t)$ contains
 five natural cubic spline basis functions evaluated at time $t$, with
@@ -90,10 +89,10 @@ between-city differences in level. Each city also has its own
 trend-basis coefficients $\mathbf u_i$ and seasonal-basis coefficients
 $\mathbf v_i$:
 
-$$
+```math
 \mathbf u_i \sim N(\mathbf 0,\sigma_u^2\mathbf I_5), \qquad
 \mathbf v_i \sim N(\mathbf 0,\sigma_v^2\mathbf I_6).
-$$
+```
 
 Thus the city trend is the global trend plus
 $\mathbf B(t)^\mathsf{T}\mathbf u_i$, and the city seasonal curve is the
