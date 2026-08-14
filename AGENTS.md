@@ -85,7 +85,7 @@ wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp
 - All-city app curves: `src/data/app/city_trends_<crime>.csv` and
   `src/data/app/city_seasons_<crime>.csv`
 - Paper source: `paper.qmd`
-- Final paper: `paper.pdf` and `output/pdf/paper.pdf`
+- Final paper: `paper.pdf`
 
 The model/output directories are Git-ignored because the fitted objects and
 generated CSVs are large. Do not add them to Git.
@@ -95,9 +95,19 @@ generated CSVs are large. Do not add them to Git.
 Render both PDF and Markdown with:
 
 ```powershell
-conda run --no-capture-output -n r2026 quarto render paper.qmd
-Copy-Item paper.pdf output/pdf/paper.pdf -Force
+conda run --no-capture-output -n r2026 quarto render paper.qmd --to all
 ```
+
+The same build writes `paper.md` and its persistent PNG assets under
+`output/markdown/images/`.
+
+At the start of each render, `paper.qmd` calls
+`src/ensure_outputs_current.R`. It checks the upstream RTCI file revisions and
+the local model signature. A changed input invokes the WSL sequential runner,
+which holds an exclusive lock, fits crimes one at a time, merges outputs, and
+runs `src/validate_outputs.R` before Quarto continues. Valid checkpoints are
+reused. Set `RTCI_SKIP_UPDATE_CHECK=true` only for an intentional offline render;
+this skips the network check but not the local signature check.
 
 The paper uses the exact theme stored in `ggplot_theme.txt`. Small-multiple
 plots have no plot-level title and occupy one page each. The final PDF must be

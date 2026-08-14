@@ -8,6 +8,13 @@ run_log="${RUN_LOG:-src/data/model/sequential-linux-run.log}"
 failure_log="${FAILURE_LOG:-src/data/model/sequential-linux-failure.log}"
 crimes=(murder rape robbery assault burglary theft motor)
 
+exec 9>src/data/model/sequential-run.lock
+if ! flock -n 9; then
+  printf '%s Another sequential model workflow is already running; refusing to start a duplicate.\n' \
+    "$(date --iso-8601=seconds)" | tee -a "$failure_log"
+  exit 75
+fi
+
 log_message() {
   printf '%s %s\n' "$(date --iso-8601=seconds)" "$1" | tee -a "$run_log"
 }
@@ -69,3 +76,6 @@ if [[ "$merge_status" -ne 0 ]]; then
   exit "$merge_status"
 fi
 log_message "Sequential models and merged outputs completed."
+log_message "Validating saved models and merged outputs."
+Rscript src/validate_outputs.R 2>&1 | tee -a "$run_log"
+log_message "Validation completed successfully."

@@ -24,17 +24,19 @@ The WSL wrapper suppresses rendering and builds the paper's exact city trend,
 seasonal, and residual comparison files after merging. Render with Windows
 Quarto afterward.
 
-## Refresh the pinned data snapshot
+## Refresh the latest data snapshot
 
 ```powershell
-conda run -n r2026 Rscript src/download_data.R
-conda run -n r2026 Rscript src/build_metadata.R
+conda run -n r2026 Rscript src/sync_latest_data.R
 wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp' && exec bash src/run_models_sequential.sh"
 ```
 
-`download_data.R` retrieves the pinned crime snapshot, the processed agency
-metadata, and the city-coordinate crosswalk into `src/data/raw/`. The
-crosswalk supplies city names, states, and map coordinates for the ORI ids.
+`sync_latest_data.R` discovers the current crime CSV on the upstream `main`
+branch, compares Git blob revisions and local checksums, and atomically replaces
+only changed inputs. It rebuilds agency metadata when its upstream inputs
+change. The QMD calls this check automatically and runs the sequential workflow
+only when the resulting model signature differs. `download_data.R` remains
+available for intentionally reproducing the older pinned snapshot.
 
 ## Run the test
 

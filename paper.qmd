@@ -3,12 +3,12 @@ title: "Monthly crime trends: global patterns and city departures"
 author: "Andrew P. Wheeler"
 bibliography: references.bib
 link-citations: true
-header-includes:
-  - \usepackage{float}
 format:
   pdf:
     documentclass: article
     geometry: margin=0.8in
+    header-includes:
+      - \usepackage{float}
   gfm: default
 execute:
   echo: false
@@ -20,8 +20,15 @@ execute:
 library(dplyr)
 library(ggplot2)
 library(readr)
+source("src/ensure_outputs_current.R")
+rtci_ensure_outputs_current()
 source("src/plots.R")
-knitr::opts_chunk$set(fig_crop = FALSE)
+figure_path <- if (knitr::is_latex_output()) {
+  "paper_files/figure-pdf/"
+} else {
+  "output/markdown/images/"
+}
+knitr::opts_chunk$set(fig_crop = FALSE, fig.path = figure_path)
 global <- read_csv("src/data/model/global_stl.csv", show_col_types = FALSE)
 decomposition <- read_csv("src/data/model/decomposition.csv", show_col_types = FALSE)
 philly_burglary_source <- read_csv(
@@ -41,6 +48,9 @@ philly_burglary_rates <- setNames(
   philly_burglary_source$annualized_rate, philly_burglary_source$month
 )
 metadata <- jsonlite::read_json("src/data/model/model_metadata.json", simplifyVector = TRUE)
+source_provenance <- jsonlite::read_json(
+  "src/data/raw/source_metadata.json", simplifyVector = TRUE
+)
 city_components <- read_csv(
   "src/data/model/city_component_examples.csv", show_col_types = FALSE
 )
@@ -55,6 +65,45 @@ latest_residual_se <- read_csv(
 )
 global$date <- as.Date(global$date)
 decomposition$date <- as.Date(decomposition$date)
+analysis_rows <- nrow(decomposition)
+analysis_cities <- n_distinct(decomposition$city_id)
+analysis_offenses <- n_distinct(decomposition$crime_type)
+analysis_start_date <- min(decomposition$date, na.rm = TRUE)
+analysis_end_date <- max(decomposition$date, na.rm = TRUE)
+analysis_start_label <- format(analysis_start_date, "%B %Y")
+analysis_end_label <- format(analysis_end_date, "%B %Y")
+analysis_period_label <- paste(analysis_start_label, "through", analysis_end_label)
+offense_end_dates <- decomposition |>
+  group_by(crime_type) |>
+  summarise(end_date = max(date, na.rm = TRUE), .groups = "drop")
+latest_offense_text <- if (n_distinct(offense_end_dates$end_date) == 1L) {
+  paste(
+    "All", analysis_offenses, "offenses currently end in",
+    format(offense_end_dates$end_date[[1]], "%B %Y")
+  )
+} else {
+  paste(
+    "The latest available offense months range from",
+    format(min(offense_end_dates$end_date), "%B %Y"), "through",
+    format(max(offense_end_dates$end_date), "%B %Y")
+  )
+}
+source_downloaded_at <- as.POSIXct(
+  source_provenance$downloaded_at_utc,
+  format = "%Y-%m-%d %H:%M:%S",
+  tz = "UTC"
+)
+if (is.na(source_downloaded_at)) {
+  stop("The source download timestamp is missing or invalid.")
+}
+source_downloaded_label <- sub(
+  " 0", " ", format(source_downloaded_at, "%B %d, %Y at %H:%M UTC"),
+  fixed = TRUE
+)
+if (!identical(as.integer(metadata$rows), analysis_rows) ||
+    !identical(as.integer(metadata$cities), analysis_cities)) {
+  stop("Model metadata sample counts do not match the decomposition.")
+}
 if (!"global_residual_rate" %in% names(global) && "remainder_rate" %in% names(global)) {
   global$global_residual_rate <- global$remainder_rate
 }
@@ -135,7 +184,6 @@ latest_residual_outliers <- decomposition |>
 if (any(!is.finite(latest_residual_outliers$overdispersion_logit_se))) {
   stop("Latest residual standard errors are incomplete.")
 }
-latest_residual_month <- max(latest_residual_outliers$date, na.rm = TRUE)
 outlier_table <- function(data, metric, digits = 3) {
   data |>
     group_by(crime_type) |>
@@ -219,7 +267,8 @@ spike look like a new trend (or smooths away a local trend that is actually
 different).
 
 I use monthly reported crime from the Real-Time Crime Index (RTCI) [@rtci] and
-fit a hierarchical binomial model separately for seven offenses. The model has
+fit a hierarchical binomial model separately for `r analysis_offenses`
+offenses. The model has
 a smooth trend and seasonal pattern shared across the sample, but it also gives
 every city its own partially pooled trend and season. Two additional terms
 separate monthly movement shared by all cities from the remaining city-month
@@ -231,17 +280,22 @@ test of why crime changed, and it is not a forecasting model.
 
 # Data and rate construction
 
-I use `r format(metadata$rows, big.mark = ",")` city-month-offense observations
-from `r metadata$cities` RTCI cities. I do not impose a population threshold.
+I use `r format(analysis_rows, big.mark = ",")` city-month-offense observations
+from `r analysis_cities` RTCI cities, covering `r analysis_offenses` offenses
+from `r analysis_period_label`. I do not impose a population threshold.
 For the figures, a monthly count $Y$ and population $N$ are displayed as
 $12(Y/N)100{,}000$. This is an annualized rate per 100,000: it preserves the
 observed monthly count but puts cities on a familiar scale.
 
-The analysis uses a pinned RTCI snapshot rather than a file that changes every
-time the code runs. I also cache the source metadata and city crosswalk. This
-makes the paper and application reproducible while keeping the reported counts
-separate from the model-generated output. Data preparation uses R and the
-tidyverse [@R2026; @tidyverse2019].
+The upstream files used for this build were downloaded on
+`r source_downloaded_label`. Before rendering, the workflow checks the current
+RTCI file revisions and atomically replaces only source files whose contents
+changed. A content-signature change triggers the sequential model workflow;
+otherwise the validated checkpoints are reused. Exact upstream revisions and
+local checksums are stored with the source metadata and city crosswalk. This
+keeps the paper and application reproducible while separating reported counts
+from model-generated output. Data preparation uses R and the tidyverse
+[@R2026; @tidyverse2019].
 
 # Model
 
@@ -249,7 +303,7 @@ The practical goal is to distinguish level, trend, season, common monthly
 movement, and local monthly noise. I fit a separate aggregated-binomial
 generalized linear mixed model for each offense. This is equivalent to a
 stacked model with no coefficients shared across offenses, but it avoids
-building all seven random-effect systems at the same time. For city $i$ in
+building all `r analysis_offenses` random-effect systems at the same time. For city $i$ in
 month $t$,
 
 $$
@@ -318,7 +372,7 @@ Here `homdiag` assigns one estimated variance to all coefficients in a basis
 block, sets their correlations to zero, and allows the coefficients to vary by
 city. Despite their names, `city_trend_group` and `city_season_group` do not
 combine cities into artificial groups. Each is a one-to-one copy of `city_id`
-with the same 586 levels. The copies let `glmmTMB` represent the city intercept,
+with the same `r analysis_cities` levels. The copies let `glmmTMB` represent the city intercept,
 city trend coefficients, and city seasonal coefficients as three independent
 covariance blocks; every city still receives its own five trend and six
 seasonal coefficients. `homdiag` is a parsimonious ridge penalty: replacing it with `diag` would
@@ -362,8 +416,9 @@ of each city's coefficient block fixed and transparent. Fitting those blocks
 with `glmmTMB` reduced the full model to a sparse random-coefficient problem
 that could be estimated and reload-verified one offense at a time. This is not
 a general claim that `mgcv` factor smooths are infeasible.
-It is a practical result for this combination of 586 cities, hundreds of
-thousands of city-month observations, two city-varying bases, and an
+It is a practical result for this combination of `r analysis_cities` cities,
+`r format(analysis_rows, big.mark = ",")` city-month-offense observations, two
+city-varying bases, and an
 observation-level random effect.
 
 # Global trends
@@ -372,13 +427,13 @@ observation-level random effect.
 seasonal, city-specific, and monthly variation. I use a separate vertical scale
 for each offense; otherwise property crime would flatten the lower-rate murder
 and rape series. Figures are produced with `ggplot2` [@wickham2016]. From
-January 2017 through May 2026, the fitted burglary trend declined by
+`r analysis_period_label`, the fitted burglary trend declined by
 `r sprintf("%.1f", abs(trend_change("burglary")))`%, robbery by
 `r sprintf("%.1f", abs(trend_change("robbery")))`%, murder by
 `r sprintf("%.1f", abs(trend_change("murder")))`%, and theft by
 `r sprintf("%.1f", abs(trend_change("theft")))`%. Assault was the exception:
 its fitted global trend ended `r sprintf("%.1f", trend_change("assault"))`%
-above its January 2017 level. These endpoint comparisons summarize the curves;
+above its `r analysis_start_label` level. These endpoint comparisons summarize the curves;
 they are not causal estimates. The paths between the endpoints are more useful
 than the percentage alone.
 
@@ -468,7 +523,8 @@ plot_city_component_comparison(city_components, example_city, example_crime)
 
 Philadelphia burglary provides a useful contrast because several abrupt 2020
 changes are visible in the reported series but should not be absorbed into the
-city's long-run trend. In the pinned RTCI source file, Philadelphia reported
+city's long-run trend. In the RTCI source snapshot downloaded on
+`r source_downloaded_label`, Philadelphia reported
 `r format(philly_burglary_counts[["5"]], big.mark = ",")` burglaries in May,
 `r format(philly_burglary_counts[["6"]], big.mark = ",")` in June, and
 `r format(philly_burglary_counts[["10"]], big.mark = ",")` in October 2020.
@@ -720,8 +776,8 @@ plot_residual_outlier_comparison(
 
 The preceding ranking asks which cities had the most unusual fitted month at
 any point in the series. For a current monitoring question, I instead restrict
-the comparison to the latest available observation within each offense. All
-seven offenses currently end in `r format(latest_residual_month, "%B %Y")`.
+the comparison to the latest available observation within each offense.
+`r latest_offense_text`.
 Within that single monthly cross-section, I rank cities by the absolute fitted
 observation-level effect $|e_{it}|$ and retain the two largest values for each
 offense. This identifies the clearest recent local departures after removing
@@ -809,7 +865,7 @@ unconstrained curve for every city, the noisiest series would tend to look the
 most distinctive. The shared variance parameters let well-supported city
 patterns depart from the global curve while pulling unstable patterns toward
 it [@pedersen2019; @simpson2017]. This is especially important when comparing
-586 cities with very different populations and crime counts.
+`r analysis_cities` cities with very different populations and crime counts.
 
 A useful future extension would turn the residual screen into a formal
 multiple-testing procedure. For each city-month effect, one could calculate a

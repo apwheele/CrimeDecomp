@@ -46,12 +46,18 @@ basis specification, are saved separately as
 with `readRDS("src/data/model/models/murder_glmmtmb.rds")`. This directory is
 excluded from Git because fitted objects can be large.
 After all model outputs are assembled, the runner renders both `paper.pdf` and
-`paper.md` automatically and copies the PDF to `output/pdf/paper.pdf`. Pass
+`paper.md` automatically, saves the Markdown PNGs under
+`output/markdown/images/`. Pass
 `--render-report=false` only when a data-only run is intended.
 The WSL sequential wrapper intentionally performs a data-only merge because
 Quarto is installed on Windows; afterward run
-`conda run --no-capture-output -n r2026 quarto render paper.qmd` and copy the
-PDF to `output/pdf/paper.pdf`.
+`conda run --no-capture-output -n r2026 quarto render paper.qmd --to all`.
+Before loading any results, the paper checks the current upstream RTCI files.
+If their content or a local model input changed, the render automatically runs
+the locked WSL workflow one crime at a time, validates all rebuilt outputs, and
+then continues. Matching checkpoints are reused without fitting. Set
+`RTCI_SKIP_UPDATE_CHECK=true` only when an intentional offline render should use
+the current local snapshot; local signature checks still run.
 
 Start the app from the repository root:
 

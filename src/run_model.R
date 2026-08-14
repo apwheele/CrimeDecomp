@@ -7,6 +7,7 @@ if (.Platform$OS.type == "windows" && dir.exists(local_r_library)) {
 
 source("src/data_prep.R")
 source("src/model.R")
+source("src/model_signature.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 get_arg <- function(name, default) {
@@ -73,23 +74,17 @@ if (stacked_model) {
                              winslash = "/", mustWork = FALSE)
   dir.create(part_dir, recursive = TRUE, showWarnings = FALSE)
   dir.create(model_dir, recursive = TRUE, showWarnings = FALSE)
-  signature_files <- c(input, metadata_path, "src/model.R", "src/data_prep.R")
-  input_hashes <- unname(tools::md5sum(signature_files))
-  run_signature <- paste(
-    input_hashes,
-    paste("sample_only", sample_only, sep = "="),
-    paste("min_population", if (is.null(min_population)) "none" else min_population,
-          sep = "="),
-    paste("city_effects", include_city_effects, sep = "="),
-    paste("city_smooths", include_city_smooths, sep = "="),
-    paste("time_k", time_k, sep = "="),
-    paste("trend_df", trend_df, sep = "="),
-    paste("season_harmonics", season_harmonics, sep = "="),
-    "model_spec=2026-08-07-glmmtmb-hierarchical-v1",
-    "model_backend=glmmTMB",
-    "time_period_effect=true",
-    paste("overdispersion", include_cell_overdispersion, sep = "="),
-    sep = "|"
+  run_signature <- rtci_model_signature(
+    input = input,
+    metadata_path = metadata_path,
+    sample_only = sample_only,
+    min_population = min_population,
+    include_city_effects = include_city_effects,
+    include_city_smooths = include_city_smooths,
+    time_k = time_k,
+    trend_df = trend_df,
+    season_harmonics = season_harmonics,
+    include_cell_overdispersion = include_cell_overdispersion
   )
   valid_tmb_model <- function(fit) {
     inherits(fit, "glmmTMB") &&
@@ -329,15 +324,19 @@ if (!stacked_model) {
 
 if (render_report) {
   message("Rendering paper.qmd to PDF and GitHub-flavored Markdown...")
-  render_status <- system2("quarto", c("render", "paper.qmd"))
+  render_status <- system2("quarto", c("render", "paper.qmd", "--to", "all"))
   if (!identical(render_status, 0L)) {
     stop("Model outputs were written, but Quarto report rendering failed with status ",
          render_status, ".")
   }
-  dir.create(file.path("output", "pdf"), recursive = TRUE, showWarnings = FALSE)
-  if (!file.copy("paper.pdf", file.path("output", "pdf", "paper.pdf"),
-                 overwrite = TRUE)) {
-    stop("Report rendered, but paper.pdf could not be copied to output/pdf/.")
+  markdown_images <- list.files(
+    file.path("output", "markdown", "images"),
+    pattern = "[.]png$",
+    full.names = TRUE
+  )
+  if (!file.exists("paper.pdf") || !file.exists("paper.md") ||
+      length(markdown_images) == 0L) {
+    stop("Quarto completed without producing paper.pdf, paper.md, and Markdown images.")
   }
-  message("Rendered paper.pdf and paper.md; copied PDF to output/pdf/paper.pdf.")
+  message("Rendered paper.pdf, paper.md, and the Markdown images.")
 }
