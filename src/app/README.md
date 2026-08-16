@@ -22,8 +22,8 @@ detail uses state-first filtering. The city catalog carries the RTCI source's
 `Type` field, and county rows are identified as sheriff's offices in city
 selectors and labels. The detail view compares city and US-wide
 trend, season, and residual components in the same order and on the same logit
-component scale as the paper example, including pointwise conditional trend and
-season intervals. Its monthly table reports observed and expected counts and
+component scale as the paper example. Visible pointwise conditional intervals
+surround the orange city trend, season, and residual curves. Its monthly table reports observed and expected counts and
 rates, the city-month residual and its conditional standard error. The
 all-city tab overlays faint city-specific trend, seasonal, and observation-level
 monthly residual curves, provides hover labels, and displays the middle 80%

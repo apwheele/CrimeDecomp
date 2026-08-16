@@ -41,6 +41,8 @@
     const lower = rows.slice().reverse().map(r => `L${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[lowerKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
     return `<path d="${upper} ${lower} Z" class="interval-band"/>`;
   };
+  const intervalLine = (rows, key, x0, x1, ymin, ymax, height = 330) =>
+    `<path d="${rows.map((r, i) => ` ${i ? 'L' : 'M'}${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[key]), ymax, ymin, 38, height - 40).toFixed(1)}`).join("")}" class="interval-boundary"/>`;
   const base = (title, ymin, ymax, x0, x1, ylabel, height = 330) => {
     let s = `<svg viewBox="0 0 1060 ${height}" role="img" aria-label="${title}"><text x="66" y="22" class="chart-title">${title}</text>`;
     [0, .25, .5, .75, 1].forEach(t => {
@@ -73,6 +75,8 @@
     const lower = rows.slice().reverse().map(r => `L${scale(n(r.month), 1, 12, 66, 1010).toFixed(1)},${scale(n(r[lowerKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
     return `<path d="${upper} ${lower} Z" class="interval-band"/>`;
   };
+  const monthIntervalLine = (rows, key, ymin, ymax, height = 290) =>
+    `<path d="${rows.map((r, i) => ` ${i ? 'L' : 'M'}${scale(n(r.month), 1, 12, 66, 1010).toFixed(1)},${scale(n(r[key]), ymax, ymin, 38, height - 40).toFixed(1)}`).join("")}" class="interval-boundary"/>`;
   const monthBase = (title, ymin, ymax, ylabel, height = 290) => {
     let s = `<svg viewBox="0 0 1060 ${height}" role="img" aria-label="${esc(title)}"><text x="66" y="22" class="chart-title">${esc(title)}</text>`;
     [0, .25, .5, .75, 1].forEach(t => {
@@ -95,7 +99,12 @@
   ) * 1.12;
   const finish = (s, items) => {
     const step = 135, start = Math.max(70, 1010 - items.length * step);
-    const legend = items.map((x, i) => `<line x1="${start + i * step}" x2="${start + 25 + i * step}" y1="22" y2="22" stroke="${x[1]}" class="legend-line"/><text x="${start + 32 + i * step}" y="26" class="legend">${x[0]}</text>`).join("");
+    const legend = items.map((x, i) => {
+      const key = x[2] === "interval"
+        ? `<rect x="${start + i * step}" y="15" width="25" height="12" class="interval-key"/>`
+        : `<line x1="${start + i * step}" x2="${start + 25 + i * step}" y1="22" y2="22" stroke="${x[1]}" class="legend-line"/>`;
+      return `${key}<text x="${start + 32 + i * step}" y="26" class="legend">${x[0]}</text>`;
+    }).join("");
     return `${s}${legend}</svg>`;
   };
 
@@ -167,12 +176,16 @@
       trendX0, trendX1, "Centered trend (logit)", 270);
     trend += ribbon(trendRows, "city_trend_lower", "city_trend_upper",
       trendX0, trendX1, -trendLimit, trendLimit, 270);
+    trend += intervalLine(trendRows, "city_trend_lower", trendX0, trendX1,
+      -trendLimit, trendLimit, 270);
+    trend += intervalLine(trendRows, "city_trend_upper", trendX0, trendX1,
+      -trendLimit, trendLimit, 270);
     trend += line(trendRows, "global_trend_centered", trendX0, trendX1,
       -trendLimit, trendLimit, "#1a657c", 270);
     trend += line(trendRows, "city_trend_centered", trendX0, trendX1,
       -trendLimit, trendLimit, "#d77942", 270);
     $("city-trend-chart").innerHTML = finish(trend, [
-      ["US-wide", "#1a657c"], [name, "#d77942"]
+      ["US-wide", "#1a657c"], [name, "#d77942"], ["95% interval", "#d77942", "interval"]
     ]);
 
     seasonRows.forEach(row => {
@@ -186,29 +199,46 @@
       seasonLimit, "Seasonal component (logit)", 290);
     season += monthRibbon(seasonRows, "city_season_lower", "city_season_upper",
       -seasonLimit, seasonLimit, 290);
+    season += monthIntervalLine(seasonRows, "city_season_lower", -seasonLimit,
+      seasonLimit, 290);
+    season += monthIntervalLine(seasonRows, "city_season_upper", -seasonLimit,
+      seasonLimit, 290);
     season += monthLine(seasonRows, "global_season_centered", -seasonLimit,
       seasonLimit, "#1a657c", 290);
     season += monthLine(seasonRows, "city_season_centered", -seasonLimit,
       seasonLimit, "#d77942", 290);
     $("city-season-chart").innerHTML = finish(season, [
-      ["US-wide", "#1a657c"], [name, "#d77942"]
+      ["US-wide", "#1a657c"], [name, "#d77942"], ["95% interval", "#d77942", "interval"]
     ]);
 
     const residualRows = rows.map(row => ({
       ...row,
-      city_residual_logit: n(row.time_effect_logit) + n(row.overdispersion_logit)
+      city_residual_logit: n(row.time_effect_logit) + n(row.overdispersion_logit),
+      city_residual_se: state.residualSE.get(`${row.city_id}|${row.date}`)
     }));
+    residualRows.forEach(row => {
+      row.city_residual_lower = row.city_residual_logit -
+        intervalMultiplier * row.city_residual_se;
+      row.city_residual_upper = row.city_residual_logit +
+        intervalMultiplier * row.city_residual_se;
+    });
     const residualLimit = symmetricLimit(residualRows.flatMap(r => [
-      n(r.time_effect_logit), n(r.city_residual_logit)
+      n(r.time_effect_logit), n(r.city_residual_lower), n(r.city_residual_upper)
     ]));
     let residual = base(`${name} - residual comparison`, -residualLimit,
       residualLimit, x0, x1, "Residual component (logit)", 270);
+    residual += ribbon(residualRows, "city_residual_lower", "city_residual_upper",
+      x0, x1, -residualLimit, residualLimit, 270);
+    residual += intervalLine(residualRows, "city_residual_lower", x0, x1,
+      -residualLimit, residualLimit, 270);
+    residual += intervalLine(residualRows, "city_residual_upper", x0, x1,
+      -residualLimit, residualLimit, 270);
     residual += line(residualRows, "time_effect_logit", x0, x1,
       -residualLimit, residualLimit, "#1a657c", 270);
     residual += line(residualRows, "city_residual_logit", x0, x1,
       -residualLimit, residualLimit, "#d77942", 270);
     $("city-residual-chart").innerHTML = finish(residual, [
-      ["US-wide", "#1a657c"], [name, "#d77942"]
+      ["US-wide", "#1a657c"], [name, "#d77942"], ["95% interval", "#d77942", "interval"]
     ]);
 
     const tableRows = rows.slice().reverse().map(row => {
