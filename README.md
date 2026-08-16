@@ -14,6 +14,27 @@ The deployed application is available at
 app CSVs from a dedicated `gh-pages` branch; fitted model objects remain local
 and are not published.
 
+Deployment is controlled by a script committed on `main`. After committing and
+pushing `main`, deploy the complete browser app and its 30 required CSV files
+with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File src/deploy_github_pages.ps1
+```
+
+To check without changing or pushing anything, run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File src/deploy_github_pages.ps1 -CheckOnly
+```
+
+The script requires local `main` to match `origin/main`, builds the site in an
+isolated temporary worktree, and records the deployed main commit plus SHA-256
+file hashes in `deployment.json`. It replaces only the published app bundle;
+the fitted models and the unused 164 MB combined decomposition CSV are not
+published. A failed or interrupted push cannot silently report a successful
+deployment.
+
 Build a self-contained Markdown package for CrimRxiv/PubPub with:
 
 ```powershell

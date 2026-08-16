@@ -141,6 +141,69 @@ the observation-level city-month residual `overdispersion_logit` around zero.
 The redirect is implemented by the server, so a root `index.html` is
 unnecessary.
 
+## RTCI refresh, paper release, and GitHub Pages deployment
+
+When the upstream RTCI data changes, use this order from the repository root.
+It keeps the paper, the ignored app CSVs, `main`, and the published site tied to
+the same validated model run.
+
+1. Use the WSL process check above and confirm that no model runner or crime fit
+   is already active. Never start a second fit. Do not fit crimes in parallel.
+2. Run the normal Windows render:
+
+   ```powershell
+   conda run --no-capture-output -n r2026 quarto render paper.qmd --to all
+   ```
+
+   Do not set `RTCI_SKIP_UPDATE_CHECK` for a real refresh. The render invokes
+   `src/ensure_outputs_current.R`; changed RTCI inputs trigger the locked WSL
+   sequential runner, checkpoint validation, the non-stacked merge,
+   `src/validate_outputs.R`, and then the PDF, Word, and Markdown renders.
+3. Confirm that Quarto exited successfully. Reload validation can also be run
+   explicitly with:
+
+   ```powershell
+   wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp' && Rscript src/validate_outputs.R"
+   ```
+
+   Rasterize every page of `paper.pdf` and inspect the page images. Treat the
+   known MiKTeX `pdfcrop`/Perl messages as nonfatal only when Quarto returned
+   success and the rendered pages are correct. Start `python src/serve_app.py`
+   and smoke-test the overview, city, and all-city pages against the refreshed
+   local CSVs.
+4. Review the changes, then commit the refreshed tracked RTCI inputs, paper
+   outputs, Markdown image assets, and any code or documentation changes. Do
+   not force-add `src/data/model/` or `src/data/app/*.csv`; those outputs remain
+   ignored. Push the completed commit to `main` before publishing the site:
+
+   ```powershell
+   git push origin main
+   ```
+
+5. Deploy the browser app and all 30 required partitioned/generated CSVs with
+   the deployment script stored on `main`:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File src/deploy_github_pages.ps1
+   ```
+
+   The script refuses to deploy unless the checked-out branch is `main`, the
+   tracked app source is clean, and local `main` exactly matches
+   `origin/main`. It builds an isolated temporary worktree, replaces the site
+   bundle on `gh-pages`, commits it, pushes it, and verifies the remote commit.
+   It publishes the crime-partitioned decomposition files, not the unused
+   164 MB combined `decomposition.csv`, and never publishes fitted models.
+6. Verify the deployment without changing either branch:
+
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File src/deploy_github_pages.ps1 -CheckOnly
+   ```
+
+   A successful check means the deployed file contents match the local app
+   bundle and `deployment.json` records the current `main` commit plus SHA-256
+   hashes for every published source file. Finally load
+   `https://apwheele.github.io/CrimeDecomp/` and exercise the three app pages.
+
 ## Known issues and history
 
 - The original full `mgcv`/`gamm4` factor-smooth model worked on reduced data,
