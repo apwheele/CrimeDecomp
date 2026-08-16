@@ -35,7 +35,9 @@ svg { display:block; width:100%; min-width:760px; height:360px; }
 .city-key { stroke:#aab4b6; stroke-width:2; stroke-opacity:.7; }
 .global-key { stroke:var(--blue); stroke-width:3; }
 .band-key { fill:#c8dadd; fill-opacity:.75; }
-.interval-band { fill:var(--orange); fill-opacity:.18; stroke:none; }
+.interval-band { fill:var(--orange); fill-opacity:.24; stroke:none; }
+.interval-boundary { fill:none; stroke:var(--orange); stroke-width:1.35; stroke-dasharray:5 4; stroke-opacity:.9; }
+.interval-key { fill:var(--orange); fill-opacity:.24; stroke:var(--orange); stroke-width:1; }
 .table-wrap { max-height:620px; overflow:auto; border:1px solid var(--line); border-radius:8px; }
 .data-table { width:100%; min-width:790px; border-collapse:collapse; font-variant-numeric:tabular-nums; }
 .data-table th,.data-table td { padding:8px 10px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; }
