@@ -14,6 +14,16 @@ The deployed application is available at
 app CSVs from a dedicated `gh-pages` branch; fitted model objects remain local
 and are not published.
 
+Build a self-contained Markdown package for CrimRxiv/PubPub with:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File src/build_crimrxiv_package.ps1
+```
+
+This creates `crimrxiv/paper.md` and preserves its relative media paths under
+`crimrxiv/output/markdown/images/`. The three web-app GIFs are downloaded into
+that image directory and changed to local references in the packaged Markdown.
+
 From the repository root, rerun the validated all-city workflow under WSL with:
 
 ```powershell

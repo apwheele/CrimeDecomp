@@ -1,6 +1,17 @@
 # Monthly crime trends: global patterns and city departures
 Andrew P. Wheeler
 
+# Abstract
+
+Crime trends are commonly summarized by national aggregates or short-term
+percentage changes, both of which can obscure sustained local departures and
+overstate ordinary variation. This paper decomposes monthly reported crime
+from the Real-Time Crime Index into a global nonlinear trend, recurring annual
+seasonality, calendar-month shocks shared across cities, city-specific trend
+and seasonal departures, and city-month residual variation. Explore the results
+at https://apwheele.github.io/CrimeDecomp/app/ and reproduce the analysis at
+https://github.com/apwheele/CrimeDecomp.
+
 # Introduction
 
 Crime trends are often summarized with two numbers and a percent change.
@@ -505,6 +516,53 @@ style="width:100.0%" data-fig-pos="H" />
 <img src="output/markdown/images/fig-latest-residual-outliers-b-1.png"
 style="width:100.0%" data-fig-pos="H" />
 
+# Interactive web application
+
+The [live web application](https://apwheele.github.io/CrimeDecomp/app/)
+turns the saved decomposition into an exploratory companion to the
+paper. Its overview page shows the global trend, seasonal pattern, and
+shared monthly effect for each offense. The city page filters
+jurisdictions by state and then compares a selected city’s observed and
+fitted rates with the US-wide and local trend, seasonal, and residual
+components. The all-city page displays every city’s centered trend and
+seasonal curve and its observation-level monthly residuals; hovering
+identifies individual cities, while a shaded band summarizes the middle
+80% of city curves.
+
+The demonstrations below are the same animations shown in the [companion
+blog post](https://crimede-coder.com/blogposts/2026/CrimeTrends). In the
+Word and Markdown versions they are embedded as animated GIFs; in the
+PDF, each caption links to the corresponding animation.
+
+<figure>
+<img src="https://crimede-coder.com/images/Philly.gif" alt="Interactive Philadelphia burglary analysis" width="600" />
+<figcaption>
+City detail: selecting Philadelphia burglary and comparing observed,
+global, city-specific, and residual patterns.
+</figcaption>
+</figure>
+<figure>
+<img src="https://crimede-coder.com/images/Curve.gif" alt="Interactive national and city-level crime trend curves" width="600" />
+<figcaption>
+All-city curves: exploring national and city-level trends and
+identifying jurisdictions with distinctive trajectories.
+</figcaption>
+</figure>
+<figure>
+<img src="https://crimede-coder.com/images/Outlier.gif" alt="Interactive analysis of monthly crime outliers" width="600" />
+<figcaption>
+Monthly residuals: examining city-month departures around zero and
+identifying observations that merit follow-up.
+</figcaption>
+</figure>
+
+The complete source, app code, and reproducible workflow are maintained
+in the [GitHub repository](https://github.com/apwheele/CrimeDecomp). The
+[live web application](https://apwheele.github.io/CrimeDecomp/app/) and
+the [GitHub-rendered Markdown
+paper](https://github.com/apwheele/CrimeDecomp/blob/main/paper.md) will
+be updated when the RTCI data are updated.
+
 # Discussion
 
 The main lesson is to avoid forcing every change into one story. The
@@ -563,11 +621,11 @@ look next, not what caused the pattern.
 
 # Reproducibility and acknowledgments
 
-The code, initial paper, and web application were created in OpenAI
-Codex using Luna and Sol, with substantive review and direction from the
-author. Generated metadata records the exact model formulas and
-settings, while source data, geocoding results, and manual coordinate
-overrides are cached in the repository.
+The code, paper text, and web application were generated entirely
+through prompting OpenAI Codex using Luna and Sol, with substantive
+review and direction from the author. Generated metadata records the
+exact model formulas and settings, and source data are cached in the
+repository.
 
 # References
 
