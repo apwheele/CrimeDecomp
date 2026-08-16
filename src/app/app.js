@@ -1,7 +1,8 @@
 (() => {
   const state = {
     global: [], decomposition: [], loadedCrime: "", cities: [],
-    cityTrends: [], citySeasons: [], loadedCurvesCrime: "",
+    cityTrends: [], citySeasons: [], residualSE: new Map(), cityById: new Map(),
+    loadedCurvesCrime: "",
     crime: "murder", city: "", selectedState: ""
   };
   const $ = id => document.getElementById(id);
@@ -24,11 +25,22 @@
   };
   const n = x => Number(x);
   const f = x => Number.isFinite(x) ? x.toFixed(2) : "-";
+  const f1 = x => Number.isFinite(x) ? x.toFixed(1) : "-";
   const esc = x => String(x).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   const crimeLabel = crime => ({ motor: "Motor Vehicle Theft" }[crime] || crime[0].toUpperCase() + crime.slice(1));
+  const cityDisplayLabel = (cityId, fallback) => {
+    const city = state.cityById.get(cityId);
+    return city?.agency_type === "County"
+      ? `${fallback} (Sheriff's Office)` : fallback;
+  };
   const scale = (x, a, b, c, d) => c + (x - a) * (d - c) / ((b - a) || 1);
   const line = (rows, key, x0, x1, ymin, ymax, color, height = 330) =>
     `<path d="${rows.map((r, i) => ` ${i ? 'L' : 'M'}${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[key]), ymax, ymin, 38, height - 40).toFixed(1)}`).join("")}" fill="none" stroke="${color}" class="legend-line"/>`;
+  const ribbon = (rows, lowerKey, upperKey, x0, x1, ymin, ymax, height = 330) => {
+    const upper = rows.map((r, i) => `${i ? "L" : "M"}${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[upperKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
+    const lower = rows.slice().reverse().map(r => `L${scale(new Date(r.date), x0, x1, 66, 1010).toFixed(1)},${scale(n(r[lowerKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
+    return `<path d="${upper} ${lower} Z" class="interval-band"/>`;
+  };
   const base = (title, ymin, ymax, x0, x1, ylabel, height = 330) => {
     let s = `<svg viewBox="0 0 1060 ${height}" role="img" aria-label="${title}"><text x="66" y="22" class="chart-title">${title}</text>`;
     [0, .25, .5, .75, 1].forEach(t => {
@@ -56,6 +68,11 @@
   };
   const monthLine = (rows, key, ymin, ymax, color, height = 290) =>
     `<path d="${rows.map((r, i) => ` ${i ? 'L' : 'M'}${scale(n(r.month), 1, 12, 66, 1010).toFixed(1)},${scale(n(r[key]), ymax, ymin, 38, height - 40).toFixed(1)}`).join("")}" fill="none" stroke="${color}" class="legend-line"/>`;
+  const monthRibbon = (rows, lowerKey, upperKey, ymin, ymax, height = 290) => {
+    const upper = rows.map((r, i) => `${i ? "L" : "M"}${scale(n(r.month), 1, 12, 66, 1010).toFixed(1)},${scale(n(r[upperKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
+    const lower = rows.slice().reverse().map(r => `L${scale(n(r.month), 1, 12, 66, 1010).toFixed(1)},${scale(n(r[lowerKey]), ymax, ymin, 38, height - 40).toFixed(1)}`).join(" ");
+    return `<path d="${upper} ${lower} Z" class="interval-band"/>`;
+  };
   const monthBase = (title, ymin, ymax, ylabel, height = 290) => {
     let s = `<svg viewBox="0 0 1060 ${height}" role="img" aria-label="${esc(title)}"><text x="66" y="22" class="chart-title">${esc(title)}</text>`;
     [0, .25, .5, .75, 1].forEach(t => {
@@ -113,17 +130,19 @@
         $(id).innerHTML = index === 0
           ? '<p class="caption">Loading this crime type...</p>' : "";
       });
+      $("city-month-table").innerHTML = '<p class="table-note">Loading this crime type...</p>';
       return;
     }
     const rows = state.decomposition.filter(r => r.city_id === state.city && r.crime_type === state.crime);
     const trendRows = state.cityTrends.filter(r => r.city_id === state.city);
     const seasonRows = state.citySeasons.filter(r => r.city_id === state.city);
     const selected = state.cities.find(r => r.city_id === state.city);
-    const name = selected ? selected.city_label : state.city;
+    const name = selected ? cityDisplayLabel(selected.city_id, selected.city_label) : state.city;
     if (!rows.length || !trendRows.length || !seasonRows.length) {
       $("city-title").textContent = `${name} - ${crimeLabel(state.crime)}`;
       $("city-chart").innerHTML = '<p class="caption">No valid component count rows are available for this city and crime type.</p>';
       componentCharts.slice(1).forEach(id => { $(id).innerHTML = ""; });
+      $("city-month-table").innerHTML = '<p class="table-note">No monthly rows are available for this selection.</p>';
       return;
     }
     $("city-title").textContent = `${name} - ${crimeLabel(state.crime)}`;
@@ -134,13 +153,20 @@
     s += line(rows, "observed_rate", x0, x1, 0, ymax, "#9aa8aa") + line(rows, "global_rate", x0, x1, 0, ymax, "#1a657c") + line(rows, "city_fitted_rate", x0, x1, 0, ymax, "#d77942");
     $("city-chart").innerHTML = finish(s, [["observed", "#9aa8aa"], ["global baseline", "#1a657c"], ["city fitted", "#d77942"]]);
 
+    const intervalMultiplier = 1.959963984540054;
+    trendRows.forEach(row => {
+      row.city_trend_lower = n(row.city_trend_centered) - intervalMultiplier * n(row.city_trend_se);
+      row.city_trend_upper = n(row.city_trend_centered) + intervalMultiplier * n(row.city_trend_se);
+    });
     const trendLimit = symmetricLimit(trendRows.flatMap(r => [
-      n(r.global_trend_centered), n(r.city_trend_centered)
+      n(r.global_trend_centered), n(r.city_trend_lower), n(r.city_trend_upper)
     ]));
     const trendX0 = new Date(trendRows[0].date);
     const trendX1 = new Date(trendRows[trendRows.length - 1].date);
     let trend = base(`${name} - centered trend`, -trendLimit, trendLimit,
       trendX0, trendX1, "Centered trend (logit)", 270);
+    trend += ribbon(trendRows, "city_trend_lower", "city_trend_upper",
+      trendX0, trendX1, -trendLimit, trendLimit, 270);
     trend += line(trendRows, "global_trend_centered", trendX0, trendX1,
       -trendLimit, trendLimit, "#1a657c", 270);
     trend += line(trendRows, "city_trend_centered", trendX0, trendX1,
@@ -149,11 +175,17 @@
       ["US-wide", "#1a657c"], [name, "#d77942"]
     ]);
 
+    seasonRows.forEach(row => {
+      row.city_season_lower = n(row.city_season_centered) - intervalMultiplier * n(row.city_season_se);
+      row.city_season_upper = n(row.city_season_centered) + intervalMultiplier * n(row.city_season_se);
+    });
     const seasonLimit = symmetricLimit(seasonRows.flatMap(r => [
-      n(r.global_season_centered), n(r.city_season_centered)
+      n(r.global_season_centered), n(r.city_season_lower), n(r.city_season_upper)
     ]));
     let season = monthBase(`${name} - seasonal pattern`, -seasonLimit,
       seasonLimit, "Seasonal component (logit)", 290);
+    season += monthRibbon(seasonRows, "city_season_lower", "city_season_upper",
+      -seasonLimit, seasonLimit, 290);
     season += monthLine(seasonRows, "global_season_centered", -seasonLimit,
       seasonLimit, "#1a657c", 290);
     season += monthLine(seasonRows, "city_season_centered", -seasonLimit,
@@ -178,6 +210,20 @@
     $("city-residual-chart").innerHTML = finish(residual, [
       ["US-wide", "#1a657c"], [name, "#d77942"]
     ]);
+
+    const tableRows = rows.slice().reverse().map(row => {
+      const expectedRate = n(row.city_time_fitted_rate);
+      const expectedCount = expectedRate * n(row.population) / (12 * 100000);
+      const error = n(row.overdispersion_logit);
+      const errorSE = state.residualSE.get(`${row.city_id}|${row.date}`);
+      const flagged = Number.isFinite(errorSE) && Math.abs(error) > 2 * errorSE;
+      const date = new Date(row.date);
+      const month = date.toLocaleDateString("en-US", {
+        month: "short", year: "numeric", timeZone: "UTC"
+      });
+      return `<tr class="${flagged ? "residual-alert" : ""}"><td>${esc(month)}</td><td>${f1(expectedCount)}</td><td>${Math.round(n(row.count)).toLocaleString()}</td><td>${f1(expectedRate)}</td><td>${f1(n(row.observed_rate))}</td><td>${f(error)}</td><td>${f(errorSE)}</td></tr>`;
+    }).join("");
+    $("city-month-table").innerHTML = `<table class="data-table"><thead><tr><th>Month</th><th>Expected count</th><th>Observed count</th><th>Expected rate</th><th>Observed rate</th><th><em>e</em></th><th>SE(<em>e</em>)</th></tr></thead><tbody>${tableRows}</tbody></table>`;
   }
 
   function loadCrime(crime) {
@@ -186,15 +232,18 @@
     renderCity();
     return Promise.all([
       `decomposition_${crime}.csv`, `city_trends_${crime}.csv`,
-      `city_seasons_${crime}.csv`
+      `city_seasons_${crime}.csv`, `residual_se_${crime}.csv`
     ].map(file => fetch(`../data/app/${file}`).then(response => {
       if (!response.ok) throw new Error(`${file}: ${response.status}`);
       return response.text();
-    }).then(csv))).then(([rows, trends, seasons]) => {
+    }).then(csv))).then(([rows, trends, seasons, residualSE]) => {
         if (crime !== state.crime) return;
         state.decomposition = rows;
         state.cityTrends = trends;
         state.citySeasons = seasons;
+        state.residualSE = new Map(residualSE.map(row => [
+          `${row.city_id}|${row.date}`, n(row.overdispersion_logit_se)
+        ]));
         state.loadedCrime = crime;
         state.loadedCurvesCrime = crime;
         renderCity();
@@ -297,7 +346,7 @@
     const lower = envelopes.slice().reverse().map(point => `L${xScale(point.value).toFixed(1)},${yScale(point.low).toFixed(1)}`).join(" ");
     svg += `<path d="${upper} ${lower} Z" class="quantile-band"/>`;
     groups.forEach(group => {
-      svg += `<path d="${pathFor(group, options.cityKey)}" class="city-curve" data-label="${esc(group[0].city_label)}"/>`;
+      svg += `<path d="${pathFor(group, options.cityKey)}" class="city-curve" data-label="${esc(cityDisplayLabel(group[0].city_id, group[0].city_label))}"/>`;
     });
     svg += `<path d="${pathFor(globalRows, options.globalKey)}" class="global-curve"/>`;
     svg += `<line x1="66" x2="1010" y1="320" y2="320" class="axis"/><text x="17" y="180" transform="rotate(-90 17 180)" class="axis-label">${esc(options.ylabel)}</text>`;
@@ -357,12 +406,20 @@
     if (page === "all-cities") renderAllCities();
   }
 
+  function syncUrl(page = document.querySelector(".page.active")?.id || "overview") {
+    const url = new URL(window.location.href);
+    url.searchParams.set("crime", state.crime);
+    if (state.city) url.searchParams.set("city", state.city);
+    url.hash = page;
+    history.replaceState(null, "", url);
+  }
+
   function populateCitySelect(preferredCity = "") {
     const cities = state.cities
       .filter(city => city.state === state.selectedState)
-      .sort((a, b) => a.city_label.localeCompare(b.city_label));
+      .sort((a, b) => cityDisplayLabel(a.city_id, a.city_label).localeCompare(cityDisplayLabel(b.city_id, b.city_label)));
     $("city-select").innerHTML = cities
-      .map(city => `<option value="${esc(city.city_id)}">${esc(city.city_label)}</option>`)
+      .map(city => `<option value="${esc(city.city_id)}">${esc(cityDisplayLabel(city.city_id, city.city_label))}</option>`)
       .join("");
     state.city = cities.some(city => city.city_id === preferredCity)
       ? preferredCity : (cities[0]?.city_id || "");
@@ -373,10 +430,16 @@
     const crimes = [...new Set(state.global.map(r => r.crime_type))].sort();
     const cities = state.cities.slice().sort((a, b) => a.city_label.localeCompare(b.city_label));
     const states = [...new Set(cities.map(city => city.state).filter(Boolean))].sort();
-    state.crime = crimes[0];
-    const initialCity = cities.find(city => city.city_id === "PAPEP0000") || cities[0];
+    state.cityById = new Map(cities.map(city => [city.city_id, city]));
+    const params = new URLSearchParams(location.search);
+    const requestedCrime = (params.get("crime") || "").toLowerCase();
+    const requestedCityId = (params.get("city") || "").toUpperCase();
+    state.crime = crimes.includes(requestedCrime) ? requestedCrime : crimes[0];
+    const initialCity = cities.find(city => city.city_id === requestedCityId) ||
+      cities.find(city => city.city_id === "PAPEP0000") || cities[0];
     state.selectedState = initialCity.state;
     $("crime").innerHTML = crimes.map(x => `<option value="${x}">${crimeLabel(x)}</option>`).join("");
+    $("crime").value = state.crime;
     $("state-select").innerHTML = states.map(value => `<option value="${esc(value)}">${esc(value)}</option>`).join("");
     $("state-select").value = state.selectedState;
     populateCitySelect(initialCity.city_id);
@@ -384,20 +447,36 @@
       state.crime = e.target.value;
       renderGlobal();
       loadCrime(state.crime);
+      syncUrl();
     });
     $("state-select").addEventListener("change", e => {
       state.selectedState = e.target.value;
       populateCitySelect();
       renderCity();
+      syncUrl();
     });
-    $("city-select").addEventListener("change", e => { state.city = e.target.value; renderCity(); });
-    $("reset").addEventListener("click", () => { state.crime = crimes[0]; $("crime").value = state.crime; renderGlobal(); loadCrime(state.crime); showPage("overview"); });
+    $("city-select").addEventListener("change", e => {
+      state.city = e.target.value;
+      renderCity();
+      syncUrl();
+    });
+    $("reset").addEventListener("click", () => {
+      state.crime = crimes[0];
+      $("crime").value = state.crime;
+      renderGlobal();
+      loadCrime(state.crime);
+      showPage("overview");
+      syncUrl("overview");
+    });
     document.querySelectorAll(".tab").forEach(x => x.addEventListener("click", () => {
-      history.replaceState(null, "", `#${x.dataset.page}`);
       showPage(x.dataset.page);
+      syncUrl(x.dataset.page);
     }));
     const requestedPage = location.hash.slice(1);
-    showPage(["overview", "city", "all-cities"].includes(requestedPage) ? requestedPage : "overview");
+    const initialPage = ["overview", "city", "all-cities"].includes(requestedPage)
+      ? requestedPage : (requestedCityId ? "city" : "overview");
+    showPage(initialPage);
+    syncUrl(initialPage);
     $("status").textContent = `${state.cities.length.toLocaleString()} cities - loading ${crimeLabel(state.crime).toLowerCase()} city detail...`;
     loadCrime(state.crime);
   }

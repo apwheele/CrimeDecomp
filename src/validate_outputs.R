@@ -59,6 +59,7 @@ stopifnot(
   nrow(decomposition) == nrow(data),
   setequal(unique(decomposition$crime_type), crimes),
   nrow(cities) == dplyr::n_distinct(data$city_id),
+  all(cities$agency_type %in% c("City", "County")),
   all(is.finite(cities$latitude)),
   all(is.finite(cities$longitude))
 )
@@ -66,23 +67,35 @@ for (crime in crimes) {
   app_path <- file.path("src/data/app", paste0("decomposition_", crime, ".csv"))
   trend_path <- file.path("src/data/app", paste0("city_trends_", crime, ".csv"))
   season_path <- file.path("src/data/app", paste0("city_seasons_", crime, ".csv"))
+  residual_se_path <- file.path(
+    "src/data/app", paste0("residual_se_", crime, ".csv")
+  )
   stopifnot(
     file.exists(app_path), file.info(app_path)$size > 0,
     file.exists(trend_path), file.info(trend_path)$size > 0,
-    file.exists(season_path), file.info(season_path)$size > 0
+    file.exists(season_path), file.info(season_path)$size > 0,
+    file.exists(residual_se_path), file.info(residual_se_path)$size > 0
   )
   trends <- readr::read_csv(trend_path, show_col_types = FALSE)
   seasons <- readr::read_csv(season_path, show_col_types = FALSE)
+  residual_se <- readr::read_csv(residual_se_path, show_col_types = FALSE)
   expected_cities <- dplyr::n_distinct(data$city_id[data$crime_type == crime])
   stopifnot(
     nrow(trends) == sum(data$crime_type == crime),
     dplyr::n_distinct(trends$city_id) == expected_cities,
     dplyr::n_distinct(seasons$city_id) == expected_cities,
     nrow(seasons) == 12 * expected_cities,
+    nrow(residual_se) == sum(data$crime_type == crime),
     all(is.finite(trends$global_trend_centered)),
     all(is.finite(trends$city_trend_centered)),
+    all(is.finite(trends$city_trend_se)),
+    all(trends$city_trend_se >= 0),
     all(is.finite(seasons$global_season_centered)),
     all(is.finite(seasons$city_season_centered)),
+    all(is.finite(seasons$city_season_se)),
+    all(seasons$city_season_se >= 0),
+    all(is.finite(residual_se$overdispersion_logit_se)),
+    all(residual_se$overdispersion_logit_se >= 0),
     max(abs(trends |>
       dplyr::group_by(city_id) |>
       dplyr::summarise(value = mean(city_trend_centered), .groups = "drop") |>
@@ -92,7 +105,7 @@ for (crime in crimes) {
       dplyr::summarise(value = mean(city_season_centered), .groups = "drop") |>
       dplyr::pull(value))) < 1e-10
   )
-  rm(trends, seasons)
+  rm(trends, seasons, residual_se)
 }
 trend_rankings <- readr::read_csv(required_outputs[[7]], show_col_types = FALSE)
 season_rankings <- readr::read_csv(required_outputs[[8]], show_col_types = FALSE)

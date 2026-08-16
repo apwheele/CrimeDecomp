@@ -230,7 +230,8 @@ rtci_write_trend_outliers <- function(
   combined
 }
 
-rtci_extract_all_city_trends <- function(model, results, crime_type) {
+rtci_extract_all_city_trends <- function(model, results, crime_type,
+                                         random_effects = NULL) {
   basis <- attr(model, "rtci_basis_spec")
   columns <- basis$trend_columns
   fixed <- glmmTMB::fixef(model)$cond
@@ -240,12 +241,41 @@ rtci_extract_all_city_trends <- function(model, results, crime_type) {
   trend_matrix <- as.matrix(results[, columns, drop = FALSE])
   global_trend <- unname(fixed[["(Intercept)"]]) +
     as.numeric(trend_matrix %*% fixed_coefficients)
-  random <- glmmTMB::ranef(model, condVar = FALSE)$cond$city_trend_group
+  random <- if (is.null(random_effects)) {
+    glmmTMB::ranef(model, condVar = TRUE)$cond$city_trend_group
+  } else {
+    random_effects$city_trend_group
+  }
   coefficients <- as.matrix(random[, columns, drop = FALSE])
   city_rows <- match(as.character(results$city_trend_group), rownames(coefficients))
+  conditional_variance <- attr(random, "condVar")
+  if (is.null(conditional_variance) || anyNA(city_rows)) {
+    stop("Conditional city trend variances are unavailable for ", crime_type, ".")
+  }
+  coefficient_variances <- t(vapply(
+    seq_len(dim(conditional_variance)[[3]]),
+    function(index) diag(conditional_variance[, , index]),
+    numeric(length(columns))
+  ))
+  if (any(!is.finite(coefficient_variances)) ||
+      any(coefficient_variances < 0)) {
+    stop("Invalid conditional city trend variances for ", crime_type, ".")
+  }
   city_trend <- global_trend + rowSums(
     trend_matrix * coefficients[city_rows, , drop = FALSE]
   )
+  centered_trend_matrix <- results |>
+    dplyr::mutate(city_id = as.character(city_id)) |>
+    dplyr::group_by(city_id) |>
+    dplyr::mutate(dplyr::across(
+      dplyr::all_of(columns), ~ .x - mean(.x)
+    )) |>
+    dplyr::ungroup() |>
+    dplyr::select(dplyr::all_of(columns)) |>
+    as.matrix()
+  city_trend_se <- sqrt(rowSums(
+    centered_trend_matrix^2 * coefficient_variances[city_rows, , drop = FALSE]
+  ))
   global_center <- mean(dplyr::distinct(
     dplyr::tibble(date = as.Date(results$date), value = global_trend), date,
     .keep_all = TRUE
@@ -256,7 +286,8 @@ rtci_extract_all_city_trends <- function(model, results, crime_type) {
     city_label = results$city_label,
     crime_type = crime_type,
     global_trend_centered = global_trend - global_center,
-    city_trend = city_trend
+    city_trend = city_trend,
+    city_trend_se = city_trend_se
   ) |>
     dplyr::group_by(city_id, city_label, crime_type) |>
     dplyr::mutate(city_trend_centered = city_trend - mean(city_trend)) |>
@@ -264,7 +295,8 @@ rtci_extract_all_city_trends <- function(model, results, crime_type) {
     dplyr::select(-city_trend)
 }
 
-rtci_extract_all_city_seasons <- function(model, crime_type, city_labels) {
+rtci_extract_all_city_seasons <- function(model, crime_type, city_labels,
+                                          random_effects = NULL) {
   basis <- attr(model, "rtci_basis_spec")
   angle <- 2 * pi * (0:11) / 12
   seasonal_basis <- do.call(cbind, lapply(
@@ -282,12 +314,39 @@ rtci_extract_all_city_seasons <- function(model, crime_type, city_labels) {
   fixed_coefficients[retained] <- fixed[retained]
   global_season <- as.numeric(seasonal_basis %*% fixed_coefficients)
   global_season <- global_season - mean(global_season)
-  random <- glmmTMB::ranef(model, condVar = FALSE)$cond$city_season_group
+  random <- if (is.null(random_effects)) {
+    glmmTMB::ranef(model, condVar = TRUE)$cond$city_season_group
+  } else {
+    random_effects$city_season_group
+  }
   coefficients <- as.matrix(
     random[, basis$season_columns, drop = FALSE]
   )
+  conditional_variance <- attr(random, "condVar")
+  if (is.null(conditional_variance)) {
+    stop("Conditional city season variances are unavailable for ", crime_type, ".")
+  }
+  coefficient_variances <- t(vapply(
+    seq_len(dim(conditional_variance)[[3]]),
+    function(index) diag(conditional_variance[, , index]),
+    numeric(length(basis$season_columns))
+  ))
+  if (any(!is.finite(coefficient_variances)) ||
+      any(coefficient_variances < 0)) {
+    stop("Invalid conditional city season variances for ", crime_type, ".")
+  }
   city_seasons <- seasonal_basis %*% t(coefficients) + global_season
   city_seasons <- sweep(city_seasons, 2, colMeans(city_seasons), "-")
+  centered_seasonal_basis <- sweep(
+    seasonal_basis, 2, colMeans(seasonal_basis), "-"
+  )
+  city_season_se <- vapply(
+    seq_len(nrow(coefficient_variances)),
+    function(index) sqrt(rowSums(sweep(
+      centered_seasonal_basis^2, 2, coefficient_variances[index, ], "*"
+    ))),
+    numeric(12)
+  )
   labels <- city_labels |>
     dplyr::filter(city_id %in% colnames(city_seasons)) |>
     dplyr::mutate(city_id = factor(city_id, levels = colnames(city_seasons))) |>
@@ -298,11 +357,32 @@ rtci_extract_all_city_seasons <- function(model, crime_type, city_labels) {
     city_id = rep(colnames(city_seasons), each = 12),
     crime_type = crime_type,
     global_season_centered = rep(global_season, times = ncol(city_seasons)),
-    city_season_centered = as.vector(city_seasons)
+    city_season_centered = as.vector(city_seasons),
+    city_season_se = as.vector(city_season_se)
   ) |>
     dplyr::left_join(labels, by = "city_id") |>
     dplyr::select(month, city_id, city_label, crime_type,
-                  global_season_centered, city_season_centered)
+                  global_season_centered, city_season_centered,
+                  city_season_se)
+}
+
+rtci_extract_all_residual_se <- function(random_effects, results, crime_type) {
+  random <- random_effects$cell_id
+  conditional_variance <- attr(random, "condVar")
+  indices <- match(as.character(results$cell_id), rownames(random))
+  if (is.null(conditional_variance) || anyNA(indices)) {
+    stop("Conditional cell-effect variances are unavailable for ", crime_type, ".")
+  }
+  variances <- conditional_variance[1, 1, indices]
+  if (any(!is.finite(variances)) || any(variances < 0)) {
+    stop("Invalid conditional cell-effect variances for ", crime_type, ".")
+  }
+  dplyr::tibble(
+    date = as.Date(results$date),
+    city_id = as.character(results$city_id),
+    crime_type = as.character(crime_type),
+    overdispersion_logit_se = sqrt(variances)
+  )
 }
 
 rtci_write_all_city_curves <- function(
@@ -314,20 +394,32 @@ rtci_write_all_city_curves <- function(
       "src/data/model/models", paste0(crime, "_glmmtmb.rds")
     ))
     record <- readRDS(file.path("src/data/model/parts", paste0(crime, ".rds")))
+    random_effects <- glmmTMB::ranef(model, condVar = TRUE)$cond
     labels <- record$results |>
       dplyr::transmute(
         city_id = as.character(city_id), city_label = city_label
       ) |>
       dplyr::distinct()
-    trends <- rtci_extract_all_city_trends(model, record$results, crime)
-    seasons <- rtci_extract_all_city_seasons(model, crime, labels)
+    trends <- rtci_extract_all_city_trends(
+      model, record$results, crime, random_effects = random_effects
+    )
+    seasons <- rtci_extract_all_city_seasons(
+      model, crime, labels, random_effects = random_effects
+    )
+    residual_se <- rtci_extract_all_residual_se(
+      random_effects, record$results, crime
+    )
     readr::write_csv(
       trends, file.path(output_directory, paste0("city_trends_", crime, ".csv"))
     )
     readr::write_csv(
       seasons, file.path(output_directory, paste0("city_seasons_", crime, ".csv"))
     )
-    rm(model, record, trends, seasons)
+    readr::write_csv(
+      residual_se,
+      file.path(output_directory, paste0("residual_se_", crime, ".csv"))
+    )
+    rm(model, record, random_effects, trends, seasons, residual_se)
     invisible(gc())
   }
   invisible(TRUE)

@@ -1,8 +1,33 @@
 {
   "source_repository": "https://github.com/AH-Datalytics/rtci",
-  "source_commit": "1d5a1ebfdc8ea641eca2b5112d21b4e76aa82964",
-  "source_url": "https://raw.githubusercontent.com/AH-Datalytics/rtci/1d5a1ebfdc8ea641eca2b5112d21b4e76aa82964/data/Crime_Index_Reported_Crime_Trends_Jan17_May26.csv",
-  "downloaded_at_utc": "2026-08-05 13:22:01",
-  "file_size_bytes": 19138905,
-  "md5": "6c934a25e57413d25a66d4b3cc2dec9d"
+  "source_ref": "main",
+  "downloaded_at_utc": "2026-08-15 21:26:56",
+  "files": {
+    "crime_data": {
+      "name": "Crime_Index_Reported_Crime_Trends_Jan17_May26.csv",
+      "repository_path": "data/Crime_Index_Reported_Crime_Trends_Jan17_May26.csv",
+      "blob_sha": "90781a621aaeab72477014ea5d5908152f10bb12",
+      "source_url": "https://raw.githubusercontent.com/AH-Datalytics/rtci/main/data/Crime_Index_Reported_Crime_Trends_Jan17_May26.csv",
+      "file_size_bytes": 19036414,
+      "md5": "f09570b981e75ba79deb9a6046234d00"
+    },
+    "agency_source": {
+      "name": "pre_processed.csv",
+      "repository_path": "data/deprecated/pre_processed.csv",
+      "blob_sha": "a96ce6e8d5eebd83a523769c63212d5256ccf93d",
+      "source_url": "https://raw.githubusercontent.com/AH-Datalytics/rtci/main/data/deprecated/pre_processed.csv",
+      "file_size_bytes": 28347901,
+      "md5": "540ac52d195c123b74b6a7f61a70c8a8"
+    },
+    "coordinate_source": {
+      "name": "unique_cities_coords.csv",
+      "repository_path": "docs/app_data/unique_cities_coords.csv",
+      "blob_sha": "3ae79c3a18fec74edc949ad1d7893c25919663fd",
+      "source_url": "https://raw.githubusercontent.com/AH-Datalytics/rtci/main/docs/app_data/unique_cities_coords.csv",
+      "file_size_bytes": 54984,
+      "md5": "7a0f84124ca97c5393fe9609e8e162c9"
+    }
+  },
+  "data_changed": true,
+  "metadata_inputs_changed": false
 }

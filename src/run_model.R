@@ -8,6 +8,7 @@ if (.Platform$OS.type == "windows" && dir.exists(local_r_library)) {
 source("src/data_prep.R")
 source("src/model.R")
 source("src/model_signature.R")
+source("src/city_catalog.R")
 
 args <- commandArgs(trailingOnly = TRUE)
 get_arg <- function(name, default) {
@@ -256,34 +257,19 @@ decomposition <- results |>
     overdispersion_logit, row_effect_rate_delta, overdispersion_rate_delta
   )
 
-city_catalog <- raw |>
-  dplyr::filter(size == "all", !is.na(population), population > 0,
-                if (sample_only) !is.na(sample) & sample == 1 else TRUE,
-                if (is.null(min_population)) TRUE else population >= min_population) |>
-  dplyr::transmute(city_id = as.character(id), population = as.numeric(population)) |>
-  dplyr::distinct(city_id, .keep_all = TRUE) |>
-  dplyr::left_join(metadata |>
-                     dplyr::select(city_id, city_name, state, latitude, longitude),
-                   by = "city_id") |>
-  dplyr::mutate(
-    city_name = dplyr::coalesce(city_name, ""),
-    city_name = ifelse(city_name == "" | city_name == city_id,
-                       paste0("Unknown agency (", city_id, ")"), city_name),
-    state = dplyr::coalesce(state, ""),
-    city_label = ifelse(state == "", city_name, paste0(city_name, ", ", state))
-  ) |>
-  dplyr::select(city_id, city_name, state, city_label, latitude, longitude, population)
-cities <- city_catalog
+agency_types <- rtci_read_agency_types()
+cities <- rtci_build_city_catalog(
+  raw, metadata, agency_types, sample_only, min_population
+)
 
 readr::write_csv(decomposition, "src/data/model/decomposition.csv")
 readr::write_csv(global, "src/data/model/global_stl.csv")
 readr::write_csv(city_summary |> dplyr::mutate(city_id = as.character(city_id)),
                  "src/data/model/city_summary.csv")
-readr::write_csv(cities |> dplyr::mutate(city_id = as.character(city_id)), "src/data/model/cities.csv")
+rtci_write_city_catalog(cities)
 readr::write_csv(decomposition, "src/data/app/decomposition.csv")
 readr::write_csv(global, "src/data/app/global_stl.csv")
 readr::write_csv(city_summary |> dplyr::mutate(city_id = as.character(city_id)), "src/data/app/city_summary.csv")
-readr::write_csv(cities |> dplyr::mutate(city_id = as.character(city_id)), "src/data/app/cities.csv")
 for (crime in unique(decomposition$crime_type)) {
   readr::write_csv(
     decomposition[decomposition$crime_type == crime, , drop = FALSE],

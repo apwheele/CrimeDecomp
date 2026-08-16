@@ -57,18 +57,23 @@
       </div>
       <div class="card">
         <h2>City and US-wide trends</h2>
-        <p class="caption">The city and US-wide spline trends are centered separately on the logit scale. Centering removes the city intercept so differences between the curves represent differences in long-run trajectory rather than average crime level.</p>
+        <p class="caption">The city and US-wide spline trends are centered separately on the logit scale. Centering removes the city intercept so differences between the curves represent differences in long-run trajectory rather than average crime level. The band is an approximate 95% pointwise conditional interval for the city deviation.</p>
         <div id="city-trend-chart" class="chart short"></div>
       </div>
       <div class="card">
         <h2>City and US-wide seasonal patterns</h2>
-        <p class="caption">The curves compare the city's fitted Fourier seasonal component with the component shared across the RTCI sample. Intercepts, long-run trends, shared time-period effects, and city-month effects are excluded.</p>
+        <p class="caption">The curves compare the city's fitted Fourier seasonal component with the component shared across the RTCI sample. Intercepts, long-run trends, shared time-period effects, and city-month effects are excluded. The band is an approximate 95% pointwise conditional interval for the city deviation.</p>
         <div id="city-season-chart" class="chart short"></div>
       </div>
       <div class="card">
         <h2>City and US-wide residuals</h2>
         <p class="caption">The US-wide residual is the shared <code>(1 | time_period)</code> effect. The city residual adds this city's <code>(1 | cell_id)</code> observation-level effect, matching the residual comparison in the paper.</p>
         <div id="city-residual-chart" class="chart short"></div>
+      </div>
+      <div class="card">
+        <h2>Monthly observed and expected outcomes</h2>
+        <p class="caption">Expected values include the city's fitted level, trend, season, and the shared time-period effect, but exclude the city-month residual <em>e</em>. Counts are monthly; rates are annualized per 100,000. Highlighted rows have |<em>e</em>| greater than two conditional standard errors.</p>
+        <div id="city-month-table" class="table-wrap"></div>
       </div>
     </section>
 

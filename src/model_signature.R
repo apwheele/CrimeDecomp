@@ -47,7 +47,10 @@ rtci_output_status <- function(expected_signature = rtci_model_signature()) {
     "src/data/model/cities.csv",
     "src/data/model/model_metadata.json",
     "src/data/model/city_component_examples.csv",
-    "src/data/model/latest_residual_se.csv"
+    "src/data/model/latest_residual_se.csv",
+    file.path(
+      "src", "data", "app", paste0("residual_se_", crimes, ".csv")
+    )
   )
   required_paths <- c(part_paths, model_paths, merged_paths)
   missing_paths <- required_paths[!file.exists(required_paths)]

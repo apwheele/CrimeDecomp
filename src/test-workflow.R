@@ -5,6 +5,7 @@ testthat::test_that("output freshness follows content signatures", {
   dir.create(file.path(root, "src", "data", "raw"), recursive = TRUE)
   dir.create(file.path(root, "src", "data", "model", "parts"), recursive = TRUE)
   dir.create(file.path(root, "src", "data", "model", "models"), recursive = TRUE)
+  dir.create(file.path(root, "src", "data", "app"), recursive = TRUE)
   on.exit(unlink(root, recursive = TRUE, force = TRUE), add = TRUE)
   old_working_directory <- setwd(root)
   on.exit(setwd(old_working_directory), add = TRUE)
@@ -32,6 +33,12 @@ testthat::test_that("output freshness follows content signatures", {
   )
   for (path in merged_paths) {
     writeLines("output-placeholder", file.path("src/data/model", path))
+  }
+  for (crime in crimes) {
+    writeLines(
+      "output-placeholder",
+      file.path("src/data/app", paste0("residual_se_", crime, ".csv"))
+    )
   }
 
   testthat::expect_true(rtci_output_status(signature)$current)

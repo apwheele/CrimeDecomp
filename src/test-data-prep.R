@@ -1,3 +1,5 @@
+source("data_prep.R")
+
 testthat::test_that("stacked preparation creates one row per component crime", {
   raw <- data.frame(
     id = c("A", "A"), size = "all", year = c(2020, 2020), month = c(1, 2),

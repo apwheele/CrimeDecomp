@@ -472,6 +472,32 @@ plot_global_seasonal(global)
 
 \clearpage
 
+# Shared time period variation
+
+@fig-global-residual shows the fitted common time-period effect $a_t$. I
+transform it from the logit scale to a change in the annualized global rate.
+This isolates monthly movement shared across the sample after accounting for
+trend and season; it does not include the city-specific effect $e_{it}$. A
+positive monthly effect can therefore occur during a declining trend whenever
+that month is above its still-declining baseline.
+
+```{r}
+#| label: fig-global-residual
+#| fig-width: 7
+#| fig-height: 6.8
+#| out-width: 100%
+#| fig-pos: H
+#| fig-cap: "Fitted shared time-period random effect for each offense, transformed to its change in the annualized global rate. Positive values are time-period departures above the global trend-plus-seasonal curve; negative values are departures below it. Panels use offense-specific vertical scales."
+plot_global_residual(global)
+```
+
+The common time-period term separates abrupt movement from gradual change.
+April 2020 is a prominent negative departure for rape, assault, and theft;
+motor vehicle theft has a large positive shared departure in October 2023.
+Their timing does not identify a cause.
+
+\clearpage
+
 # A city example: Philadelphia
 
 ## Robbery
@@ -575,32 +601,6 @@ plot_city_component_comparison(
   city_components, example_city, burglary_example_crime
 )
 ```
-
-\clearpage
-
-# Shared time period variation
-
-@fig-global-residual shows the fitted common time-period effect $a_t$. I
-transform it from the logit scale to a change in the annualized global rate.
-This isolates monthly movement shared across the sample after accounting for
-trend and season; it does not include the city-specific effect $e_{it}$. A
-positive monthly effect can therefore occur during a declining trend whenever
-that month is above its still-declining baseline.
-
-```{r}
-#| label: fig-global-residual
-#| fig-width: 7
-#| fig-height: 6.8
-#| out-width: 100%
-#| fig-pos: H
-#| fig-cap: "Fitted shared time-period random effect for each offense, transformed to its change in the annualized global rate. Positive values are time-period departures above the global trend-plus-seasonal curve; negative values are departures below it. Panels use offense-specific vertical scales."
-plot_global_residual(global)
-```
-
-The common time-period term separates abrupt movement from gradual change.
-April 2020 is a prominent negative departure for rape, assault, and theft;
-motor vehicle theft has a large positive shared departure in October 2023.
-Their timing does not identify a cause.
 
 \clearpage
 

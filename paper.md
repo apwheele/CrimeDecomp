@@ -41,16 +41,16 @@ population $N$ are displayed as $12(Y/N)100{,}000$. This is an
 annualized rate per 100,000: it preserves the observed monthly count but
 puts cities on a familiar scale.
 
-The upstream files used for this build were downloaded on August 5, 2026
-at 13:22 UTC. Before rendering, the workflow checks the current RTCI
-file revisions and atomically replaces only source files whose contents
-changed. A content-signature change triggers the sequential model
-workflow; otherwise the validated checkpoints are reused. Exact upstream
-revisions and local checksums are stored with the source metadata and
-city crosswalk. This keeps the paper and application reproducible while
-separating reported counts from model-generated output. Data preparation
-uses R and the tidyverse ([R Core Team 2026](#ref-R2026); [Wickham et
-al. 2019](#ref-tidyverse2019)).
+The upstream files used for this build were downloaded on August 15,
+2026 at 21:26 UTC. Before rendering, the workflow checks the current
+RTCI file revisions and atomically replaces only source files whose
+contents changed. A content-signature change triggers the sequential
+model workflow; otherwise the validated checkpoints are reused. Exact
+upstream revisions and local checksums are stored with the source
+metadata and city crosswalk. This keeps the paper and application
+reproducible while separating reported counts from model-generated
+output. Data preparation uses R and the tidyverse ([R Core Team
+2026](#ref-R2026); [Wickham et al. 2019](#ref-tidyverse2019)).
 
 # Model
 
@@ -213,6 +213,24 @@ baseline rate for the offense as well as the logit-scale seasonal curve.
 
 <img src="output/markdown/images/fig-global-seasonal-1.png"
 style="width:100.0%" data-fig-pos="H" />
+# Shared time period variation
+
+<a href="#fig-global-residual" class="quarto-xref">Figure 3</a> shows
+the fitted common time-period effect $a_t$. I transform it from the
+logit scale to a change in the annualized global rate. This isolates
+monthly movement shared across the sample after accounting for trend and
+season; it does not include the city-specific effect $e_{it}$. A
+positive monthly effect can therefore occur during a declining trend
+whenever that month is above its still-declining baseline.
+
+<img src="output/markdown/images/fig-global-residual-1.png"
+style="width:100.0%" data-fig-pos="H" />
+
+The common time-period term separates abrupt movement from gradual
+change. April 2020 is a prominent negative departure for rape, assault,
+and theft; motor vehicle theft has a large positive shared departure in
+October 2023. Their timing does not identify a cause.
+
 # A city example: Philadelphia
 
 ## Robbery
@@ -235,7 +253,7 @@ city-specific trend and seasonal deviations. The largest fitted monthly
 row residual occurs in July 2020. It is not folded back into either
 smooth curve, which keeps an unusual month from being mistaken for a
 persistent local trajectory.
-<a href="#fig-city-components" class="quarto-xref">Figure 3</a> compares
+<a href="#fig-city-components" class="quarto-xref">Figure 4</a> compares
 like components directly. The trend panel removes intercepts and centers
 both curves, so it compares shape rather than level. The seasonal panel
 superimposes Philadelphia’s fitted seasonal pattern on the global
@@ -252,14 +270,14 @@ style="width:100.0%" data-fig-pos="H" />
 Philadelphia burglary provides a useful contrast because several abrupt
 2020 changes are visible in the reported series but should not be
 absorbed into the city’s long-run trend. In the RTCI source snapshot
-downloaded on August 5, 2026 at 13:22 UTC, Philadelphia reported 722
+downloaded on August 15, 2026 at 21:26 UTC, Philadelphia reported 722
 burglaries in May, 1,347 in June, and 986 in October 2020. Those counts
 correspond to annualized monthly rates of 554.5, 1034.6, and 757.3 per
 100,000, respectively. These values are calculated directly from RTCI’s
 reported count and population fields, rather than from a model-generated
 artifact.
 
-<a href="#fig-philly-burglary-rate" class="quarto-xref">Figure 4</a>
+<a href="#fig-philly-burglary-rate" class="quarto-xref">Figure 5</a>
 shows that the partially pooled city curve remains smooth through these
 spikes. This is intentional: the smooth trend and season describe
 persistent structure, while isolated city-month departures belong to the
@@ -269,7 +287,7 @@ occurs in June 2020.
 <img src="output/markdown/images/fig-philly-burglary-rate-1.png"
 style="width:100.0%" data-fig-pos="H" />
 <a href="#fig-philly-burglary-components"
-class="quarto-xref">Figure 5</a> separates the same series into trend,
+class="quarto-xref">Figure 6</a> separates the same series into trend,
 season, and residual components. The centered trend panel removes
 Philadelphia’s city intercept; the seasonal panel compares like Fourier
 components; and the bottom panel shows how the city-month term isolates
@@ -278,24 +296,6 @@ national sample.
 
 <img src="output/markdown/images/fig-philly-burglary-components-1.png"
 style="width:100.0%" data-fig-pos="H" />
-# Shared time period variation
-
-<a href="#fig-global-residual" class="quarto-xref">Figure 6</a> shows
-the fitted common time-period effect $a_t$. I transform it from the
-logit scale to a change in the annualized global rate. This isolates
-monthly movement shared across the sample after accounting for trend and
-season; it does not include the city-specific effect $e_{it}$. A
-positive monthly effect can therefore occur during a declining trend
-whenever that month is above its still-declining baseline.
-
-<img src="output/markdown/images/fig-global-residual-1.png"
-style="width:100.0%" data-fig-pos="H" />
-
-The common time-period term separates abrupt movement from gradual
-change. April 2020 is a prominent negative departure for rape, assault,
-and theft; motor vehicle theft has a large positive shared departure in
-October 2023. Their timing does not identify a cause.
-
 # Cities with unusually different trends
 
 A large city intercept only says that a city has a different average
