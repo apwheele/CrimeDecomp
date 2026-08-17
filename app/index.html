@@ -19,9 +19,10 @@
       <button class="tab active" data-page="overview">Global patterns</button>
       <button class="tab" data-page="city">City detail</button>
       <button class="tab" data-page="all-cities">All-city curves</button>
+      <button class="tab" data-page="about">About</button>
     </nav>
 
-    <section class="controls">
+    <section id="data-controls" class="controls">
       <label>Crime type<select id="crime"></select></label>
       <button id="reset" type="button">Reset crime</button>
     </section>
@@ -72,7 +73,7 @@
       </div>
       <div class="card">
         <h2>Monthly observed and expected outcomes</h2>
-        <p class="caption">Expected values include the city's fitted level, trend, season, and the shared time-period effect, but exclude the city-month residual <em>e</em>. Counts are monthly; rates are annualized per 100,000. Highlighted rows have |<em>e</em>| greater than two conditional standard errors.</p>
+        <p class="caption">Expected values include the city's fitted level, trend, season, and the shared time-period effect, but exclude the city-month residual <em>e</em>. Counts are monthly; rates are annualized per 100,000. Rows with |<em>e</em>| greater than two conditional standard errors are highlighted: blue for decreases and red for increases.</p>
         <div id="city-month-table" class="table-wrap"></div>
       </div>
     </section>
@@ -92,6 +93,18 @@
         <h2>City-specific monthly residuals across the sample</h2>
         <p class="caption">Each grey line is one city's fitted observation-level residual <em>e</em><sub>it</sub>; the blue line marks zero. The shaded band contains the middle 80% of city residuals in each month. Hover over a line to identify the city. The smooth trends, seasonal terms, city intercepts, and shared time-period effect are excluded.</p>
         <div id="all-residuals-chart" class="chart all-city-chart"></div>
+      </div>
+    </section>
+
+    <section id="about" class="page">
+      <div class="card about-card">
+        <h2>About this explorer</h2>
+        <p>This application was created by <a href="https://crimede-coder.com/">Andrew Wheeler</a> to separate reported crime patterns into long-run trends, recurring seasonality, broad monthly changes, and city-specific departures.</p>
+        <p>The reported monthly crime data come from AH Datalytics' <a href="https://github.com/AH-Datalytics/rtci">Real-Time Crime Index (RTCI)</a>.</p>
+
+        <h2>Methodology</h2>
+        <p>Each offense is estimated separately with an aggregated-binomial mixed model. A natural cubic spline captures the national long-run trend, and three sine/cosine harmonic pairs capture annual seasonality. Random effects allow cities to have different average levels, trends, and seasonal patterns, while separate terms capture monthly movement shared across cities and remaining city-by-month variation.</p>
+        <p>The <a href="https://github.com/apwheele/CrimeDecomp">project repository</a> contains the complete methodology, model formulas, source code, validation checks, and paper.</p>
       </div>
     </section>
   </main>

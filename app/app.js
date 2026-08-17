@@ -246,12 +246,16 @@
       const expectedCount = expectedRate * n(row.population) / (12 * 100000);
       const error = n(row.overdispersion_logit);
       const errorSE = state.residualSE.get(`${row.city_id}|${row.date}`);
-      const flagged = Number.isFinite(errorSE) && Math.abs(error) > 2 * errorSE;
+      const residualClass = Number.isFinite(errorSE) && error > 2 * errorSE
+        ? "residual-increase"
+        : Number.isFinite(errorSE) && error < -2 * errorSE
+          ? "residual-decrease"
+          : "";
       const date = new Date(row.date);
       const month = date.toLocaleDateString("en-US", {
         month: "short", year: "numeric", timeZone: "UTC"
       });
-      return `<tr class="${flagged ? "residual-alert" : ""}"><td>${esc(month)}</td><td>${f1(expectedCount)}</td><td>${Math.round(n(row.count)).toLocaleString()}</td><td>${f1(expectedRate)}</td><td>${f1(n(row.observed_rate))}</td><td>${f(error)}</td><td>${f(errorSE)}</td></tr>`;
+      return `<tr class="${residualClass}"><td>${esc(month)}</td><td>${f1(expectedCount)}</td><td>${Math.round(n(row.count)).toLocaleString()}</td><td>${f1(expectedRate)}</td><td>${f1(n(row.observed_rate))}</td><td>${f(error)}</td><td>${f(errorSE)}</td></tr>`;
     }).join("");
     $("city-month-table").innerHTML = `<table class="data-table"><thead><tr><th>Month</th><th>Expected count</th><th>Observed count</th><th>Expected rate</th><th>Observed rate</th><th><em>e</em></th><th>SE(<em>e</em>)</th></tr></thead><tbody>${tableRows}</tbody></table>`;
   }
@@ -431,6 +435,9 @@
   function showPage(page) {
     document.querySelectorAll(".page").forEach(x => x.classList.toggle("active", x.id === page));
     document.querySelectorAll(".tab").forEach(x => x.classList.toggle("active", x.dataset.page === page));
+    const showDataControls = page !== "about";
+    $("data-controls").hidden = !showDataControls;
+    $("status").hidden = !showDataControls;
     if (page === "overview") renderGlobal();
     if (page === "city") renderCity();
     if (page === "all-cities") renderAllCities();
@@ -503,7 +510,7 @@
       syncUrl(x.dataset.page);
     }));
     const requestedPage = location.hash.slice(1);
-    const initialPage = ["overview", "city", "all-cities"].includes(requestedPage)
+    const initialPage = ["overview", "city", "all-cities", "about"].includes(requestedPage)
       ? requestedPage : (requestedCityId ? "city" : "overview");
     showPage(initialPage);
     syncUrl(initialPage);

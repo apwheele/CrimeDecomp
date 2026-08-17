@@ -1,0 +1,170 @@
+{
+    "main_commit":  "e30c27bd7b8a6ad9b4c4ae9124079b30b4e1febf",
+    "files":  [
+                  {
+                      "source":  "src/app/app.js",
+                      "deployed_as":  "app/app.js",
+                      "sha256":  "c2b424ae0d8ce679ede851355c94ce0e74f55e0c5ae10e39169204aa974da3ad"
+                  },
+                  {
+                      "source":  "src/app/index.html",
+                      "deployed_as":  "app/index.html",
+                      "sha256":  "97d753a513297e71afcf02690602f7ca64ef62fd36949dc8f746b72570e2a230"
+                  },
+                  {
+                      "source":  "src/app/styles.css",
+                      "deployed_as":  "app/styles.css",
+                      "sha256":  "c4c3221ba0e6ab178dd25256459ccdd6e3349431058285df6e56b130dd3db5c8"
+                  },
+                  {
+                      "source":  "src/data/app/cities.csv",
+                      "deployed_as":  "data/app/cities.csv",
+                      "sha256":  "77b43217b1b3a9d302adcf18ca0e2aa4ffe269285ca85c5c6a5477bcb7efdd87"
+                  },
+                  {
+                      "source":  "src/data/app/global_stl.csv",
+                      "deployed_as":  "data/app/global_stl.csv",
+                      "sha256":  "5065ddc395e419c5c7b55415728b74e847066e4faa017d83680980783918eb9d"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_murder.csv",
+                      "deployed_as":  "data/app/decomposition_murder.csv",
+                      "sha256":  "feaf9253caa81406028b72e1fb0eee4a5096ff09483da8d5215cca7df052e659"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_murder.csv",
+                      "deployed_as":  "data/app/city_trends_murder.csv",
+                      "sha256":  "3b5e6204bcba3e69f936c986a9e4e942f6ce48a3584f4901d25fa769b87bd05c"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_murder.csv",
+                      "deployed_as":  "data/app/city_seasons_murder.csv",
+                      "sha256":  "2017d31d62577059210bfdd1ee93d2b6b3ea619bd8fe8b74dc5c4fdce550d1cd"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_murder.csv",
+                      "deployed_as":  "data/app/residual_se_murder.csv",
+                      "sha256":  "c87ada21ace1870e6aa8c5337ca6349a349d964f1ee0714565242e31226ff5a7"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_rape.csv",
+                      "deployed_as":  "data/app/decomposition_rape.csv",
+                      "sha256":  "92bbea4dd3f5995d783006ff7cd20497c25c0e1488b8a0e66500379b20c74e24"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_rape.csv",
+                      "deployed_as":  "data/app/city_trends_rape.csv",
+                      "sha256":  "c3aed9a175c9a2f31c363640691cc58d258d0358553a846b105c93d33b57d07e"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_rape.csv",
+                      "deployed_as":  "data/app/city_seasons_rape.csv",
+                      "sha256":  "1e0d53a14cc02b4a056df64a2ed7e8ff7a9daf90338a88aaba024161b311604a"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_rape.csv",
+                      "deployed_as":  "data/app/residual_se_rape.csv",
+                      "sha256":  "60accb8a5e2c4277f7fd4ba7673ccd4125a7c27bd50352ef0cc324f4da628ec6"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_robbery.csv",
+                      "deployed_as":  "data/app/decomposition_robbery.csv",
+                      "sha256":  "2be6a6329737606f3e4de60c22a7d83d2962ff975421610157b78961fcc13bc3"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_robbery.csv",
+                      "deployed_as":  "data/app/city_trends_robbery.csv",
+                      "sha256":  "9371f7c9c4c01ebe10f13d0e2413cd096211978fabcd542a8d34871ba11b7ede"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_robbery.csv",
+                      "deployed_as":  "data/app/city_seasons_robbery.csv",
+                      "sha256":  "bbd19302d9abba6c2e43e5444ef155a1d1404abf66c8a13db2387722c64c3ab0"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_robbery.csv",
+                      "deployed_as":  "data/app/residual_se_robbery.csv",
+                      "sha256":  "b225872ca6a56a8d4d4d6000a7f96ceaec72eb91b9001c5f9139f6abd03581bb"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_assault.csv",
+                      "deployed_as":  "data/app/decomposition_assault.csv",
+                      "sha256":  "e08fe2a4f19681bd3010b93864b3bb1f97e252accd691af188fc524b680c25cb"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_assault.csv",
+                      "deployed_as":  "data/app/city_trends_assault.csv",
+                      "sha256":  "045a4a82ba63bbccb4f2f17348155021ec8c9f337769a2817604f27bbb14cdd0"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_assault.csv",
+                      "deployed_as":  "data/app/city_seasons_assault.csv",
+                      "sha256":  "e4f855fc0bf3d7f4484ef39643c769decfd400ef0caff3ee6f55c18f53514f95"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_assault.csv",
+                      "deployed_as":  "data/app/residual_se_assault.csv",
+                      "sha256":  "fb5c9f1a565fd44045a15e001ccca1613d1b59ad59c982797bfc2698efc7e2cf"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_burglary.csv",
+                      "deployed_as":  "data/app/decomposition_burglary.csv",
+                      "sha256":  "7b619f3dc1a1f5df8c4bc040872637e18c64b94e088cd96170ce6be15a20a8a0"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_burglary.csv",
+                      "deployed_as":  "data/app/city_trends_burglary.csv",
+                      "sha256":  "253c6535d7e3eadb61fc4ed5ef8c94a1a71f808e85bf64f186e9847f5a4438f2"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_burglary.csv",
+                      "deployed_as":  "data/app/city_seasons_burglary.csv",
+                      "sha256":  "4bbfa780c4e43cee164c2d2e3c70e2f0fa23b5935162c18c8809f25aac775efb"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_burglary.csv",
+                      "deployed_as":  "data/app/residual_se_burglary.csv",
+                      "sha256":  "fdc0f13771a22aafb28ecac58a870573416095bb004c4ffe29bb2a72e850262e"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_theft.csv",
+                      "deployed_as":  "data/app/decomposition_theft.csv",
+                      "sha256":  "d227e52d52900816c1e6a19ce8d276eb8be2aeaf32913c1bad9676469d968c8e"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_theft.csv",
+                      "deployed_as":  "data/app/city_trends_theft.csv",
+                      "sha256":  "877a92ea7fe249c6c17551bc6ba567bd37a79403a0ddc01cc2c048f35685ee52"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_theft.csv",
+                      "deployed_as":  "data/app/city_seasons_theft.csv",
+                      "sha256":  "ca447a1bc56e03890af154b0aa63db4a4798ef3eb1b45b62eca459e4976433fd"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_theft.csv",
+                      "deployed_as":  "data/app/residual_se_theft.csv",
+                      "sha256":  "1631b57e53297a7e5515fa129b01fdce8bc714d01ca95d0c6c8954189ba72d2e"
+                  },
+                  {
+                      "source":  "src/data/app/decomposition_motor.csv",
+                      "deployed_as":  "data/app/decomposition_motor.csv",
+                      "sha256":  "d4f3fc69b2d798c0998bbbbd60313eb7adbc4b9aad5691ab0c39f8f3d72836d1"
+                  },
+                  {
+                      "source":  "src/data/app/city_trends_motor.csv",
+                      "deployed_as":  "data/app/city_trends_motor.csv",
+                      "sha256":  "44a2fea7d92617a98e097dd5ef7b65d7361575ff8e078cb6bea79213f92710a9"
+                  },
+                  {
+                      "source":  "src/data/app/city_seasons_motor.csv",
+                      "deployed_as":  "data/app/city_seasons_motor.csv",
+                      "sha256":  "835f939bf20a139d320149bca83492fb505286413c08b715210fd8a409e26a2b"
+                  },
+                  {
+                      "source":  "src/data/app/residual_se_motor.csv",
+                      "deployed_as":  "data/app/residual_se_motor.csv",
+                      "sha256":  "50b6e4e638d667049a97f949039e0dad9eda43cb3daed9a0f69de8cb35059f81"
+                  }
+              ]
+}
