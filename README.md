@@ -113,30 +113,30 @@ monthly residual around a zero reference line. City detail mirrors the paper exa
 city rates followed by city-versus-US-wide trend, season, and residual panels.
 The full date range is always shown.
 
-## Monthly Windows release
+## Scheduled Windows release
 
 To refresh the upstream RTCI snapshot, rebuild stale models sequentially,
 render and validate all paper formats, commit and push changed tracked outputs,
 and deploy and verify GitHub Pages, run:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File src/run_monthly_release.ps1
+powershell -ExecutionPolicy Bypass -File src/run_scheduled_release.ps1
 ```
 
 The release refuses to run outside `main`, with a dirty worktree, when local
 `main` is ahead of `origin/main`, or while another model/release process is
 active. Logs are written to the ignored
-`src/data/model/monthly-release.log`. A preflight without rendering, committing,
+`src/data/model/scheduled-release.log`. A preflight without rendering, committing,
 or deploying is available with `-PreflightOnly`.
 
-Install the current-user Windows Task Scheduler entry (first day of every
-month at 9:00 AM by default) with:
+Install the current-user Windows Task Scheduler entry (every Monday at
+9:00 AM by default) with:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File src/install_monthly_release_task.ps1
+powershell -ExecutionPolicy Bypass -File src/install_weekly_release_task.ps1
 ```
 
-The installer accepts `-DayOfMonth`, `-At`, and `-TaskName`. The scheduled task
+The installer accepts `-DayOfWeek`, `-At`, and `-TaskName`. The scheduled task
 runs only while the installing user is logged on so it can use that user's Git
 credentials, requires a network connection, starts when possible after a missed
 run, ignores overlapping starts, and has an eight-hour execution limit. Remove

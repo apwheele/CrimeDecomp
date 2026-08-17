@@ -1,10 +1,10 @@
 [CmdletBinding(SupportsShouldProcess = $true)]
 param(
-  [ValidateRange(1, 28)]
-  [int]$DayOfMonth = 1,
+  [ValidateSet("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")]
+  [string]$DayOfWeek = "Monday",
   [ValidateScript({ $_ -ge [TimeSpan]::Zero -and $_ -lt [TimeSpan]::FromDays(1) })]
   [TimeSpan]$At = [TimeSpan]::FromHours(9),
-  [string]$TaskName = "CrimeDecomp Monthly Release",
+  [string]$TaskName = "CrimeDecomp Weekly Release",
   [switch]$Uninstall
 )
 
@@ -32,9 +32,9 @@ $repositoryRoot = [System.IO.Path]::GetFullPath(
     "/", [System.IO.Path]::DirectorySeparatorChar
   )
 )
-$releaseScript = Join-Path $repositoryRoot "src\run_monthly_release.ps1"
+$releaseScript = Join-Path $repositoryRoot "src\run_scheduled_release.ps1"
 if (-not (Test-Path -LiteralPath $releaseScript -PathType Leaf)) {
-  throw "Monthly release script does not exist: $releaseScript"
+  throw "Scheduled release script does not exist: $releaseScript"
 }
 $condaExecutable = (Get-Command conda.exe -ErrorAction Stop).Source
 $powerShellExecutable = (Get-Command powershell.exe -ErrorAction Stop).Source
@@ -43,10 +43,13 @@ $null = Get-Command pdfinfo.exe -ErrorAction Stop
 $null = Get-Command pdftoppm.exe -ErrorAction Stop
 
 $now = Get-Date
-$firstStart = Get-Date -Year $now.Year -Month $now.Month -Day $DayOfMonth `
-  -Hour $At.Hours -Minute $At.Minutes -Second $At.Seconds
+$targetDay = [System.DayOfWeek][System.Enum]::Parse(
+  [System.DayOfWeek], $DayOfWeek, $true
+)
+$daysUntilTarget = (([int]$targetDay - [int]$now.DayOfWeek) + 7) % 7
+$firstStart = $now.Date.AddDays($daysUntilTarget).Add($At)
 if ($firstStart -le $now) {
-  $firstStart = $firstStart.AddMonths(1)
+  $firstStart = $firstStart.AddDays(7)
 }
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $userSid = $identity.User.Value
@@ -84,13 +87,10 @@ $taskXml = @"
     <CalendarTrigger>
       <StartBoundary>$startBoundary</StartBoundary>
       <Enabled>true</Enabled>
-      <ScheduleByMonth>
-        <DaysOfMonth><Day>$DayOfMonth</Day></DaysOfMonth>
-        <Months>
-          <January/><February/><March/><April/><May/><June/>
-          <July/><August/><September/><October/><November/><December/>
-        </Months>
-      </ScheduleByMonth>
+      <ScheduleByWeek>
+        <WeeksInterval>1</WeeksInterval>
+        <DaysOfWeek><$DayOfWeek/></DaysOfWeek>
+      </ScheduleByWeek>
     </CalendarTrigger>
   </Triggers>
   <Principals>
@@ -129,14 +129,20 @@ $taskXml = @"
 
 if ($PSCmdlet.ShouldProcess(
     $TaskName,
-    "Register monthly task for day $DayOfMonth at $($At.ToString()) as $userName"
+    "Register weekly task for $DayOfWeek at $($At.ToString()) as $userName"
   )) {
   Register-ScheduledTask -TaskName $TaskName -Xml $taskXml -Force | Out-Null
+  $legacyTaskName = "CrimeDecomp Monthly Release"
+  if ($TaskName -ne $legacyTaskName -and
+      $null -ne (Get-ScheduledTask -TaskName $legacyTaskName -ErrorAction SilentlyContinue)) {
+    Unregister-ScheduledTask -TaskName $legacyTaskName -Confirm:$false
+    Write-Host "Removed legacy scheduled task '$legacyTaskName'."
+  }
   $task = Get-ScheduledTask -TaskName $TaskName
   $taskInfo = Get-ScheduledTaskInfo -TaskName $TaskName
   Write-Host "Registered scheduled task '$TaskName' for $userName."
   Write-Host "Next run: $($taskInfo.NextRunTime)"
   Write-Host "The task runs only while this user is logged on and will start when possible after a missed run."
-  Write-Host "Release log: $(Join-Path $repositoryRoot 'src\data\model\monthly-release.log')"
+  Write-Host "Release log: $(Join-Path $repositoryRoot 'src\data\model\scheduled-release.log')"
   $task | Select-Object TaskName, State
 }

@@ -109,8 +109,8 @@ if (-not $CondaExecutable) {
 
 $modelDirectory = Join-Path $repositoryRoot "src\data\model"
 New-Item -ItemType Directory -Path $modelDirectory -Force | Out-Null
-$lockPath = Join-Path $modelDirectory "monthly-release.lock"
-$logPath = Join-Path $modelDirectory "monthly-release.log"
+$lockPath = Join-Path $modelDirectory "scheduled-release.lock"
+$logPath = Join-Path $modelDirectory "scheduled-release.log"
 $releaseLock = $null
 $transcriptStarted = $false
 
@@ -123,26 +123,26 @@ try {
       [System.IO.FileShare]::None
     )
   } catch {
-    throw "Another monthly release is already running (lock: $lockPath)."
+    throw "Another scheduled release is already running (lock: $lockPath)."
   }
 
   Start-Transcript -Path $logPath -Append | Out-Null
   $transcriptStarted = $true
   Set-Location -LiteralPath $repositoryRoot
-  Write-Host "Monthly CrimeDecomp release started at $([DateTime]::Now.ToString('s'))."
+  Write-Host "Scheduled CrimeDecomp release started at $([DateTime]::Now.ToString('s'))."
   Write-Host "Repository: $repositoryRoot"
 
   $branch = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
     "-C", $repositoryRoot, "branch", "--show-current"
   )
   if ($branch -ne "main") {
-    throw "The monthly release requires branch main (current branch: $branch)."
+    throw "The scheduled release requires branch main (current branch: $branch)."
   }
   $initialStatus = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
     "-C", $repositoryRoot, "status", "--porcelain=v1", "--untracked-files=all"
   )
   if ($initialStatus) {
-    throw "The worktree must be clean before the monthly release:`n$initialStatus"
+    throw "The worktree must be clean before the scheduled release:`n$initialStatus"
   }
 
   Invoke-External -FilePath $gitExecutable -Arguments @(
@@ -217,7 +217,7 @@ try {
   $pageCount = [int]$pageMatch.Groups[1].Value
   $temporaryParent = [System.IO.Path]::GetFullPath((Join-Path $repositoryRoot "tmp"))
   $qaDirectory = [System.IO.Path]::GetFullPath((Join-Path $temporaryParent (
-    "monthly-paper-qa-" + [guid]::NewGuid().ToString("N")
+    "scheduled-paper-qa-" + [guid]::NewGuid().ToString("N")
   )))
   $temporaryPrefix = $temporaryParent + [System.IO.Path]::DirectorySeparatorChar
   if (-not $qaDirectory.StartsWith(
@@ -264,7 +264,7 @@ try {
   & $gitExecutable -C $repositoryRoot diff --cached --quiet
   $hasReleaseChanges = $LASTEXITCODE -eq 1
   if ($LASTEXITCODE -notin @(0, 1)) {
-    throw "Unable to inspect the staged monthly release changes."
+    throw "Unable to inspect the staged scheduled-release changes."
   }
   if ($hasReleaseChanges) {
     Invoke-External -FilePath $gitExecutable -Arguments @(
@@ -295,7 +295,7 @@ try {
   $finalCommit = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
     "-C", $repositoryRoot, "rev-parse", "HEAD"
   )
-  Write-Host "Monthly release completed at $([DateTime]::Now.ToString('s'))."
+  Write-Host "Scheduled release completed at $([DateTime]::Now.ToString('s'))."
   Write-Host "Published main commit: $finalCommit"
 } finally {
   if ($transcriptStarted) {
