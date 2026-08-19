@@ -79,6 +79,18 @@ function Test-AllowedReleasePath {
     $normalized.StartsWith("src/data/raw/")
 }
 
+function Convert-WindowsPathToWsl {
+  param([Parameter(Mandatory = $true)][string]$Path)
+
+  $fullPath = [System.IO.Path]::GetFullPath($Path)
+  if ($fullPath -match "^[A-Za-z]:\\") {
+    $drive = $fullPath.Substring(0, 1).ToLowerInvariant()
+    $remainder = $fullPath.Substring(3).Replace("\", "/")
+    return "/mnt/$drive/$remainder"
+  }
+  throw "Could not convert the repository path to WSL format: $fullPath"
+}
+
 $candidateRoot = [System.IO.Path]::GetFullPath(
   (Join-Path -Path $PSScriptRoot -ChildPath "..")
 )
@@ -192,10 +204,7 @@ try {
     "quarto", "render", "paper.qmd", "--to", "all"
   )
 
-  $wslRoot = Invoke-ExternalCapture -FilePath $wslExecutable `
-    -StandardOutputOnly -Arguments @(
-      "-d", "Ubuntu", "--", "wslpath", "-a", $repositoryRoot
-    )
+  $wslRoot = Convert-WindowsPathToWsl -Path $repositoryRoot
   $escapedWslRoot = $wslRoot.Replace("'", "'\''")
   $validationCommand = "cd '$escapedWslRoot' && Rscript src/validate_outputs.R"
   Invoke-External -FilePath $wslExecutable -Arguments @(
