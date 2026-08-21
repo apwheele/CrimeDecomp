@@ -45,15 +45,15 @@ is not a test of why crime changed, and it is not a forecasting model.
 
 # Data and rate construction
 
-I use 458,392 city-month-offense observations from 586 RTCI cities,
-covering 7 offenses from January 2017 through May 2026. I do not impose
+I use 465,985 city-month-offense observations from 590 RTCI cities,
+covering 7 offenses from January 2017 through June 2026. I do not impose
 a population threshold. For the figures, a monthly count $Y$ and
 population $N$ are displayed as $12(Y/N)100{,}000$. This is an
 annualized rate per 100,000: it preserves the observed monthly count but
 puts cities on a familiar scale.
 
-The upstream files used for this build were downloaded on August 15,
-2026 at 21:26 UTC. Before rendering, the workflow checks the current
+The upstream files used for this build were downloaded on August 21,
+2026 at 16:31 UTC. Before rendering, the workflow checks the current
 RTCI file revisions and atomically replaces only source files whose
 contents changed. A content-signature change triggers the sequential
 model workflow; otherwise the validated checkpoints are reused. Exact
@@ -143,7 +143,7 @@ Here `homdiag` assigns one estimated variance to all coefficients in a
 basis block, sets their correlations to zero, and allows the
 coefficients to vary by city. Despite their names, `city_trend_group`
 and `city_season_group` do not combine cities into artificial groups.
-Each is a one-to-one copy of `city_id` with the same 586 levels. The
+Each is a one-to-one copy of `city_id` with the same 590 levels. The
 copies let `glmmTMB` represent the city intercept, city trend
 coefficients, and city seasonal coefficients as three independent
 covariance blocks; every city still receives its own five trend and six
@@ -194,7 +194,7 @@ transparent. Fitting those blocks with `glmmTMB` reduced the full model
 to a sparse random-coefficient problem that could be estimated and
 reload-verified one offense at a time. This is not a general claim that
 `mgcv` factor smooths are infeasible. It is a practical result for this
-combination of 586 cities, 458,392 city-month-offense observations, two
+combination of 590 cities, 465,985 city-month-offense observations, two
 city-varying bases, and an observation-level random effect.
 
 # Global trends
@@ -204,12 +204,12 @@ gradual change shared across cities after removing seasonal,
 city-specific, and monthly variation. I use a separate vertical scale
 for each offense; otherwise property crime would flatten the lower-rate
 murder and rape series. Figures are produced with `ggplot2` ([Wickham
-2016](#ref-wickham2016)). From January 2017 through May 2026, the fitted
-burglary trend declined by 62.7%, robbery by 56.5%, murder by 35.9%, and
-theft by 32.5%. Assault was the exception: its fitted global trend ended
-9.3% above its January 2017 level. These endpoint comparisons summarize
-the curves; they are not causal estimates. The paths between the
-endpoints are more useful than the percentage alone.
+2016](#ref-wickham2016)). From January 2017 through June 2026, the
+fitted burglary trend declined by 62.7%, robbery by 57.0%, murder by
+37.6%, and theft by 33.0%. Assault was the exception: its fitted global
+trend ended 7.9% above its January 2017 level. These endpoint
+comparisons summarize the curves; they are not causal estimates. The
+paths between the endpoints are more useful than the percentage alone.
 
 <img src="output/markdown/images/fig-global-trend-1.png"
 style="width:100.0%" data-fig-pos="H" />
@@ -258,7 +258,7 @@ alt="Observed robbery rate and fitted global and Philadelphia curves." />
 
 Across the series, Philadelphia’s fitted city curve differs from the
 global curve by an average of 2.01 on the logit scale. That average
-includes the city intercept. The departure ranges from 1.83 in March
+includes the city intercept. The departure ranges from 1.84 in March
 2017 to 2.23 in October 2022; movement within that range reflects the
 city-specific trend and seasonal deviations. The largest fitted monthly
 row residual occurs in July 2020. It is not folded back into either
@@ -281,7 +281,7 @@ style="width:100.0%" data-fig-pos="H" />
 Philadelphia burglary provides a useful contrast because several abrupt
 2020 changes are visible in the reported series but should not be
 absorbed into the city’s long-run trend. In the RTCI source snapshot
-downloaded on August 15, 2026 at 21:26 UTC, Philadelphia reported 722
+downloaded on August 21, 2026 at 16:31 UTC, Philadelphia reported 722
 burglaries in May, 1,347 in June, and 986 in October 2020. Those counts
 correspond to annualized monthly rates of 554.5, 1034.6, and 757.3 per
 100,000, respectively. These values are calculated directly from RTCI’s
@@ -333,13 +333,13 @@ a new city’s trajectory.
 
 | Offense             | First city                            | Second city                               |
 |:--------------------|:--------------------------------------|:------------------------------------------|
-| Murder              | Portland, OR (RMS 0.287; score 3.58)  | Baltimore, MD (RMS 0.237; score 3.14)     |
-| Rape                | Paulding, GA (RMS 0.787; score 4.58)  | State College, PA (RMS 0.684; score 4.19) |
-| Robbery             | Arlington, VA (RMS 0.561; score 4.17) | Livingston, LA (RMS 0.398; score 3.18)    |
-| Assault             | Scranton, PA (RMS 0.855; score 4.82)  | Euclid, OH (RMS 0.596; score 3.82)        |
-| Burglary            | San Mateo, CA (RMS 0.574; score 4.06) | Palatine, IL (RMS 0.554; score 3.96)      |
-| Theft               | Vallejo, CA (RMS 0.574; score 5.08)   | Upper Darby, PA (RMS 0.539; score 4.88)   |
-| Motor Vehicle Theft | Tulare, CA (RMS 0.952; score 4.92)    | Burlington, VT (RMS 0.900; score 4.75)    |
+| Murder              | Portland, OR (RMS 0.289; score 3.31)  | Livingston, LA (RMS 0.250; score 2.97)    |
+| Rape                | Paulding, GA (RMS 0.784; score 4.60)  | State College, PA (RMS 0.675; score 4.19) |
+| Robbery             | Arlington, VA (RMS 0.562; score 4.15) | Vallejo, CA (RMS 0.394; score 3.13)       |
+| Assault             | Scranton, PA (RMS 0.851; score 4.77)  | Murrieta, CA (RMS 0.577; score 3.71)      |
+| Burglary            | Palatine, IL (RMS 0.551; score 3.90)  | Wright, MN (RMS 0.438; score 3.24)        |
+| Theft               | Vallejo, CA (RMS 0.582; score 5.14)   | Upper Darby, PA (RMS 0.539; score 4.90)   |
+| Motor Vehicle Theft | Tulare, CA (RMS 0.952; score 4.80)    | Burlington, VT (RMS 0.896; score 4.62)    |
 
 Two cities with the largest standardized trend departures within each
 offense. RMS is calculated on the centered logit-scale spline departure;
@@ -371,13 +371,13 @@ pointwise, conditional interpretation as the trend ribbons.
 
 | Offense             | First city                              | Second city                                  |
 |:--------------------|:----------------------------------------|:---------------------------------------------|
-| Murder              | Chicago, IL (RMS 0.087; score 4.37)     | St Louis, MO (RMS 0.065; score 3.79)         |
-| Rape                | Paulding, GA (RMS 0.051; score 4.31)    | Colorado Springs, CO (RMS 0.048; score 4.18) |
-| Robbery             | Minneapolis, MN (RMS 0.109; score 4.08) | Salt Lake City, UT (RMS 0.078; score 3.22)   |
-| Assault             | Cincinnati, OH (RMS 0.069; score 3.91)  | Newark, NJ (RMS 0.057; score 3.24)           |
-| Burglary            | Shawnee, KS (RMS 0.110; score 4.48)     | Utica, NY (RMS 0.097; score 3.94)            |
-| Theft               | Burlington, VT (RMS 0.120; score 4.26)  | Manchester, NH (RMS 0.081; score 3.00)       |
-| Motor Vehicle Theft | Owensboro, KY (RMS 0.069; score 3.79)   | Galveston, TX (RMS 0.062; score 3.43)        |
+| Murder              | Chicago, IL (RMS 0.087; score 4.30)     | St Louis, MO (RMS 0.064; score 3.69)         |
+| Rape                | Paulding, GA (RMS 0.054; score 4.31)    | Colorado Springs, CO (RMS 0.051; score 4.11) |
+| Robbery             | Minneapolis, MN (RMS 0.108; score 4.17) | Prince George’s, MD (RMS 0.065; score 2.85)  |
+| Assault             | Cincinnati, OH (RMS 0.065; score 3.79)  | Newark, NJ (RMS 0.053; score 3.09)           |
+| Burglary            | Shawnee, KS (RMS 0.110; score 4.33)     | Minneapolis, MN (RMS 0.095; score 3.74)      |
+| Theft               | Burlington, VT (RMS 0.118; score 4.33)  | Manchester, NH (RMS 0.080; score 3.06)       |
+| Motor Vehicle Theft | Owensboro, KY (RMS 0.067; score 3.78)   | Kalamazoo, MI (RMS 0.063; score 3.53)        |
 
 Two cities with the largest standardized seasonal departures within each
 offense. RMS is calculated from the city-specific Fourier departure over
@@ -417,20 +417,20 @@ predicted counts are monthly.
 
 | Offense             | City                 | Month |  $e$ | Pred. n | Obs. n |
 |:--------------------|:---------------------|:------|-----:|--------:|-------:|
-| Murder              | Las Vegas, NV        | 10/17 | +1.0 |    13.5 |     71 |
-| Murder              | San Antonio, TX      | 06/22 | +0.8 |    19.7 |     71 |
-| Rape                | Bismarck, ND         | 05/25 | +0.6 |     4.8 |     39 |
+| Murder              | Las Vegas, NV        | 10/17 | +1.0 |    13.6 |     71 |
+| Murder              | San Antonio, TX      | 06/22 | +0.8 |    19.2 |     71 |
+| Rape                | Bismarck, ND         | 05/25 | +0.6 |     4.7 |     39 |
 | Rape                | Riverside, CA        | 12/19 | +0.5 |    11.7 |     45 |
-| Robbery             | Washington, DC       | 07/23 | +0.6 |   252.5 |    475 |
-| Robbery             | Indianapolis, IN     | 06/19 | -0.5 |   212.7 |     90 |
-| Assault             | Bismarck, ND         | 05/25 | +1.3 |    15.1 |    101 |
-| Assault             | Indianapolis, IN     | 06/19 | -1.2 |   476.8 |     96 |
-| Burglary            | St. Clair Shores, MI | 12/24 | +2.1 |    10.1 |    129 |
-| Burglary            | Bismarck, ND         | 05/25 | +1.9 |    18.5 |    165 |
-| Theft               | Bismarck, ND         | 05/25 | +1.6 |   131.9 |    772 |
-| Theft               | Washoe, NV           | 06/17 | +1.5 |    56.1 |    342 |
-| Motor Vehicle Theft | Washoe, NV           | 06/17 | +1.6 |    12.2 |    105 |
-| Motor Vehicle Theft | Bismarck, ND         | 05/25 | +1.6 |    15.3 |    114 |
+| Robbery             | Washington, DC       | 07/23 | +0.6 |   253.8 |    475 |
+| Robbery             | Indianapolis, IN     | 06/19 | -0.5 |   213.2 |     90 |
+| Assault             | Bismarck, ND         | 05/25 | +1.3 |    14.9 |    101 |
+| Assault             | Indianapolis, IN     | 06/19 | -1.2 |   468.0 |     96 |
+| Burglary            | St. Clair Shores, MI | 12/24 | +2.1 |    10.2 |    129 |
+| Burglary            | Bismarck, ND         | 05/25 | +1.9 |    18.4 |    165 |
+| Theft               | Bismarck, ND         | 05/25 | +1.7 |   130.8 |    772 |
+| Theft               | Lubbock, TX          | 10/17 | -1.6 |   682.5 |     39 |
+| Motor Vehicle Theft | Washoe, NV           | 06/17 | +1.6 |    12.1 |    105 |
+| Motor Vehicle Theft | Bismarck, ND         | 05/25 | +1.6 |    15.1 |    114 |
 
 </div>
 
@@ -460,7 +460,7 @@ style="width:100.0%" data-fig-pos="H" />
 The preceding ranking asks which cities had the most unusual fitted
 month at any point in the series. For a current monitoring question, I
 instead restrict the comparison to the latest available observation
-within each offense. All 7 offenses currently end in May 2026. Within
+within each offense. All 7 offenses currently end in June 2026. Within
 that single monthly cross-section, I rank cities by the absolute fitted
 observation-level effect $|e_{it}|$ and retain the two largest values
 for each offense. This identifies the clearest recent local departures
@@ -486,20 +486,20 @@ standard error for the raw observed-minus-predicted difference.
 
 | Offense             | City             |   $e$ | SE($e$) | Pred. n | Obs. n | Pred. rate | Obs. rate |
 |:--------------------|:-----------------|------:|--------:|--------:|-------:|-----------:|----------:|
-| Murder              | St Louis, MO     | +0.17 |    0.15 |    13.7 |     22 |       59.8 |      96.1 |
-| Murder              | Fort Wayne, IN   | +0.15 |    0.16 |     2.5 |      8 |       10.9 |      34.9 |
-| Rape                | Houston, TX      | +0.19 |    0.09 |    88.2 |    117 |       43.9 |      58.2 |
-| Rape                | Bakersfield, CA  | +0.19 |    0.13 |     7.3 |     19 |       20.8 |      54.2 |
-| Robbery             | Washington, DC   | +0.30 |    0.09 |    79.6 |    126 |      137.7 |     218.0 |
-| Robbery             | Little Rock, AR  | -0.21 |    0.11 |    25.5 |      7 |      148.8 |      40.9 |
-| Assault             | Indianapolis, IN | -0.46 |    0.09 |   373.7 |    219 |      496.2 |     290.8 |
-| Assault             | Fayetteville, NC | -0.43 |    0.14 |    39.5 |     11 |      226.9 |      63.1 |
-| Burglary            | Roanoke, VA      | +0.99 |    0.13 |    33.3 |    112 |      409.3 |    1375.9 |
-| Burglary            | Portsmouth, VA   | +0.80 |    0.13 |    42.4 |    113 |      528.0 |    1407.2 |
-| Theft               | Fayetteville, NC | -0.70 |    0.10 |    95.7 |      7 |      549.3 |      40.2 |
-| Theft               | Medford, OR      | -0.55 |    0.09 |   212.2 |     91 |     2951.3 |    1265.4 |
-| Motor Vehicle Theft | Tucson, AZ       | -0.65 |    0.14 |    69.1 |     19 |      148.9 |      40.9 |
-| Motor Vehicle Theft | Milwaukee, WI    | -0.44 |    0.10 |   407.2 |    251 |      873.1 |     538.1 |
+| Murder              | Philadelphia, PA | +0.23 |    0.14 |    17.0 |     29 |       13.1 |      22.3 |
+| Murder              | Vallejo, CA      | +0.14 |    0.17 |     1.9 |      7 |       19.0 |      68.4 |
+| Rape                | Nashville, TN    | -0.15 |    0.11 |    37.8 |     24 |       63.1 |      40.1 |
+| Rape                | Hidalgo, TX      | +0.14 |    0.12 |     9.1 |     18 |       41.9 |      83.0 |
+| Robbery             | Milwaukee, WI    | -0.28 |    0.10 |    80.5 |     43 |      172.5 |      92.2 |
+| Robbery             | Washington, DC   | +0.24 |    0.09 |    89.0 |    129 |      153.9 |     223.2 |
+| Assault             | Houston, TX      | -0.58 |    0.08 |   893.3 |    482 |      444.1 |     239.6 |
+| Assault             | Indianapolis, IN | -0.46 |    0.09 |   328.8 |    192 |      436.6 |     255.0 |
+| Burglary            | Collierville, TN | +1.04 |    0.17 |     6.2 |     41 |      142.6 |     944.2 |
+| Burglary            | Pasadena, TX     | +1.02 |    0.13 |    33.6 |    116 |      269.9 |     933.2 |
+| Theft               | Milwaukee, WI    | -0.49 |    0.07 |   510.4 |    284 |     1094.2 |     608.9 |
+| Theft               | San Diego, CA    | +0.39 |    0.06 |  1355.8 |  2,021 |     1154.3 |    1720.7 |
+| Motor Vehicle Theft | Milwaukee, WI    | -0.96 |    0.11 |   352.3 |    110 |      755.2 |     235.8 |
+| Motor Vehicle Theft | Omaha, NE        | +0.63 |    0.10 |   134.2 |    268 |      329.6 |     658.5 |
 
 </div>
 
@@ -589,7 +589,7 @@ would tend to look the most distinctive. The shared variance parameters
 let well-supported city patterns depart from the global curve while
 pulling unstable patterns toward it ([Pedersen et al.
 2019](#ref-pedersen2019); [Simpson 2017](#ref-simpson2017)). This is
-especially important when comparing 586 cities with very different
+especially important when comparing 590 cities with very different
 populations and crime counts.
 
 A useful future extension would turn the residual screen into a formal
