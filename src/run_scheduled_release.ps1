@@ -224,7 +224,11 @@ try {
     throw "Could not verify the page count in paper.pdf."
   }
   $pageCount = [int]$pageMatch.Groups[1].Value
-  $temporaryParent = [System.IO.Path]::GetFullPath((Join-Path $repositoryRoot "tmp"))
+  # Keep disposable rasterized pages outside the Dropbox-synced repository.
+  # Sync clients can briefly hold directory handles after pdftoppm exits.
+  $temporaryParent = [System.IO.Path]::GetFullPath((Join-Path (
+    [System.IO.Path]::GetTempPath()
+  ) "CrimeDecomp"))
   $qaDirectory = [System.IO.Path]::GetFullPath((Join-Path $temporaryParent (
     "scheduled-paper-qa-" + [guid]::NewGuid().ToString("N")
   )))
@@ -247,7 +251,21 @@ try {
     Write-Host "Verified and rasterized all $pageCount pages of paper.pdf."
   } finally {
     if (Test-Path -LiteralPath $qaDirectory) {
-      Remove-Item -LiteralPath $qaDirectory -Recurse -Force
+      for ($cleanupAttempt = 1; $cleanupAttempt -le 5; $cleanupAttempt++) {
+        try {
+          Remove-Item -LiteralPath $qaDirectory -Recurse -Force -ErrorAction Stop
+          break
+        } catch {
+          if ($cleanupAttempt -eq 5) {
+            Write-Warning (
+              "Could not remove disposable PDF QA directory after 5 attempts: " +
+              "$qaDirectory. Release processing will continue. $($_.Exception.Message)"
+            )
+          } else {
+            Start-Sleep -Milliseconds (250 * $cleanupAttempt)
+          }
+        }
+      }
     }
   }
 
