@@ -25,10 +25,11 @@ trend, season, and residual components in the same order and on the same logit
 component scale as the paper example. Visible pointwise conditional intervals
 surround the orange city trend, season, and residual curves. Its monthly table reports observed and expected counts and
 rates, the city-month residual and its conditional standard error. The
-all-city tab overlays faint city-specific trend, seasonal, and observation-level
-monthly residual curves, provides hover labels, and displays the middle 80%
-envelope. The residual panel uses zero as its reference because the global,
-city, seasonal, trend, and shared time-period terms have been removed.
+all-city tab overlays faint city-specific fitted annualized rates, trends,
+seasonal patterns, and observation-level monthly residual curves, with hover
+labels for each city. The annualized-rate panel uses the global trend plus
+season curve as its reference, while the residual panel uses zero because the
+global, city, seasonal, trend, and shared time-period terms have been removed.
 
 City and offense selections are directly linkable. For example,
 `?crime=robbery&city=PAPEP0000#city` opens Philadelphia robbery, and the app

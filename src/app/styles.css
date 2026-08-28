@@ -36,10 +36,8 @@ svg { display:block; width:100%; min-width:760px; height:360px; }
 .has-highlight .city-curve:not(.highlighted) { stroke-opacity:.07; }
 .city-curve.highlighted { stroke:var(--orange); stroke-width:3.5; stroke-opacity:1; }
 .global-curve { fill:none; stroke:var(--blue); stroke-width:3; pointer-events:none; }
-.quantile-band { fill:#c8dadd; fill-opacity:.58; stroke:none; pointer-events:none; }
 .city-key { stroke:#aab4b6; stroke-width:2; stroke-opacity:.7; }
 .global-key { stroke:var(--blue); stroke-width:3; }
-.band-key { fill:#c8dadd; fill-opacity:.75; }
 .interval-band { fill:var(--orange); fill-opacity:.24; stroke:none; }
 .interval-boundary { fill:none; stroke:var(--orange); stroke-width:1.35; stroke-dasharray:5 4; stroke-opacity:.9; }
 .interval-key { fill:var(--orange); fill-opacity:.24; stroke:var(--orange); stroke-width:1; }
