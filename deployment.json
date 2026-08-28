@@ -1,20 +1,20 @@
 {
-    "main_commit":  "2814f627b78e6ffca7ee0d05b90183a6d19cf116",
+    "main_commit":  "4495cbbf032e9ce934ebeb47100b83e8e1c6b98d",
     "files":  [
                   {
                       "source":  "src/app/app.js",
                       "deployed_as":  "app/app.js",
-                      "sha256":  "c2b424ae0d8ce679ede851355c94ce0e74f55e0c5ae10e39169204aa974da3ad"
+                      "sha256":  "d0b56b54e284f876f4bb88207a35a8ff704f4c5052f9db51fc1d03fda57d1194"
                   },
                   {
                       "source":  "src/app/index.html",
                       "deployed_as":  "app/index.html",
-                      "sha256":  "97d753a513297e71afcf02690602f7ca64ef62fd36949dc8f746b72570e2a230"
+                      "sha256":  "c72169a9541b3714345066fd84a81417ab648ac83864999770b991ba3a6172bb"
                   },
                   {
                       "source":  "src/app/styles.css",
                       "deployed_as":  "app/styles.css",
-                      "sha256":  "c4c3221ba0e6ab178dd25256459ccdd6e3349431058285df6e56b130dd3db5c8"
+                      "sha256":  "2ecc81986b076d2b9675cfe941e6fca8ce6f2d3d01d259f067e85992f033a49d"
                   },
                   {
                       "source":  "src/data/app/cities.csv",

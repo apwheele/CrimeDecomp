@@ -134,6 +134,10 @@
 
   function renderCity() {
     const componentCharts = ["city-chart", "city-trend-chart", "city-season-chart", "city-residual-chart"];
+    const crime = crimeLabel(state.crime);
+    $("city-trend-title").textContent = `${crime}: City and US-wide trends`;
+    $("city-season-title").textContent = `${crime}: City and US-wide seasonal patterns`;
+    $("city-residual-title").textContent = `${crime}: City and US-wide residuals`;
     if (state.loadedCrime !== state.crime || state.loadedCurvesCrime !== state.crime) {
       componentCharts.forEach((id, index) => {
         $(id).innerHTML = index === 0
@@ -172,7 +176,7 @@
     ]));
     const trendX0 = new Date(trendRows[0].date);
     const trendX1 = new Date(trendRows[trendRows.length - 1].date);
-    let trend = base(`${name} - centered trend`, -trendLimit, trendLimit,
+    let trend = base(`${name} - ${crime} centered trend`, -trendLimit, trendLimit,
       trendX0, trendX1, "Centered trend (logit)", 270);
     trend += ribbon(trendRows, "city_trend_lower", "city_trend_upper",
       trendX0, trendX1, -trendLimit, trendLimit, 270);
@@ -195,7 +199,7 @@
     const seasonLimit = symmetricLimit(seasonRows.flatMap(r => [
       n(r.global_season_centered), n(r.city_season_lower), n(r.city_season_upper)
     ]));
-    let season = monthBase(`${name} - seasonal pattern`, -seasonLimit,
+    let season = monthBase(`${name} - ${crime} seasonal pattern`, -seasonLimit,
       seasonLimit, "Seasonal component (logit)", 290);
     season += monthRibbon(seasonRows, "city_season_lower", "city_season_upper",
       -seasonLimit, seasonLimit, 290);
@@ -225,7 +229,7 @@
     const residualLimit = symmetricLimit(residualRows.flatMap(r => [
       n(r.time_effect_logit), n(r.city_residual_lower), n(r.city_residual_upper)
     ]));
-    let residual = base(`${name} - residual comparison`, -residualLimit,
+    let residual = base(`${name} - ${crime} residual comparison`, -residualLimit,
       residualLimit, x0, x1, "Residual component (logit)", 270);
     residual += ribbon(residualRows, "city_residual_lower", "city_residual_upper",
       x0, x1, -residualLimit, residualLimit, 270);
@@ -289,14 +293,6 @@
       .catch(error => { $("status").textContent = `Could not load city detail: ${error}`; });
   }
 
-  const quantile = (values, probability) => {
-    const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
-    if (!sorted.length) return NaN;
-    const index = (sorted.length - 1) * probability;
-    const lower = Math.floor(index), upper = Math.ceil(index);
-    return sorted[lower] + (sorted[upper] - sorted[lower]) * (index - lower);
-  };
-
   function bindCurveHover(container) {
     const tooltip = $("chart-tooltip");
     container.querySelectorAll(".city-curve").forEach(path => {
@@ -339,7 +335,10 @@
       if (value < ymin) ymin = value;
       if (value > ymax) ymax = value;
     });
-    if (options.symmetric) {
+    if (options.zeroBased) {
+      ymin = 0;
+      ymax = Math.max(ymax, 0.02) * 1.08;
+    } else if (options.symmetric) {
       const limit = Math.max(Math.abs(ymin), Math.abs(ymax), 0.02) * 1.08;
       ymin = -limit;
       ymax = limit;
@@ -365,20 +364,6 @@
     });
     const zeroY = yScale(0);
     if (ymin < 0 && ymax > 0) svg += `<line x1="66" x2="1010" y1="${zeroY}" y2="${zeroY}" class="zero-line"/>`;
-    const valuesByX = new Map();
-    rows.forEach(row => {
-      const value = options.x(row);
-      if (!valuesByX.has(value)) valuesByX.set(value, []);
-      valuesByX.get(value).push(n(row[options.cityKey]));
-    });
-    const xValues = [...valuesByX.keys()].sort((a, b) => a - b);
-    const envelopes = xValues.map(value => {
-      const values = valuesByX.get(value);
-      return { value, low: quantile(values, .1), high: quantile(values, .9) };
-    });
-    const upper = envelopes.map((point, index) => `${index ? "L" : "M"}${xScale(point.value).toFixed(1)},${yScale(point.high).toFixed(1)}`).join(" ");
-    const lower = envelopes.slice().reverse().map(point => `L${xScale(point.value).toFixed(1)},${yScale(point.low).toFixed(1)}`).join(" ");
-    svg += `<path d="${upper} ${lower} Z" class="quantile-band"/>`;
     groups.forEach(group => {
       svg += `<path d="${pathFor(group, options.cityKey)}" class="city-curve" data-label="${esc(cityDisplayLabel(group[0].city_id, group[0].city_label))}"/>`;
     });
@@ -388,13 +373,14 @@
       const x = xScale(tick.value);
       svg += `<line x1="${x}" x2="${x}" y1="320" y2="326" class="x-tick"/><text x="${x}" y="345" text-anchor="middle" class="axis-label">${esc(tick.label)}</text>`;
     });
-    svg += `<line x1="735" x2="760" y1="22" y2="22" class="city-key"/><text x="767" y="26" class="legend">${esc(options.cityLabel || "cities")}</text><rect x="830" y="15" width="25" height="12" class="band-key"/><text x="862" y="26" class="legend">middle 80%</text><line x1="950" x2="975" y1="22" y2="22" class="global-key"/><text x="982" y="26" class="legend">${esc(options.globalLabel || "global")}</text></svg>`;
+    svg += `<line x1="710" x2="735" y1="22" y2="22" class="city-key"/><text x="742" y="26" class="legend">${esc(options.cityLabel || "cities")}</text><line x1="880" x2="905" y1="22" y2="22" class="global-key"/><text x="912" y="26" class="legend">${esc(options.globalLabel || "global")}</text></svg>`;
     container.innerHTML = svg;
     bindCurveHover(container);
   }
 
   function renderAllCities() {
     if (state.loadedCurvesCrime !== state.crime) {
+      $("all-rates-chart").innerHTML = '<p class="caption">Loading city rates...</p>';
       $("all-trends-chart").innerHTML = '<p class="caption">Loading city trends...</p>';
       $("all-seasons-chart").innerHTML = '<p class="caption">Loading city seasonal curves...</p>';
       $("all-residuals-chart").innerHTML = '<p class="caption">Loading city-month residuals...</p>';
@@ -408,6 +394,13 @@
     const lastYear = new Date(trendExtent[1]).getUTCFullYear();
     const trendTicks = [];
     for (let year = firstYear; year <= lastYear; year += 2) trendTicks.push({ value: Date.UTC(year, 0, 1), label: year });
+    renderCurveCollection("all-rates-chart", state.decomposition, {
+      title: `${crimeLabel(state.crime)} - annualized city rates`,
+      x: row => new Date(row.date).getTime(), cityKey: "city_fitted_rate",
+      globalKey: "global_rate", ylabel: "Annualized rate per 100,000",
+      ticks: trendTicks, zeroBased: true, cityLabel: "city fitted",
+      globalLabel: "global + season"
+    });
     renderCurveCollection("all-trends-chart", state.cityTrends, {
       title: `${crimeLabel(state.crime)} - centered city trends`,
       x: row => new Date(row.date).getTime(), cityKey: "city_trend_centered",
