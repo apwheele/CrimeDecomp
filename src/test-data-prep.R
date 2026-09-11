@@ -13,8 +13,13 @@ testthat::test_that("stacked preparation creates one row per component crime", {
     state = "TT", latitude = 1, longitude = 2
   )
   out <- rtci_prepare_stacked(raw, metadata, min_population = 0)
-  testthat::expect_equal(nrow(out), 14)
+  testthat::expect_equal(nrow(out), 18)
   testthat::expect_setequal(as.character(unique(out$crime_type)), rtci_component_crimes)
   testthat::expect_true(all(out$count <= out$trials))
   testthat::expect_equal(out$observed_rate[[1]], 24)
+
+  violent_month1 <- out$count[out$crime_type == "violent" & out$date == out$date[[1]]]
+  property_month1 <- out$count[out$crime_type == "property" & out$date == out$date[[1]]]
+  testthat::expect_equal(violent_month1, 2 + 4 + 6 + 8)
+  testthat::expect_equal(property_month1, 10 + 12 + 14)
 })

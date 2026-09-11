@@ -35,7 +35,8 @@ rtci_model_signature <- function(
 }
 
 rtci_output_status <- function(expected_signature = rtci_model_signature()) {
-  crimes <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor")
+  crimes <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor",
+             "violent", "property")
   part_paths <- file.path("src", "data", "model", "parts", paste0(crimes, ".rds"))
   model_paths <- file.path(
     "src", "data", "model", "models", paste0(crimes, "_glmmtmb.rds")

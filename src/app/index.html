@@ -24,11 +24,17 @@
 
     <section id="data-controls" class="controls">
       <label>Crime type<select id="crime"></select></label>
+      <label class="checkbox-label"><input type="checkbox" id="baseline-toggle"> Index to start (compare shapes)</label>
       <button id="reset" type="button">Reset crime</button>
     </section>
     <p id="status" class="status">Loading all-sample model outputs...</p>
 
     <section id="overview" class="page active">
+      <div class="card">
+        <h2>All crime types at a glance</h2>
+        <p class="caption">Every offense's population-weighted global annualized rate, without switching the crime selector for each one. Grey is the observed sample rate and blue is the global trend plus season. Check "Index to start" above to rescale every mini chart to a common start-of-period baseline, which makes shape and growth comparable across crimes with very different rate levels. Click a chart to open it below.</p>
+        <div id="crime-overview-grid" class="crime-grid"></div>
+      </div>
       <div class="card">
         <h2>Global model decomposition</h2>
         <p class="caption">Observed is the population-weighted monthly sample rate, and sample fitted aggregates the city-specific structural curves using population weights. Global trend and global plus season describe a reference city whose random effects equal zero; they need not match the sample level because cities have different intercepts and the logit transformation is nonlinear.</p>
@@ -53,8 +59,13 @@
           <label>City<select id="city-select"></select></label>
         </div>
         <h2 id="city-title">City detail</h2>
-        <p class="caption">Observed is this city's reported rate. Global baseline contains the crime-specific intercept, trend, and season. City fitted additionally contains the city random intercept and the city's trend and seasonal deviations.</p>
+        <p class="caption">Observed is this city's reported rate. Global baseline contains the crime-specific intercept, trend, and season. City fitted additionally contains the city random intercept and the city's trend and seasonal deviations. City and national rate levels often differ a lot; check "Index to start" above to rebase both curves to 100 at the start of the window so their trajectories are easier to compare over time.</p>
         <div id="city-chart" class="chart"></div>
+      </div>
+      <div class="card">
+        <h2 id="city-overview-title">All crime types for this city</h2>
+        <p class="caption">Each mini chart compares this city's fitted annualized rate (orange) with the US-wide reference (blue) and the observed rate (grey), for every offense at once. Click a chart to open its full detail above.</p>
+        <div id="city-crime-grid" class="crime-grid"></div>
       </div>
       <div class="card">
         <h2 id="city-trend-title">City and US-wide trends</h2>
@@ -108,7 +119,7 @@
         <p>The reported monthly crime data come from AH Datalytics' <a href="https://github.com/AH-Datalytics/rtci">Real-Time Crime Index (RTCI)</a>.</p>
 
         <h2>Methodology</h2>
-        <p>Each offense is estimated separately with an aggregated-binomial mixed model. A natural cubic spline captures the national long-run trend, and three sine/cosine harmonic pairs capture annual seasonality. Random effects allow cities to have different average levels, trends, and seasonal patterns, while separate terms capture monthly movement shared across cities and remaining city-by-month variation.</p>
+        <p>Each offense is estimated separately with an aggregated-binomial mixed model. A natural cubic spline captures the national long-run trend, and three sine/cosine harmonic pairs capture annual seasonality. Random effects allow cities to have different average levels, trends, and seasonal patterns, while separate terms capture monthly movement shared across cities and remaining city-by-month variation. Violent crime (murder, rape, robbery, and assault) and property crime (burglary, theft, and motor vehicle theft) are modeled the same way: each city-month's component offense counts are summed first, and that combined count gets its own trend, season, and city terms, rather than averaging the seven separate model outputs after the fact.</p>
         <p>The <a href="https://github.com/apwheele/CrimeDecomp">project repository</a> contains the complete methodology, model formulas, source code, validation checks, and paper.</p>
       </div>
     </section>

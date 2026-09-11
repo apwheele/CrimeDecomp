@@ -1,7 +1,8 @@
 #!/usr/bin/env Rscript
 
 part_dir <- file.path("src", "data", "model", "parts")
-crime_names <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor")
+crime_names <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor",
+                 "violent", "property")
 
 cat("Crime model checkpoint status\n")
 cat("Checked:", format(Sys.time(), "%Y-%m-%d %H:%M:%S %Z"), "\n\n")

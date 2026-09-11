@@ -6,7 +6,7 @@ export OPENBLAS_NUM_THREADS="${OPENBLAS_NUM_THREADS:-4}"
 mkdir -p src/data/model
 run_log="${RUN_LOG:-src/data/model/sequential-linux-run.log}"
 failure_log="${FAILURE_LOG:-src/data/model/sequential-linux-failure.log}"
-crimes=(murder rape robbery assault burglary theft motor)
+crimes=(murder rape robbery assault burglary theft motor violent property)
 
 exec 9>src/data/model/sequential-run.lock
 if ! flock -n 9; then

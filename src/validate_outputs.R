@@ -128,5 +128,20 @@ stopifnot(
   all(component_examples$city_season_centered <=
         component_examples$city_season_upper)
 )
+overview_files <- list.files(
+  "src/data/app/city_overview", pattern = "[.]csv$", full.names = TRUE
+)
+stopifnot(
+  length(overview_files) == dplyr::n_distinct(data$city_id),
+  all(file.info(overview_files)$size > 0)
+)
+overview_rows <- sum(vapply(overview_files, function(path) {
+  nrow(readr::read_csv(path, show_col_types = FALSE))
+}, integer(1)))
+stopifnot(overview_rows == nrow(decomposition))
+cat(sprintf("City overview files OK: %s files, %s rows.\n",
+            format(length(overview_files), big.mark = ","),
+            format(overview_rows, big.mark = ",")))
+
 cat(sprintf("Merged outputs OK: %s rows, %s cities, all coordinates finite.\n",
             format(nrow(decomposition), big.mark = ","), nrow(cities)))

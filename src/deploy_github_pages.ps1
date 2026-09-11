@@ -61,7 +61,8 @@ function Assert-GitQuiet {
 }
 
 $crimeTypes = @(
-  "murder", "rape", "robbery", "assault", "burglary", "theft", "motor"
+  "murder", "rape", "robbery", "assault", "burglary", "theft", "motor",
+  "violent", "property"
 )
 $appFiles = @("app.js", "index.html", "styles.css")
 $dataFiles = @("cities.csv", "global_stl.csv")
@@ -87,6 +88,20 @@ foreach ($file in $dataFiles) {
     Source = Join-Path $repositoryRoot "src\data\app\$file"
     SourceRelative = "src/data/app/$file"
     TargetRelative = "data/app/$file"
+  }
+}
+
+$cityOverviewSourceDir = Join-Path $repositoryRoot "src\data\app\city_overview"
+$cityOverviewFiles = Get-ChildItem -LiteralPath $cityOverviewSourceDir -Filter "*.csv" -File `
+  -ErrorAction Stop
+if ($cityOverviewFiles.Count -eq 0) {
+  throw "No per-city overview CSVs found in $cityOverviewSourceDir. Run src/run_model.R first."
+}
+foreach ($file in $cityOverviewFiles) {
+  $bundleFiles += [PSCustomObject]@{
+    Source = $file.FullName
+    SourceRelative = "src/data/app/city_overview/$($file.Name)"
+    TargetRelative = "data/app/city_overview/$($file.Name)"
   }
 }
 
@@ -166,7 +181,7 @@ try {
     Write-Host $removeOutput
   }
 
-  foreach ($directory in @("app", "data\app")) {
+  foreach ($directory in @("app", "data\app", "data\app\city_overview")) {
     New-Item -ItemType Directory -Path (
       Join-Path $stagingRoot $directory
     ) -Force | Out-Null

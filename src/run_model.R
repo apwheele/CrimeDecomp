@@ -277,6 +277,20 @@ for (crime in unique(decomposition$crime_type)) {
   )
 }
 
+message("Writing per-city all-crime overview files...")
+city_overview_dir <- "src/data/app/city_overview"
+dir.create(city_overview_dir, recursive = TRUE, showWarnings = FALSE)
+overview <- decomposition[, c(
+  "city_id", "crime_type", "date", "observed_rate", "global_rate", "city_fitted_rate"
+), drop = FALSE]
+overview_columns <- setdiff(names(overview), "city_id")
+for (city in unique(overview$city_id)) {
+  readr::write_csv(
+    overview[overview$city_id == city, overview_columns, drop = FALSE],
+    file.path(city_overview_dir, paste0(city, ".csv"))
+  )
+}
+
 model_metadata <- list(
   formulas = formulas,
   model_strategy = if (stacked_model) "single stacked bam model" else

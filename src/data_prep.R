@@ -1,8 +1,16 @@
 # Prepare every city in the RTCI national sample for the decomposition.
 
-rtci_component_crimes <- c(
+rtci_base_crimes <- c(
   "murder", "rape", "robbery", "assault", "burglary", "theft", "motor"
 )
+# Combined offense categories, modeled the same way as any base crime: their
+# monthly counts are the sum of their member crimes' counts out of the same
+# population trials.
+rtci_crime_groups <- list(
+  violent = c("murder", "rape", "robbery", "assault"),
+  property = c("burglary", "theft", "motor")
+)
+rtci_component_crimes <- c(rtci_base_crimes, names(rtci_crime_groups))
 rtci_annualization <- 12
 
 rtci_read_raw <- function(path = "src/data/raw/rtci_crime_trends.csv") {
@@ -19,8 +27,8 @@ rtci_prepare_stacked <- function(raw,
                                  metadata,
                                  sample_only = TRUE,
                                  min_population = NULL) {
-  count_cols <- paste0(rtci_component_crimes, "_total")
-  required <- c("id", "size", "year", "month", "population", "sample", count_cols)
+  base_count_cols <- paste0(rtci_base_crimes, "_total")
+  required <- c("id", "size", "year", "month", "population", "sample", base_count_cols)
   missing <- setdiff(required, names(raw))
   if (length(missing) > 0) stop("Source data missing: ", paste(missing, collapse = ", "))
 
@@ -30,6 +38,14 @@ rtci_prepare_stacked <- function(raw,
   monthly <- raw[keep, , drop = FALSE]
   if (nrow(monthly) == 0) stop("No city rows remain after the sample filters.")
   monthly$date <- as.Date(sprintf("%04d-%02d-01", monthly$year, monthly$month))
+
+  for (group_name in names(rtci_crime_groups)) {
+    member_cols <- paste0(rtci_crime_groups[[group_name]], "_total")
+    monthly[[paste0(group_name, "_total")]] <- rowSums(
+      as.matrix(monthly[, member_cols, drop = FALSE]), na.rm = FALSE
+    )
+  }
+  count_cols <- paste0(rtci_component_crimes, "_total")
 
   stacked <- tidyr::pivot_longer(
     monthly,
