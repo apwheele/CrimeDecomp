@@ -558,6 +558,9 @@
     renderGlobal();
     loadCrime(crime);
     syncUrl();
+    const page = document.querySelector(".page.active")?.id;
+    const target = page === "city" ? $("city-chart") : $("global-chart");
+    target?.closest(".card")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function renderCrimeGrid(containerId, crimesList, rowsForCrime, series) {
@@ -579,7 +582,7 @@
       crime => state.global.filter(r => r.crime_type === crime),
       [
         { key: "observed_rate", color: "#9aa8aa" },
-        { key: "global_rate", color: "#1a657c", width: 2 }
+        { key: "city_fitted_rate", color: "#17343d", width: 2 }
       ]);
   }
 
@@ -720,6 +723,13 @@
       showPage(x.dataset.page);
       syncUrl(x.dataset.page);
     }));
+    document.querySelectorAll(".subpanel").forEach(panel => {
+      panel.addEventListener("toggle", () => {
+        if (!panel.open) return;
+        if (panel.querySelector("#crime-overview-grid")) renderCrimeOverviewGrid();
+        if (panel.querySelector("#city-crime-grid")) renderCityGrid();
+      });
+    });
     const requestedPage = location.hash.slice(1);
     const initialPage = ["overview", "city", "all-cities", "about"].includes(requestedPage)
       ? requestedPage : (requestedCityId ? "city" : "overview");

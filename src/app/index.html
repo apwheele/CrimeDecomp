@@ -31,15 +31,17 @@
 
     <section id="overview" class="page active">
       <div class="card">
-        <h2>All crime types at a glance</h2>
-        <p class="caption">Every offense's population-weighted global annualized rate, without switching the crime selector for each one. Grey is the observed sample rate and blue is the global trend plus season. Check "Index to start" above to rescale every mini chart to a common start-of-period baseline, which makes shape and growth comparable across crimes with very different rate levels. Click a chart to open it below.</p>
-        <div id="crime-overview-grid" class="crime-grid"></div>
-      </div>
-      <div class="card">
         <h2>Global model decomposition</h2>
         <p class="caption">Observed is the population-weighted monthly sample rate, and sample fitted aggregates the city-specific structural curves using population weights. Global trend and global plus season describe a reference city whose random effects equal zero; they need not match the sample level because cities have different intercepts and the logit transformation is nonlinear.</p>
         <div id="global-chart" class="chart"></div>
       </div>
+      <details class="card subpanel">
+        <summary>
+          <h2>All crime types at a glance</h2>
+        </summary>
+        <p class="caption">Every offense's population-weighted global annualized rate, without switching the crime selector for each one. Grey is the observed sample rate and dark teal is the sample fitted curve. Check "Index to start" above to rescale every mini chart to a common start-of-period baseline, which makes shape and growth comparable across crimes with very different rate levels. Click a chart to open that crime in the panel above.</p>
+        <div id="crime-overview-grid" class="crime-grid"></div>
+      </details>
       <div class="card">
         <h2>Seasonal component</h2>
         <p class="caption">Seasonal effect is the change in annualized rate associated with the three-harmonic Fourier curve, relative to the long-run trend.</p>
@@ -62,11 +64,13 @@
         <p class="caption">Observed is this city's reported rate. Global baseline contains the crime-specific intercept, trend, and season. City fitted additionally contains the city random intercept and the city's trend and seasonal deviations. City and national rate levels often differ a lot; check "Index to start" above to rebase both curves to 100 at the start of the window so their trajectories are easier to compare over time.</p>
         <div id="city-chart" class="chart"></div>
       </div>
-      <div class="card">
-        <h2 id="city-overview-title">All crime types for this city</h2>
+      <details class="card subpanel">
+        <summary>
+          <h2 id="city-overview-title">All crime types for this city</h2>
+        </summary>
         <p class="caption">Each mini chart compares this city's fitted annualized rate (orange) with the US-wide reference (blue) and the observed rate (grey), for every offense at once. Click a chart to open its full detail above.</p>
         <div id="city-crime-grid" class="crime-grid"></div>
-      </div>
+      </details>
       <div class="card">
         <h2 id="city-trend-title">City and US-wide trends</h2>
         <p class="caption">The city and US-wide spline trends are centered separately on the logit scale. Centering removes the city intercept so differences between the curves represent differences in long-run trajectory rather than average crime level. The band is an approximate 95% pointwise conditional interval for the city deviation.</p>
