@@ -1,170 +1,3160 @@
 {
-    "main_commit":  "d5c514271bd27739cb752a3a1a4253810599545a",
-    "files":  [
-                  {
-                      "source":  "src/app/app.js",
-                      "deployed_as":  "app/app.js",
-                      "sha256":  "d0b56b54e284f876f4bb88207a35a8ff704f4c5052f9db51fc1d03fda57d1194"
-                  },
-                  {
-                      "source":  "src/app/index.html",
-                      "deployed_as":  "app/index.html",
-                      "sha256":  "c72169a9541b3714345066fd84a81417ab648ac83864999770b991ba3a6172bb"
-                  },
-                  {
-                      "source":  "src/app/styles.css",
-                      "deployed_as":  "app/styles.css",
-                      "sha256":  "2ecc81986b076d2b9675cfe941e6fca8ce6f2d3d01d259f067e85992f033a49d"
-                  },
-                  {
-                      "source":  "src/data/app/cities.csv",
-                      "deployed_as":  "data/app/cities.csv",
-                      "sha256":  "5b0800fa38dc12ddb8d920a0be13ef38ee7fba0702cf3788433817bafec594ad"
-                  },
-                  {
-                      "source":  "src/data/app/global_stl.csv",
-                      "deployed_as":  "data/app/global_stl.csv",
-                      "sha256":  "7a5dfa356f579a28fd20e1cbbe3e175c7a90dda9889da1a8d4de6cb3e8a4e578"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_murder.csv",
-                      "deployed_as":  "data/app/decomposition_murder.csv",
-                      "sha256":  "cfd4e1c81f281140abad96ba43e78cdc4b835046d8acdc1ef8d78db46d09109a"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_murder.csv",
-                      "deployed_as":  "data/app/city_trends_murder.csv",
-                      "sha256":  "b6bb322082f8e42889df00aef3b0490d4954b1b12f89e065d636bef225fa2e90"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_murder.csv",
-                      "deployed_as":  "data/app/city_seasons_murder.csv",
-                      "sha256":  "82787351599d9b58e208ca2103bae44daca1d486e31a52f54fe3204a382f31ab"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_murder.csv",
-                      "deployed_as":  "data/app/residual_se_murder.csv",
-                      "sha256":  "2e96e84bb2eda727e1fd77a4bb6b2405eb05a3b4f6e7f682540274be240faa44"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_rape.csv",
-                      "deployed_as":  "data/app/decomposition_rape.csv",
-                      "sha256":  "687fcfb65285103882672efb2981a02670aaca162f7734d87112a35d0319b5e5"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_rape.csv",
-                      "deployed_as":  "data/app/city_trends_rape.csv",
-                      "sha256":  "696c242ff7fa88805368830860c94fff7547152a0d78229d36d5e9604a4279f9"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_rape.csv",
-                      "deployed_as":  "data/app/city_seasons_rape.csv",
-                      "sha256":  "ed24f0f4af1166941da59eeb2fe118cfb3a9aeb5ad948b855a87b59bc1aa6cbd"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_rape.csv",
-                      "deployed_as":  "data/app/residual_se_rape.csv",
-                      "sha256":  "4ee44c674d7e308ec84b5e2779f7450145a44fa45844d1c427b7d68d52e9a547"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_robbery.csv",
-                      "deployed_as":  "data/app/decomposition_robbery.csv",
-                      "sha256":  "887ef8a3f36d12ee6cd1ee12b767bfcfe50fcd29a4c8c0106fd39a2136f0d216"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_robbery.csv",
-                      "deployed_as":  "data/app/city_trends_robbery.csv",
-                      "sha256":  "c4d32144164488ab4bfca51bf3adf1211f76d678bd3e38508973690b8a704156"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_robbery.csv",
-                      "deployed_as":  "data/app/city_seasons_robbery.csv",
-                      "sha256":  "8d07c679eae389e4f5bed6a439fb5cc2c923da89beef5a31468c0d56a2b79277"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_robbery.csv",
-                      "deployed_as":  "data/app/residual_se_robbery.csv",
-                      "sha256":  "87959b86f7718e029ca52f2ba5e85ef15bf6f8a8af9c23ee6c9032d22c2a3f92"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_assault.csv",
-                      "deployed_as":  "data/app/decomposition_assault.csv",
-                      "sha256":  "b04b2f87346fdc1bc513bdb3f8540f9986e420312b4562c631527ab2342f13ff"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_assault.csv",
-                      "deployed_as":  "data/app/city_trends_assault.csv",
-                      "sha256":  "48d802159c589b47f4fd9c6519b88ac1116e1f50a48f90e08a97ab52dafb8c58"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_assault.csv",
-                      "deployed_as":  "data/app/city_seasons_assault.csv",
-                      "sha256":  "7e6a3d6901dc471524f0eace2443a1af84f59e3b4b4182a5fc75f385a9adf222"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_assault.csv",
-                      "deployed_as":  "data/app/residual_se_assault.csv",
-                      "sha256":  "f6f498df94a855bee7c69e770b7c4995601b430b6bfce8fe85b795d8754fced4"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_burglary.csv",
-                      "deployed_as":  "data/app/decomposition_burglary.csv",
-                      "sha256":  "b86c19b1c189c3a1256a0034158d75e30c0473e6d0fa82e4c765b1967a34c270"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_burglary.csv",
-                      "deployed_as":  "data/app/city_trends_burglary.csv",
-                      "sha256":  "be6d87df56343f7c57c8005eed003795eeca21ee7651b6b34c9cb94b1f5de07c"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_burglary.csv",
-                      "deployed_as":  "data/app/city_seasons_burglary.csv",
-                      "sha256":  "0a79b8c2e87dd9fa7e4e0a68d8f31b9fd7d9634a154eb80b2e21f0df2b563a55"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_burglary.csv",
-                      "deployed_as":  "data/app/residual_se_burglary.csv",
-                      "sha256":  "a8b4f7976f7f7816628625afb1fb388e168d68f24688638e588c46456ea64dd0"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_theft.csv",
-                      "deployed_as":  "data/app/decomposition_theft.csv",
-                      "sha256":  "dcfe7f266b20b3a2dad3b300173e5dc44aacc4a8a90c69754d4d5015b7bf6da1"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_theft.csv",
-                      "deployed_as":  "data/app/city_trends_theft.csv",
-                      "sha256":  "32f650f96ccb668c95aec5d21fad64c02b702b743865949a1658571f7c1db3dc"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_theft.csv",
-                      "deployed_as":  "data/app/city_seasons_theft.csv",
-                      "sha256":  "fb3fd73387e8f2793ee932e6d49106ba193d94e5ff71685f2ccff3a144d3ca2d"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_theft.csv",
-                      "deployed_as":  "data/app/residual_se_theft.csv",
-                      "sha256":  "99fc6c545ef207d3aaa6552a55adfb6b5ab96ba4d3723fd224b6a0115953a1d9"
-                  },
-                  {
-                      "source":  "src/data/app/decomposition_motor.csv",
-                      "deployed_as":  "data/app/decomposition_motor.csv",
-                      "sha256":  "928fef6e444fc48a2b3ed84ae1b39b0c633b95d54497351f305bfb034c8c6731"
-                  },
-                  {
-                      "source":  "src/data/app/city_trends_motor.csv",
-                      "deployed_as":  "data/app/city_trends_motor.csv",
-                      "sha256":  "9f7ad21072a3b1793a880aff0aeb8c42cf56be76ded69eed6669e17bf6346438"
-                  },
-                  {
-                      "source":  "src/data/app/city_seasons_motor.csv",
-                      "deployed_as":  "data/app/city_seasons_motor.csv",
-                      "sha256":  "a1225e0ef8e3ba93c52fa17b72690e22780a6d5581a47af3d694815b2835a526"
-                  },
-                  {
-                      "source":  "src/data/app/residual_se_motor.csv",
-                      "deployed_as":  "data/app/residual_se_motor.csv",
-                      "sha256":  "02e844f4f02c86ac152ed1331d37d3e71eca32301d6bb50a18d06f1b2c1d3826"
-                  }
-              ]
+  "main_commit": "bd5ac12773f5b8a4843e4d4dd1fc46a40a03502d",
+  "files": [
+    {
+      "source": "src/app/app.js",
+      "deployed_as": "app/app.js",
+      "sha256": "d773b8bf2bc7cd6b27367929c57291b148113cb3846033fedac693bee01d8207"
+    },
+    {
+      "source": "src/app/index.html",
+      "deployed_as": "app/index.html",
+      "sha256": "b6fd5968eb1d939781ce8e8ad699b2a0b81bb64eded3ad7657278f3e6a4eca9f"
+    },
+    {
+      "source": "src/app/styles.css",
+      "deployed_as": "app/styles.css",
+      "sha256": "fdee97d735da1ce5f39dbf5a5ad257ce01cf8274934135bb55d91a03e8631251"
+    },
+    {
+      "source": "src/data/app/cities.csv",
+      "deployed_as": "data/app/cities.csv",
+      "sha256": "5b0800fa38dc12ddb8d920a0be13ef38ee7fba0702cf3788433817bafec594ad"
+    },
+    {
+      "source": "src/data/app/city_overview/AL0010200.csv",
+      "deployed_as": "data/app/city_overview/AL0010200.csv",
+      "sha256": "cc91a1aec243afb2edd178b120383efee4d9bd89b6e7bb1ed8d7888cd990b7ac"
+    },
+    {
+      "source": "src/data/app/city_overview/AL0011200.csv",
+      "deployed_as": "data/app/city_overview/AL0011200.csv",
+      "sha256": "01526cae63d3bdcdaad55cac0c48b641e2973fed771f95edc856408f3ef9c60b"
+    },
+    {
+      "source": "src/data/app/city_overview/AL0020100.csv",
+      "deployed_as": "data/app/city_overview/AL0020100.csv",
+      "sha256": "b4e55c8c8db5d874bcb0f819252da29e99b1389cc86661a7746d3256128c0c65"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0040100.csv",
+      "deployed_as": "data/app/city_overview/AR0040100.csv",
+      "sha256": "09cbffaf32c4f84c822fe6cb278ff040b351accc5e804daf0b355227125e7be2"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0230100.csv",
+      "deployed_as": "data/app/city_overview/AR0230100.csv",
+      "sha256": "11b5964800f480694f6a7434aeba34e55b8693b7e08b120b41d8afd678cb3a9f"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0600200.csv",
+      "deployed_as": "data/app/city_overview/AR0600200.csv",
+      "sha256": "46c39f18f943e8a3ceba99537f416a7f26e140196aee6153a75808915e28c1b0"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0600300.csv",
+      "deployed_as": "data/app/city_overview/AR0600300.csv",
+      "sha256": "4eb89426c876e3f5ed7c0432f5f4e712b54244fa04b1fac1e8b081afa50c0b76"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0660100.csv",
+      "deployed_as": "data/app/city_overview/AR0660100.csv",
+      "sha256": "36f01d3ef4d60374cc25e1416e8c5d4405c351952955344523c633f2127e425f"
+    },
+    {
+      "source": "src/data/app/city_overview/AR0720100.csv",
+      "deployed_as": "data/app/city_overview/AR0720100.csv",
+      "sha256": "ff7fcc3b1c6a09f5b8d6bf27b8f2e561dfcdd7a3fa9a9cbff21c852a6ba15f87"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0070100.csv",
+      "deployed_as": "data/app/city_overview/AZ0070100.csv",
+      "sha256": "b7eb2511c7ccb2f851073c99cf9b75b970c3b1318ea07dabcc10997ca35988c4"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0070300.csv",
+      "deployed_as": "data/app/city_overview/AZ0070300.csv",
+      "sha256": "b6e6b3dcb0eff22fb0b04f9413faaa8f6b22e1547a6ea479417853a3ed176959"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0070500.csv",
+      "deployed_as": "data/app/city_overview/AZ0070500.csv",
+      "sha256": "36e08934f1b0f9a55b3b44ffc49cce249cad0c4f3a0a373ddeb93a2084df7304"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0071100.csv",
+      "deployed_as": "data/app/city_overview/AZ0071100.csv",
+      "sha256": "1a8d9c310edba031c6dc3fa0e8700fc8869ff87a5390c11d824f2d60a7540c8a"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0071500.csv",
+      "deployed_as": "data/app/city_overview/AZ0071500.csv",
+      "sha256": "9e594218b2297cd7f4e7309464f59c8c13c9d70b876dd82a03e776c8f025aa7c"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0072300.csv",
+      "deployed_as": "data/app/city_overview/AZ0072300.csv",
+      "sha256": "f7decb9d0831c508d6d9ed747d79fd7eeb1cbdb7fc4134d7ecbbe7ad7bf681ed"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0072500.csv",
+      "deployed_as": "data/app/city_overview/AZ0072500.csv",
+      "sha256": "02d51d091d428d8d4aba52165e9f9e0b9ee24612cee45d75ef0a27f58dcb767b"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0072900.csv",
+      "deployed_as": "data/app/city_overview/AZ0072900.csv",
+      "sha256": "bc66932b5b41786fa512f34588b18bd53618acd317c69b68fca6ef0170f8951f"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0100000.csv",
+      "deployed_as": "data/app/city_overview/AZ0100000.csv",
+      "sha256": "25453fba47c26682a4fb978de914b677f0d80587811ed62af4e5802197dc6d67"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0100300.csv",
+      "deployed_as": "data/app/city_overview/AZ0100300.csv",
+      "sha256": "90688156683607a71919bf07f47dc159864a14e15ab944832d8ea982617cd5a2"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0100900.csv",
+      "deployed_as": "data/app/city_overview/AZ0100900.csv",
+      "sha256": "1ba959fae5599bfb83a08e6271a857aefa52aaaf84e98f4ef5842b6389390b6e"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0110000.csv",
+      "deployed_as": "data/app/city_overview/AZ0110000.csv",
+      "sha256": "cc8023f3164af84de11e6b6a5f057d0a4eb9e63c713b0868d711e66aa9d0769a"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0110100.csv",
+      "deployed_as": "data/app/city_overview/AZ0110100.csv",
+      "sha256": "6ffb59c11d84b43a6bad3b475c37036d08b4ff0df8a0bcd20d2640212c77534e"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0111700.csv",
+      "deployed_as": "data/app/city_overview/AZ0111700.csv",
+      "sha256": "6df4d44124a789cbdeca75d0371e4e46dfb4c287609aaa88cebc77337d990fb6"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0130000.csv",
+      "deployed_as": "data/app/city_overview/AZ0130000.csv",
+      "sha256": "938ba78881557459dba3fa062fbc45c2a3aaba2c2a02c1c304e505b25a2dfb2b"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0131100.csv",
+      "deployed_as": "data/app/city_overview/AZ0131100.csv",
+      "sha256": "ff5a240e3934166a4c44a2f9627e16826242dd85a4ea8d8bfb9188a59fd546d9"
+    },
+    {
+      "source": "src/data/app/city_overview/AZ0140500.csv",
+      "deployed_as": "data/app/city_overview/AZ0140500.csv",
+      "sha256": "960be04391ebdfc001e68b1519d74c1684117aef7824cda67d1e8c6cabb9c50b"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0010000.csv",
+      "deployed_as": "data/app/city_overview/CA0010000.csv",
+      "sha256": "c57644c201aa1144d0b1853e99289e4d730d8f245c5c25b7e4610a2e652af75e"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0010100.csv",
+      "deployed_as": "data/app/city_overview/CA0010100.csv",
+      "sha256": "4c6723dee1ee9dd946c6ca0dce5684af62dbdc864e9436b45c41e063da9b5286"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0010300.csv",
+      "deployed_as": "data/app/city_overview/CA0010300.csv",
+      "sha256": "12667c7174565624c1ec984ad101c89ce00ba861137ad6694165479564d11a0d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0010600.csv",
+      "deployed_as": "data/app/city_overview/CA0010600.csv",
+      "sha256": "6d540ee5486ad474070d38c5c7b79074bda377f774de11345f2d98087b785b26"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0011100.csv",
+      "deployed_as": "data/app/city_overview/CA0011100.csv",
+      "sha256": "d1a27d6f30340d9d232358c6dd43459a0502032613d0ea444fbbcf90765f9aaa"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0070100.csv",
+      "deployed_as": "data/app/city_overview/CA0070100.csv",
+      "sha256": "97f623ebe12165708bb7a040e4988eb5b7cfb7898bc84fb2a845d7a393ce26e3"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0070200.csv",
+      "deployed_as": "data/app/city_overview/CA0070200.csv",
+      "sha256": "c1d0eb321ae0ba071772a4a1c56dbdd13c86f7c19883f201eb1cfe02044d4edd"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0070400.csv",
+      "deployed_as": "data/app/city_overview/CA0070400.csv",
+      "sha256": "cb8ece6e4a78ee1bc022c479d1720de56d9c8c1dc108cdc0537f02e4b5129db8"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0071000.csv",
+      "deployed_as": "data/app/city_overview/CA0071000.csv",
+      "sha256": "114ed0cea46cf8de0e553ec805bacdcf09d18588d7fbc5908a44f92654d4bf2a"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0071200.csv",
+      "deployed_as": "data/app/city_overview/CA0071200.csv",
+      "sha256": "50ff55db0bdf41e77d14b316e3f1ea850b4c9e1b545d31897b06a9c9c07f47f8"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0090000.csv",
+      "deployed_as": "data/app/city_overview/CA0090000.csv",
+      "sha256": "526f3e272ec867c355a25ae4961bfd291690f49124e147cd70fe3aa8af20ff8e"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0100100.csv",
+      "deployed_as": "data/app/city_overview/CA0100100.csv",
+      "sha256": "bce26f9e9328e0a0309f0cac6f75766a7178dfae3fb00e8208e935f2f3e109ba"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0100500.csv",
+      "deployed_as": "data/app/city_overview/CA0100500.csv",
+      "sha256": "2170079690fa3ae2f24bdc86f974cee87a9b8ba8b580006d5326743ca5ca8e75"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0150200.csv",
+      "deployed_as": "data/app/city_overview/CA0150200.csv",
+      "sha256": "b17016fa321b19857230263d9950ce187aca10dea1c1c17e82d904286c038e1c"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0190000.csv",
+      "deployed_as": "data/app/city_overview/CA0190000.csv",
+      "sha256": "0d471d9d283a15e3ca87800a762e2303a75c0595328721d8c4da8e1bbb98b5e4"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0190100.csv",
+      "deployed_as": "data/app/city_overview/CA0190100.csv",
+      "sha256": "2a581e5338dd7e0bea6baa1e881e9e9291ae8e15a986d185523a922967ffabbb"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0190200.csv",
+      "deployed_as": "data/app/city_overview/CA0190200.csv",
+      "sha256": "bf7ec5dcf08c55dbfb97330059bff65b154a9d572845ff791a16f5831b4ae2bc"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0190600.csv",
+      "deployed_as": "data/app/city_overview/CA0190600.csv",
+      "sha256": "fde9b7ee8c889d9ce29b0d549986c12820102524c61ef162148a718d5cbe58a9"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0191200.csv",
+      "deployed_as": "data/app/city_overview/CA0191200.csv",
+      "sha256": "07263d37bc55224260827742e739bd30622f7990c82afc44d80b85c0f71a65d0"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0192200.csv",
+      "deployed_as": "data/app/city_overview/CA0192200.csv",
+      "sha256": "1f73a08043f65a6946241952fc145d9d553343e2743a2a14fc0ba7b8bdca61d8"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0192400.csv",
+      "deployed_as": "data/app/city_overview/CA0192400.csv",
+      "sha256": "bd71cd43b05c2f493cbfe465988ad7fbc2a936e415f64a3988d9b4f25c375cc7"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0194100.csv",
+      "deployed_as": "data/app/city_overview/CA0194100.csv",
+      "sha256": "da02d63a4c5e891fe496c195696a0f36eb5bbb6ca05c0c4ce922e22f3ee627ee"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0194200.csv",
+      "deployed_as": "data/app/city_overview/CA0194200.csv",
+      "sha256": "5be7b95335e35f5c577ffd252f5d517aa1e559d5aaa068b8ff4b1d3706d6ef71"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0194800.csv",
+      "deployed_as": "data/app/city_overview/CA0194800.csv",
+      "sha256": "708d3e90badc13fa443d4119a9a5bd1b3ba2b433328cc574c7f301c89eeb79bf"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0195300.csv",
+      "deployed_as": "data/app/city_overview/CA0195300.csv",
+      "sha256": "44da0909451fbb688981f2de1c40bb180126a408017cfba1662f558196d9795e"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0195500.csv",
+      "deployed_as": "data/app/city_overview/CA0195500.csv",
+      "sha256": "13730b10868a23be0ae77154c3081a4cd080e5875b1ef44f9a29849e72184db4"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0196500.csv",
+      "deployed_as": "data/app/city_overview/CA0196500.csv",
+      "sha256": "17bcf6ecd15a6bbc70fda59173d90618c6434bd9832cba2d90ce92c2497e294c"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0197200.csv",
+      "deployed_as": "data/app/city_overview/CA0197200.csv",
+      "sha256": "8446dda2540cc3538cf0a05b18538577b80c15cb43d9151e5d9b87ea2fe61187"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0197500.csv",
+      "deployed_as": "data/app/city_overview/CA0197500.csv",
+      "sha256": "7631bf9bc3fd9be0678059c359faf3d16b06c599a3736fdff2d6195be013ffdc"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0200200.csv",
+      "deployed_as": "data/app/city_overview/CA0200200.csv",
+      "sha256": "5a4ea681b5318eb38a013fd3389cf3028001714b4428b4bd13f915e0ca1eb6d0"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0210600.csv",
+      "deployed_as": "data/app/city_overview/CA0210600.csv",
+      "sha256": "92cc2c3cb520d116db02da8815c7bcb18cec105c6b94dbdea59d1751f80d3628"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0210900.csv",
+      "deployed_as": "data/app/city_overview/CA0210900.csv",
+      "sha256": "80de4aac1ab0d1ec47af3f8eff92ec83428d5a222082d4d20cc9bbfbfac0f0e9"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0240600.csv",
+      "deployed_as": "data/app/city_overview/CA0240600.csv",
+      "sha256": "18ccdc9193c28a2209ee4ab6eb295141b95d7cf2fecad75f53df730546bf26e8"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0270000.csv",
+      "deployed_as": "data/app/city_overview/CA0270000.csv",
+      "sha256": "8d2572a821608c60b8849f47519833c3dc3c5b60167a765cbe2cf16a95f7c341"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0280200.csv",
+      "deployed_as": "data/app/city_overview/CA0280200.csv",
+      "sha256": "dc515008070395af780a71ca439516d200b9cb8aa92ab040388fb5812cf4d611"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0300100.csv",
+      "deployed_as": "data/app/city_overview/CA0300100.csv",
+      "sha256": "fa56c750443cecd2f21c1c2e00ba230b6403138b7ac1ed521edac59364ed270a"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0300300.csv",
+      "deployed_as": "data/app/city_overview/CA0300300.csv",
+      "sha256": "fc7c2b92660c18af67b998d983dca0d9990ea72ecfb62bda337fa23aae8c1989"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0300700.csv",
+      "deployed_as": "data/app/city_overview/CA0300700.csv",
+      "sha256": "2131425cf78fe0031a840db6101f0b4a0e1289b25a0b90567a2f427c0aea0a35"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0300800.csv",
+      "deployed_as": "data/app/city_overview/CA0300800.csv",
+      "sha256": "25fa855a6ae4daab8de2f989cce9acc11961919543de94e33802f97bf2d953ef"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0301400.csv",
+      "deployed_as": "data/app/city_overview/CA0301400.csv",
+      "sha256": "46c7975a34a120b548768050f1a67084416a18b4c5e767c44cd0e5b1186b6480"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0302200.csv",
+      "deployed_as": "data/app/city_overview/CA0302200.csv",
+      "sha256": "974674eec37af82053dcb4ae4c7776a4d7fc889d43eb8db2f931a5e596d91c24"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0302400.csv",
+      "deployed_as": "data/app/city_overview/CA0302400.csv",
+      "sha256": "f8d299d5cac0f71d00a72a2060678c3f440da03d01bfa0f25ad0aaded33aa780"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0302500.csv",
+      "deployed_as": "data/app/city_overview/CA0302500.csv",
+      "sha256": "05812159b8d42e8deda2ea7222dbbda494aee29d4addc0b1ddbe2547a751eee5"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0302600.csv",
+      "deployed_as": "data/app/city_overview/CA0302600.csv",
+      "sha256": "cdd9335639d3891e8a665436dbfccbb8a2fbd07d310aa69b535a025d1483ba25"
+    },
+    {
+      "source": "src/data/app/city_overview/CA030350X.csv",
+      "deployed_as": "data/app/city_overview/CA030350X.csv",
+      "sha256": "7248fb750c9d82ddbc487962b2e292561921fec8d3ea6e8cf6a645e8753bc98a"
+    },
+    {
+      "source": "src/data/app/city_overview/CA030390X.csv",
+      "deployed_as": "data/app/city_overview/CA030390X.csv",
+      "sha256": "4bd1c04eb96d2399412617f04b696f5346b0df3354e16413f11a8237100f7783"
+    },
+    {
+      "source": "src/data/app/city_overview/CA030490X.csv",
+      "deployed_as": "data/app/city_overview/CA030490X.csv",
+      "sha256": "a17f4f0baa0a01f13018d3b0733b0e7e19dd1d5074bc72b3b543c23913016ef1"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0310300.csv",
+      "deployed_as": "data/app/city_overview/CA0310300.csv",
+      "sha256": "649ad9246125b4de433dcdc75ce146347e73a785d6a8900327f1658dbd877cf7"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0310400.csv",
+      "deployed_as": "data/app/city_overview/CA0310400.csv",
+      "sha256": "beff3f8e1cb3b50a8854aa1379203693232648b3f5ca726b22e968fc6728543d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0310500.csv",
+      "deployed_as": "data/app/city_overview/CA0310500.csv",
+      "sha256": "f2925d835099146ccc76e089683531bba9e2f054c75b535f8d9cefe345a5ed6d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0330200.csv",
+      "deployed_as": "data/app/city_overview/CA0330200.csv",
+      "sha256": "1986b8f159c5d2860ac5373d9e4ae28f5ee8b6fbe5ed6d95932e80ffcd8c1d96"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0331300.csv",
+      "deployed_as": "data/app/city_overview/CA0331300.csv",
+      "sha256": "77ef9141f3e33eca6fe58a71d30332e8fb53e1c92394ecc459c7ea0d39737185"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0331500.csv",
+      "deployed_as": "data/app/city_overview/CA0331500.csv",
+      "sha256": "d3f21df6d7f04a216aa608aa113641ae6a42fe2575785e756c71cd3d4abbb31d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0334200.csv",
+      "deployed_as": "data/app/city_overview/CA0334200.csv",
+      "sha256": "00ead734fd6345c4e7b0205e5792f1beb4957fa81e392b359a2e88f20689b655"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0340000.csv",
+      "deployed_as": "data/app/city_overview/CA0340000.csv",
+      "sha256": "4b3ac56017a8d347d8ec6bad6ac3c076f7e61a13ab074b144d3351b18532f88e"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0340100.csv",
+      "deployed_as": "data/app/city_overview/CA0340100.csv",
+      "sha256": "80d12f02c3fe556e116a4e02f543c6b430def5e9a133c4f87bc9054888f7f5bb"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0340400.csv",
+      "deployed_as": "data/app/city_overview/CA0340400.csv",
+      "sha256": "32a1953e0faf9fe13e4b7618d5098c4f5f8f3b5979e7b66fb0afe725fb87c538"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0340H00.csv",
+      "deployed_as": "data/app/city_overview/CA0340H00.csv",
+      "sha256": "61a98af858ffc80007b7a0a5cb5c93859d7253ec5ef5a8daf3bf4f5415aa1bb7"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0349600.csv",
+      "deployed_as": "data/app/city_overview/CA0349600.csv",
+      "sha256": "c7acca86d47da779f919a606d0cfadf8ce2b0fb8b87bbcbf8ce236205ffa71eb"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0360200.csv",
+      "deployed_as": "data/app/city_overview/CA0360200.csv",
+      "sha256": "9601be8ae13b1f64d3f2e59da09dfcd35f53168c44f54e6c2d03b2517722cfeb"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0360400.csv",
+      "deployed_as": "data/app/city_overview/CA0360400.csv",
+      "sha256": "81c7e39d31cbe14366a6427c9cae8a660cb233e51a0a1c46f8cc758c1cc3d5a6"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370000.csv",
+      "deployed_as": "data/app/city_overview/CA0370000.csv",
+      "sha256": "6a421dab5139b193f8ccd445cfdfdb509a6bfe396217ad424abb09473424bb85"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370100.csv",
+      "deployed_as": "data/app/city_overview/CA0370100.csv",
+      "sha256": "ad9f3d69774dbb2adfa42a36527b147b73f6cdfdb5b8db377b2e66762882d235"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370200.csv",
+      "deployed_as": "data/app/city_overview/CA0370200.csv",
+      "sha256": "98558bf100449bd40442c39d95897c4b1260f4806b8a50d448227a12bf0bb0cc"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370500.csv",
+      "deployed_as": "data/app/city_overview/CA0370500.csv",
+      "sha256": "aa6abc7bfda4119ad8d1cf83fd846d5306f8bd15f7e893735d790138cca7204a"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370600.csv",
+      "deployed_as": "data/app/city_overview/CA0370600.csv",
+      "sha256": "c4926984b0ef0b5a5c42a9d7438387d7e8872488b1298111b39b1b47abcf529d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370800.csv",
+      "deployed_as": "data/app/city_overview/CA0370800.csv",
+      "sha256": "f3424b7730fa81574436252c34ce46c772bc70a7545341103ffb5f9859c09c1d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0370900.csv",
+      "deployed_as": "data/app/city_overview/CA0370900.csv",
+      "sha256": "f557f9f2f9342061b43718871fd7b10f2d668df3aff5a4da1257d2049d78a442"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0371000.csv",
+      "deployed_as": "data/app/city_overview/CA0371000.csv",
+      "sha256": "00ee6afb3caa6dff218d9bbfa7647d81872b296efab708c234d488c396e8dd0f"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0371100.csv",
+      "deployed_as": "data/app/city_overview/CA0371100.csv",
+      "sha256": "8a0f9fca0f2e25115f507ffc22f6f642640671fb7bbca43fe1a648682f9c822f"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0380100.csv",
+      "deployed_as": "data/app/city_overview/CA0380100.csv",
+      "sha256": "6bde8a83503cb93cb6fa096000d5d220002c2ebb7f87140cacbd4932bf09bfce"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0390300.csv",
+      "deployed_as": "data/app/city_overview/CA0390300.csv",
+      "sha256": "a6ff18703e8a08222a6ec6b84ca4f285fd237ce5a1e80205fa0278e36b9011b9"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0390600.csv",
+      "deployed_as": "data/app/city_overview/CA0390600.csv",
+      "sha256": "6706b9993a63c85073f5e4fddca76111ac6a1727fa08fc63ec704d687d4612b3"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0410000.csv",
+      "deployed_as": "data/app/city_overview/CA0410000.csv",
+      "sha256": "e010a5f74f0c6e85eaf5bfacc6fdce2fda3cdd333710b11bd8ea7e7d604b2e76"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0410600.csv",
+      "deployed_as": "data/app/city_overview/CA0410600.csv",
+      "sha256": "33fa26e31e85381bbaef4fc2377ead19d7dc63cb39c78323682adffa1541b0fb"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0411300.csv",
+      "deployed_as": "data/app/city_overview/CA0411300.csv",
+      "sha256": "adb22d4972beff7d5b5eebce0e844a8d58ab4a8771a44c277c9605937fd338c3"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0420400.csv",
+      "deployed_as": "data/app/city_overview/CA0420400.csv",
+      "sha256": "ed0bd89df3029617142419f2edf90746952cf428114efbf392dc64da3f631978"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0430400.csv",
+      "deployed_as": "data/app/city_overview/CA0430400.csv",
+      "sha256": "887c4eb3b094574ca1d5b407000a5f35a475e44a453c4187ea535a004c585cbf"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0430800.csv",
+      "deployed_as": "data/app/city_overview/CA0430800.csv",
+      "sha256": "ec7b32f081eb03ba244634aee1061993139db0a11c13120124a4a2c76b321404"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0431100.csv",
+      "deployed_as": "data/app/city_overview/CA0431100.csv",
+      "sha256": "9788b9f469a64dd2e08d4efc2a7f6f7bf8a1893e39130c873ba2b48dfee00d60"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0431200.csv",
+      "deployed_as": "data/app/city_overview/CA0431200.csv",
+      "sha256": "bf59fb0508d421d44685aa2de2262599a3eb820fed244b12dd4281d6b6cc4e8d"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0431400.csv",
+      "deployed_as": "data/app/city_overview/CA0431400.csv",
+      "sha256": "c01f40a4023265bfd8aea8b42ec8c70b6ad67e989bbe0b06c20072ec2af5275f"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0431600.csv",
+      "deployed_as": "data/app/city_overview/CA0431600.csv",
+      "sha256": "2b2b9e88cf1627dfa49c2a5aa2c236594b4fae5db472a0ac85a7ddc04a2afa22"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0440000.csv",
+      "deployed_as": "data/app/city_overview/CA0440000.csv",
+      "sha256": "85dde1d71902984e826fd1a6d879a38c012078e02f44b79ef40fc721c36a85cf"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0440200.csv",
+      "deployed_as": "data/app/city_overview/CA0440200.csv",
+      "sha256": "b4b3379fcfc87fe7e983b0e38921607fa442759bb28be21ade757a7fcb56c68a"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0480300.csv",
+      "deployed_as": "data/app/city_overview/CA0480300.csv",
+      "sha256": "0ea72545ff8e301ba36ec63309a6b3981bb82493a2be4afbf5777afdd5f50e03"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0480600.csv",
+      "deployed_as": "data/app/city_overview/CA0480600.csv",
+      "sha256": "6f5a74a7eaea4d7c3b3042c9d5c0cc211bf4b0e22599a90dc9a0e103d7b90d41"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0480700.csv",
+      "deployed_as": "data/app/city_overview/CA0480700.csv",
+      "sha256": "dbc97dcbc2f89ef990ff7c9b73cfb85f3dabfff78418163bc5576fda7dc8e083"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0490000.csv",
+      "deployed_as": "data/app/city_overview/CA0490000.csv",
+      "sha256": "c81b13113531fc649541d88f80c912f6d4e0b146fad30e2bc1a7b5eea58e5c37"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0490500.csv",
+      "deployed_as": "data/app/city_overview/CA0490500.csv",
+      "sha256": "b73449d558095bc6eab6909c60348bcb8c6a7bae9614dbc365d955960dd879d1"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0490800.csv",
+      "deployed_as": "data/app/city_overview/CA0490800.csv",
+      "sha256": "76c10aa3710755455912ae034402dbd23f3a0d1b330cbca0f24403a082c7bf63"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0540000.csv",
+      "deployed_as": "data/app/city_overview/CA0540000.csv",
+      "sha256": "50ffc53636c69c5b48c98a8b451ba6e4b7cecbb111ea97d11334e96ce5e15337"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0540500.csv",
+      "deployed_as": "data/app/city_overview/CA0540500.csv",
+      "sha256": "c28c302f2a8ebd886a1362777f2570137878358440959ad453363887ef318eac"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0540600.csv",
+      "deployed_as": "data/app/city_overview/CA0540600.csv",
+      "sha256": "c858b1d4d04d55e6ade9aa6d43f3f0b28ba5047ed0ed9c7d2ee22a12fc6dfc5c"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0540700.csv",
+      "deployed_as": "data/app/city_overview/CA0540700.csv",
+      "sha256": "eeb7f98373ab0aa20a5d3886d2cd15da9a3066175baef82a2c72b3e94b103a54"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0560100.csv",
+      "deployed_as": "data/app/city_overview/CA0560100.csv",
+      "sha256": "680eca81ebed10d7a9a2a4be5b2fd58602adab5595ef1bbc050a80fcb2c75be5"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0560400.csv",
+      "deployed_as": "data/app/city_overview/CA0560400.csv",
+      "sha256": "22b4fbc012ab38e2f3ad2892cfc7042b6076feff0a3f06b576ec0d14fd6b5d95"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0560700.csv",
+      "deployed_as": "data/app/city_overview/CA0560700.csv",
+      "sha256": "698c69092154d5f446172643bebfe769d2114779bd0cb6438429be6c2e4971e2"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0560800.csv",
+      "deployed_as": "data/app/city_overview/CA0560800.csv",
+      "sha256": "395248c0372400fbaab51863091b96fc2e2c60ff3e6970ea8b1b6ff56d327b89"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0560900.csv",
+      "deployed_as": "data/app/city_overview/CA0560900.csv",
+      "sha256": "0e5cd54f24f2aec3a17a33281802fcc2e05b4e25d316401f9620fcd410871cf3"
+    },
+    {
+      "source": "src/data/app/city_overview/CA0570100.csv",
+      "deployed_as": "data/app/city_overview/CA0570100.csv",
+      "sha256": "f19d11c3e202349395502a916fd669c869db14482cf8528fde38d1ddee76c60e"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0010000.csv",
+      "deployed_as": "data/app/city_overview/CO0010000.csv",
+      "sha256": "a67c18542e2e9eb6f07c50a4a54b6b8e76ec019d5fc9335720cb38b770b0a41b"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0010100.csv",
+      "deployed_as": "data/app/city_overview/CO0010100.csv",
+      "sha256": "e705480621ccf7ba52c56a4d1f09c6eb3ca1a4b34a8f87270662ed3f549ffffe"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0010400.csv",
+      "deployed_as": "data/app/city_overview/CO0010400.csv",
+      "sha256": "5ca138361c46537ce2099040bcb4ed806553390bee18eee6ccce38c9ea3de81e"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0030000.csv",
+      "deployed_as": "data/app/city_overview/CO0030000.csv",
+      "sha256": "608cb01593390180059150200feff21b32067edbc4578fc3dbaba4630d33d9b8"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0031100.csv",
+      "deployed_as": "data/app/city_overview/CO0031100.csv",
+      "sha256": "dc93817dfdd7682a30db7b699b192cb57176f30bf6904f1af9917c79cd5883ae"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0070100.csv",
+      "deployed_as": "data/app/city_overview/CO0070100.csv",
+      "sha256": "05c819e2b3b5c1abb3a45dc6b7535a761660e5aee58d25713bd1d513e9df995e"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0180000.csv",
+      "deployed_as": "data/app/city_overview/CO0180000.csv",
+      "sha256": "e95dd24135123394b93de726da89e9c77706d573810e1b6b750d3ec05a5fd6c4"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0180500.csv",
+      "deployed_as": "data/app/city_overview/CO0180500.csv",
+      "sha256": "550a7d2ecfadc0f13b9ae538e0ada2ae715ac015af95db8ea084e8c599cc0fc6"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0210000.csv",
+      "deployed_as": "data/app/city_overview/CO0210000.csv",
+      "sha256": "d5eb02c8509cc9b904dedaaa03950fc6bfea68dd73bccae9e1194e328b13b799"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0210100.csv",
+      "deployed_as": "data/app/city_overview/CO0210100.csv",
+      "sha256": "f23c726a66a8df887d6389f0a498ca61f4fc4f0c6f8ec95ae6b450c70d6dc76d"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0300000.csv",
+      "deployed_as": "data/app/city_overview/CO0300000.csv",
+      "sha256": "a9f26eb812683997d1f3f9713a53b410f4c3336f687d520505da0652e7e87932"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0300100.csv",
+      "deployed_as": "data/app/city_overview/CO0300100.csv",
+      "sha256": "b7a036416ca4535060f70f6ed9a17f9012a45c61b430561212d879559c704dc5"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0350300.csv",
+      "deployed_as": "data/app/city_overview/CO0350300.csv",
+      "sha256": "c051a8369e3016cd0b683934dda45ab8fc0cd11f3f7d79a2458ac5fc850a63a0"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0350400.csv",
+      "deployed_as": "data/app/city_overview/CO0350400.csv",
+      "sha256": "3cf6f1c680e9b26ff6845c440e5fc83b79870bc44958d59184b7e8af286dbddd"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0390100.csv",
+      "deployed_as": "data/app/city_overview/CO0390100.csv",
+      "sha256": "24809413f371d6d537b83d8216569a0ac53ecbc99d00e7c0bcddec41fe0531cf"
+    },
+    {
+      "source": "src/data/app/city_overview/CO0640100.csv",
+      "deployed_as": "data/app/city_overview/CO0640100.csv",
+      "sha256": "bba3024c14c0bd9efb05f26d2da1b9b4e14b84950c68611293a95b97bceec458"
+    },
+    {
+      "source": "src/data/app/city_overview/CODPD0000.csv",
+      "deployed_as": "data/app/city_overview/CODPD0000.csv",
+      "sha256": "29daa4b5f571d8b3bf6bdcce3b0ab4a3a3f0793a5ffd14e19f2784dccae38dfb"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0001500.csv",
+      "deployed_as": "data/app/city_overview/CT0001500.csv",
+      "sha256": "ffa155330145bde2421f0c05717c8a92cd511983113be51c691a7ed4507ed983"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0001700.csv",
+      "deployed_as": "data/app/city_overview/CT0001700.csv",
+      "sha256": "237a23d5011344a37b29284cb5b326dc45ee6e1634be72ab0de1c9687ef93c0e"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0003400.csv",
+      "deployed_as": "data/app/city_overview/CT0003400.csv",
+      "sha256": "4f942224e9e69c99972cc6b32f55be525bd9f9acd150a78e8aaf7dcf1549ba52"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0004300.csv",
+      "deployed_as": "data/app/city_overview/CT0004300.csv",
+      "sha256": "0a718b9b9d5791d768a761a641643462a7bf305f06ee0e8a13d5eee4315de2cf"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0005100.csv",
+      "deployed_as": "data/app/city_overview/CT0005100.csv",
+      "sha256": "5a35e87d1b69198afa8b53697e8645baa3f9983bc18c87de8a049b797fcd0371"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0006400.csv",
+      "deployed_as": "data/app/city_overview/CT0006400.csv",
+      "sha256": "55983197664a21339c595b7c1533a49266dfcd3b01fd96092159fb48aaca0d1e"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0007700.csv",
+      "deployed_as": "data/app/city_overview/CT0007700.csv",
+      "sha256": "14027e0dcac5e4853fb3fce1416056b7b4c70342a727c3d8cac286ea146bc6cd"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0008000.csv",
+      "deployed_as": "data/app/city_overview/CT0008000.csv",
+      "sha256": "7e12273f5588e203f2c3324348d2a9314e4bbd111cc8f1f4b3110f61ee93ebda"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0008400.csv",
+      "deployed_as": "data/app/city_overview/CT0008400.csv",
+      "sha256": "8fa41dfe7a990574d6f4201f22b055dfad4dd28c33b7fad66196dd85bca9912c"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0008900.csv",
+      "deployed_as": "data/app/city_overview/CT0008900.csv",
+      "sha256": "7b4ff82072ea2fbba72038cfa21777c520c6627e5879581063674162246ceff8"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0013500.csv",
+      "deployed_as": "data/app/city_overview/CT0013500.csv",
+      "sha256": "b99df28fedd614eed9f24de9c69f94e9996decba9f3c6c2da441f56acce8552e"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0013800.csv",
+      "deployed_as": "data/app/city_overview/CT0013800.csv",
+      "sha256": "d7eff5ca4c8d4121a177b2e570e4166597aabd41f3e15af2e796ab12631aa131"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0015100.csv",
+      "deployed_as": "data/app/city_overview/CT0015100.csv",
+      "sha256": "1ebac1d7a56582d64fbdf3ea3b4e5c2f1b3e27e9a7d00831c288e152b116583d"
+    },
+    {
+      "source": "src/data/app/city_overview/CT0015500.csv",
+      "deployed_as": "data/app/city_overview/CT0015500.csv",
+      "sha256": "a9b1854c12b21fc0f07b1b524e3792132c31f039015b2644bcc8265282648801"
+    },
+    {
+      "source": "src/data/app/city_overview/DCMPD0000.csv",
+      "deployed_as": "data/app/city_overview/DCMPD0000.csv",
+      "sha256": "c13084559e3ad07ff53df294b3aa7536dee68fdd096eb1923155e268d1f9bcfb"
+    },
+    {
+      "source": "src/data/app/city_overview/FL0130600.csv",
+      "deployed_as": "data/app/city_overview/FL0130600.csv",
+      "sha256": "6895badffd30963407bed50d14c2753a38a7cd27df799ea0a494e9dd7f13992f"
+    },
+    {
+      "source": "src/data/app/city_overview/FL0130700.csv",
+      "deployed_as": "data/app/city_overview/FL0130700.csv",
+      "sha256": "19e77b3f20dfe23b8d868f32d5bffa064ab65790adab89fa63d67739d0ad9094"
+    },
+    {
+      "source": "src/data/app/city_overview/FL0160000.csv",
+      "deployed_as": "data/app/city_overview/FL0160000.csv",
+      "sha256": "5a0d9752a10e3dd310a8af9a8f4e1dc45d3802d78ca26681fcbaa5e300754093"
+    },
+    {
+      "source": "src/data/app/city_overview/FL0580000.csv",
+      "deployed_as": "data/app/city_overview/FL0580000.csv",
+      "sha256": "79c18663b905060889a29044ff2d76d519a13106698525702f80e65aca6cd231"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0447100.csv",
+      "deployed_as": "data/app/city_overview/GA0447100.csv",
+      "sha256": "9e5b251aa280b7ae1b704e9158031cc20bd0135148f8b49fe900e291832295b2"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0470100.csv",
+      "deployed_as": "data/app/city_overview/GA0470100.csv",
+      "sha256": "1e5c3ab9ff087b4d66f2b1cb50574e65cdf455d234daefa66fdb81166bfffbff"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0580000.csv",
+      "deployed_as": "data/app/city_overview/GA0580000.csv",
+      "sha256": "67783b58ed84e7445164bd156577b358c10043a8116a076fa492e06d8a60202b"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0600400.csv",
+      "deployed_as": "data/app/city_overview/GA0600400.csv",
+      "sha256": "d7f8ec5724c164292b4756274419a2de7531d6e4efe6bf4cecef5abdc5ed2cb1"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0600500.csv",
+      "deployed_as": "data/app/city_overview/GA0600500.csv",
+      "sha256": "1f8319435c2aec3f6958cef85312b9b53f06be88d9f4100d2dfbb03805a0e403"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0605800.csv",
+      "deployed_as": "data/app/city_overview/GA0605800.csv",
+      "sha256": "7ff5e5d3aa1e2a3ab439837598cec64806f04fc05b968d58fcb711370b942f48"
+    },
+    {
+      "source": "src/data/app/city_overview/GA0690000.csv",
+      "deployed_as": "data/app/city_overview/GA0690000.csv",
+      "sha256": "b9c3272d90ee4e57d11fd6554d97eafc0e7c9c3ffbab57d929b49ed864e2a257"
+    },
+    {
+      "source": "src/data/app/city_overview/GA1100000.csv",
+      "deployed_as": "data/app/city_overview/GA1100000.csv",
+      "sha256": "ef090e60c668be71cdb5f8f13c8113cfb0a0d70e66256a6b9c2e1d9d27d7f503"
+    },
+    {
+      "source": "src/data/app/city_overview/GAAPD0000.csv",
+      "deployed_as": "data/app/city_overview/GAAPD0000.csv",
+      "sha256": "e0deff0b4f9ac5b5491f2f7fd72a31099f53cd73dcb03a9a25dd35b62d171993"
+    },
+    {
+      "source": "src/data/app/city_overview/HI0020000.csv",
+      "deployed_as": "data/app/city_overview/HI0020000.csv",
+      "sha256": "4a501fd8afc7913fddee7c865eb1fe903972c6376b587144b8ccb30ae999d947"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0070300.csv",
+      "deployed_as": "data/app/city_overview/IA0070300.csv",
+      "sha256": "43200d4b52bd83b989347e6dcdd23f66d0ca0217b8fbc6ea29e65156bfa35645"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0310100.csv",
+      "deployed_as": "data/app/city_overview/IA0310100.csv",
+      "sha256": "f34d413dabd5a63a3e6386e3ed6e7d23119b223abd8b3aa98c8f4ffc5d5397d2"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0520200.csv",
+      "deployed_as": "data/app/city_overview/IA0520200.csv",
+      "sha256": "1eb74f4467a5793f73802b7a4e3acc30484567b3e062368c038d912a05fffde3"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0570100.csv",
+      "deployed_as": "data/app/city_overview/IA0570100.csv",
+      "sha256": "5e2f41722a1af99c58c2df1246b59c56f6e966d978ffdfd26c346ca986f017e4"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0770100.csv",
+      "deployed_as": "data/app/city_overview/IA0770100.csv",
+      "sha256": "333dd6e09699679e2e6e9c32d403832256a4c209d91cd7741890de447e3eeb17"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0770300.csv",
+      "deployed_as": "data/app/city_overview/IA0770300.csv",
+      "sha256": "5c1f14c4d521d8d5db21bda276c05e982d75a525c49a7c41cc3952654d2a2971"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0770500.csv",
+      "deployed_as": "data/app/city_overview/IA0770500.csv",
+      "sha256": "3aee6fa07c8b3079015d628bf16f886dc336edd0529b591356f8ca9367a3965b"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0780100.csv",
+      "deployed_as": "data/app/city_overview/IA0780100.csv",
+      "sha256": "4c5d4326e2726304c9ac869bed1a21b26334d9c24d73f57e71e0ee86caa271f8"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0820200.csv",
+      "deployed_as": "data/app/city_overview/IA0820200.csv",
+      "sha256": "ffcb5f1a9659a4a234f7e8af78c4f7078af997e07d6a5553892f249542b45390"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0850100.csv",
+      "deployed_as": "data/app/city_overview/IA0850100.csv",
+      "sha256": "6b29bf4257ffdad1bb533d2b42de1506a9949a6bc7c4e1f20f2694b1d686bfb5"
+    },
+    {
+      "source": "src/data/app/city_overview/IA0970100.csv",
+      "deployed_as": "data/app/city_overview/IA0970100.csv",
+      "sha256": "39fec7f42056b6261a35bcb6c383d397d6c3681a75d5cbe506299806c06b0d8d"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0010000.csv",
+      "deployed_as": "data/app/city_overview/ID0010000.csv",
+      "sha256": "48b67be618b6083f1cff6711bd4adbf08152d77fa796af57e89879f9f8f245a6"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0010300.csv",
+      "deployed_as": "data/app/city_overview/ID0010300.csv",
+      "sha256": "d5ba00a344b23815555c57ad1f290e5c7a491de1bdda8045c56492939962fb5d"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0030200.csv",
+      "deployed_as": "data/app/city_overview/ID0030200.csv",
+      "sha256": "9ff146bcd8f443c730463d3ab1cf573ffe23aa96751097215b418fa0d8c6d317"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0100200.csv",
+      "deployed_as": "data/app/city_overview/ID0100200.csv",
+      "sha256": "3284e1a21fac0e3a083651131d25054756f18cac91a6b51ba5f246ebc5b47ed5"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0280100.csv",
+      "deployed_as": "data/app/city_overview/ID0280100.csv",
+      "sha256": "2cfdd9dcddd795d7dc3b373dc0162ce63bc442a4375dd91254d443fae87fbdc8"
+    },
+    {
+      "source": "src/data/app/city_overview/ID0420200.csv",
+      "deployed_as": "data/app/city_overview/ID0420200.csv",
+      "sha256": "3973760e45b935e63882cab3a2ca1661f4d0fb90319d6e1b89c6fb1cf93758e4"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0100100.csv",
+      "deployed_as": "data/app/city_overview/IL0100100.csv",
+      "sha256": "0378c7beacd4667519c71af4d12282e43711300d037b85cc46145c7916358678"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0160200.csv",
+      "deployed_as": "data/app/city_overview/IL0160200.csv",
+      "sha256": "b51e80cd89c9f0b11ea99bd3ccc2904bd2e7097da6d8de59e6794c9a5920e0d8"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0162100.csv",
+      "deployed_as": "data/app/city_overview/IL0162100.csv",
+      "sha256": "d1b085272149db6953b585fcdf7d4b6cc1f5a36b9ca57d346a83069fb139b3d1"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0162A00.csv",
+      "deployed_as": "data/app/city_overview/IL0162A00.csv",
+      "sha256": "56dcf8c18d2e5e4ad451dccb435c6a901c4a6a0a2fab2dbd3477d25530b98129"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0163200.csv",
+      "deployed_as": "data/app/city_overview/IL0163200.csv",
+      "sha256": "7b92900ab511c1f1c9d8fbce62bbfea7d15d4797ab71f8fd378d39bf1d872a5e"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0164A00.csv",
+      "deployed_as": "data/app/city_overview/IL0164A00.csv",
+      "sha256": "a71fd127a5406a13230fb09f25de77f77104d288de4f00d93591570144de4c7d"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0165M00.csv",
+      "deployed_as": "data/app/city_overview/IL0165M00.csv",
+      "sha256": "020358b6aa41cbf3a724008230088cbd529349f72b9f2c4c52dd75027874190d"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0167200.csv",
+      "deployed_as": "data/app/city_overview/IL0167200.csv",
+      "sha256": "6a790163367ed2dc65a1d8cb6ac66e7e17fb93440443e1fa6d3b2631fe83d5aa"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0168000.csv",
+      "deployed_as": "data/app/city_overview/IL0168000.csv",
+      "sha256": "d5c8054490c456fe5c6012a54a01edadc99ad0a2b216d4565aac67a45d5e2870"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0168400.csv",
+      "deployed_as": "data/app/city_overview/IL0168400.csv",
+      "sha256": "15088da968f76b08417ed8b86c534ef2e7db3463d665012b85906d70f9e8087a"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0580200.csv",
+      "deployed_as": "data/app/city_overview/IL0580200.csv",
+      "sha256": "73ecfefd5bc9ddb56cda375fc73b683e2a753b967a83d4d494bbed689dd1a4b9"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0840200.csv",
+      "deployed_as": "data/app/city_overview/IL0840200.csv",
+      "sha256": "c9d6be66be759b89e4a5bb2974e4e70005e5e8a6bf0cb1d459585f930a255dcf"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0990000.csv",
+      "deployed_as": "data/app/city_overview/IL0990000.csv",
+      "sha256": "e52cf24c0522847ccf6104449be897cb89a9edc093f4eff0d86e9ea699e3f56c"
+    },
+    {
+      "source": "src/data/app/city_overview/IL0990200.csv",
+      "deployed_as": "data/app/city_overview/IL0990200.csv",
+      "sha256": "916351b28ebfd90d3d8dd6f2e3ffacc88b668fff6cc40b89094d56dba2e34634"
+    },
+    {
+      "source": "src/data/app/city_overview/IL1010400.csv",
+      "deployed_as": "data/app/city_overview/IL1010400.csv",
+      "sha256": "f509afcbb19e5dd4c410d42fc009a18f757f370e7837af587042f3ebb30be871"
+    },
+    {
+      "source": "src/data/app/city_overview/ILCPD0000.csv",
+      "deployed_as": "data/app/city_overview/ILCPD0000.csv",
+      "sha256": "d0ceaebaafa25f4b9e4065a9da94b927bf98d1b82626c7ac22eac7b3318a6ed7"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0020100.csv",
+      "deployed_as": "data/app/city_overview/IN0020100.csv",
+      "sha256": "3ce27bc02c6e71845a7150dbb0c65ca97c2ed7517ae1638c7b6ad73287eb44af"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0180100.csv",
+      "deployed_as": "data/app/city_overview/IN0180100.csv",
+      "sha256": "ff4cb559de7f22a71924bd8e30f6dfe66813982947457530cd2e13e62953d7bc"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0290100.csv",
+      "deployed_as": "data/app/city_overview/IN0290100.csv",
+      "sha256": "02faf7b3e587f39e3890742c855b5a6eb906af608aebf513be8ee9322ca52db2"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0290200.csv",
+      "deployed_as": "data/app/city_overview/IN0290200.csv",
+      "sha256": "a785a39ce0530a27e16e405ff83c5798e6ecabbe2e6d15ce426aaa61b3c61f82"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0290400.csv",
+      "deployed_as": "data/app/city_overview/IN0290400.csv",
+      "sha256": "47940254e4ec2fe34a9608f4474194eb59f45162d6e6825d79fb888f488a3594"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0290700.csv",
+      "deployed_as": "data/app/city_overview/IN0290700.csv",
+      "sha256": "cfedb298169e04275677ff3e2d48130ae7dedcb4cdc612012bdc1b73b535c7d2"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0410300.csv",
+      "deployed_as": "data/app/city_overview/IN0410300.csv",
+      "sha256": "fba3685b7ed87b39f2c1f8f7e3bb0e22bbb542c0a1de0c84b0ddc2a802eec10d"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0710000.csv",
+      "deployed_as": "data/app/city_overview/IN0710000.csv",
+      "sha256": "b01bf6946f51dd9b5bea77e6a9e4b09536c892bf57db160c4e80404f8b6feefd"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0710200.csv",
+      "deployed_as": "data/app/city_overview/IN0710200.csv",
+      "sha256": "cd20e7a08730c72bd6b13c03621eef2f816db7f8f28dd8a54aed77a53369af65"
+    },
+    {
+      "source": "src/data/app/city_overview/IN0820100.csv",
+      "deployed_as": "data/app/city_overview/IN0820100.csv",
+      "sha256": "083b9ad5cf4a0ce52979b3c3beae5afde96edc10cee6b50810a4f28ffd061875"
+    },
+    {
+      "source": "src/data/app/city_overview/INIPD0000.csv",
+      "deployed_as": "data/app/city_overview/INIPD0000.csv",
+      "sha256": "01f1d75d704a0beff86d6b0ac09f26bd49c2160674948b7fbf226800c18e9812"
+    },
+    {
+      "source": "src/data/app/city_overview/KS0460900.csv",
+      "deployed_as": "data/app/city_overview/KS0460900.csv",
+      "sha256": "eaed50a10922413aa51d8633b1f143ad72d7bc6ada8f29619f3af740c65360bd"
+    },
+    {
+      "source": "src/data/app/city_overview/KS0461000.csv",
+      "deployed_as": "data/app/city_overview/KS0461000.csv",
+      "sha256": "40678465ec8b302b415aaeba5dcdaddf253e6772b0a829565c52ee43365c7fa2"
+    },
+    {
+      "source": "src/data/app/city_overview/KY0080000.csv",
+      "deployed_as": "data/app/city_overview/KY0080000.csv",
+      "sha256": "f1a577b8d270d753a804c8345a5aa6940c726879d1d0260404338afef4e4f4db"
+    },
+    {
+      "source": "src/data/app/city_overview/KY0300100.csv",
+      "deployed_as": "data/app/city_overview/KY0300100.csv",
+      "sha256": "5b5dd920cefb91e9baa6165ca821183d870224b3d48caba49b1e8b22bfb2a1a3"
+    },
+    {
+      "source": "src/data/app/city_overview/KY0340200.csv",
+      "deployed_as": "data/app/city_overview/KY0340200.csv",
+      "sha256": "10baa5912a14b18ac144c5a704d5a0e7a7cb879417fe9716e3e6ec5a894cb2b0"
+    },
+    {
+      "source": "src/data/app/city_overview/KY0568000.csv",
+      "deployed_as": "data/app/city_overview/KY0568000.csv",
+      "sha256": "066c28a4f52179d5f2f0db3c59c365ac2933e0d073549e1a16c97040675f0498"
+    },
+    {
+      "source": "src/data/app/city_overview/KY1140100.csv",
+      "deployed_as": "data/app/city_overview/KY1140100.csv",
+      "sha256": "bf52ee930337bf394718e3a8f954f9e0f83ad69aa0fff3eb3e1a06a50202c120"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0080100.csv",
+      "deployed_as": "data/app/city_overview/LA0080100.csv",
+      "sha256": "7a36419ac235158fe7dd859b032e0115c8ebdaf02c0315e8a2e0432eddc5358b"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0090100.csv",
+      "deployed_as": "data/app/city_overview/LA0090100.csv",
+      "sha256": "d7a9585b2b14aeaa6bf9e0f242093bc941cec44d008304e167d0e8860d30eed0"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0100200.csv",
+      "deployed_as": "data/app/city_overview/LA0100200.csv",
+      "sha256": "f0d2230b56493d55e33b5ce773fd99b22ef5d2dbd2f09f6cfdc953bc9508532a"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0170200.csv",
+      "deployed_as": "data/app/city_overview/LA0170200.csv",
+      "sha256": "c5009e5ac7d4f86467927c902066bd0435953e531e714af62f003d7fc7f806c4"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0260000.csv",
+      "deployed_as": "data/app/city_overview/LA0260000.csv",
+      "sha256": "e129665c9c04283a5e5896f4cb29c0a99c6af918d03db7838f3ca10c07a37bcb"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0280300.csv",
+      "deployed_as": "data/app/city_overview/LA0280300.csv",
+      "sha256": "635c9e30226a5e583695aca169e6f29e450eb146597be10134fd0d29fb4c45b7"
+    },
+    {
+      "source": "src/data/app/city_overview/LA0320000.csv",
+      "deployed_as": "data/app/city_overview/LA0320000.csv",
+      "sha256": "f95c70921abb431b357e3877c84df0d78d5cfa227953fe5016a37da962617bfe"
+    },
+    {
+      "source": "src/data/app/city_overview/LANPD0000.csv",
+      "deployed_as": "data/app/city_overview/LANPD0000.csv",
+      "sha256": "43dc86080180c317bddbad86dc34ab41af6c34b466efdb04548fd7e852fd619d"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0031100.csv",
+      "deployed_as": "data/app/city_overview/MA0031100.csv",
+      "sha256": "ac9a3cdd9401dd3a1c3b077d2786b14d11a80b09b7d6611e230e6c6d533f3044"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0031900.csv",
+      "deployed_as": "data/app/city_overview/MA0031900.csv",
+      "sha256": "0e7d505115875efa26ed16dec07c74bfb23bd28252670fad5ca8efcaa7d58228"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0051100.csv",
+      "deployed_as": "data/app/city_overview/MA0051100.csv",
+      "sha256": "6e9a07ad5fe525f58fac0109653c9dbe5b531a9a90d90f81897233a34ec2a40a"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0051300.csv",
+      "deployed_as": "data/app/city_overview/MA0051300.csv",
+      "sha256": "61fde5ef7484a01882ca8798ae862d4026489efc4eb8850c9e16bed51af22434"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0051400.csv",
+      "deployed_as": "data/app/city_overview/MA0051400.csv",
+      "sha256": "e403ee4116605a080df8a22de56a74e8e3d2a3f76379cf8b8c6246b0f5db43ae"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0051900.csv",
+      "deployed_as": "data/app/city_overview/MA0051900.csv",
+      "sha256": "3e55ffcbec04020876105c0e7f816bbbe892624a39a5a1c81d3347ee9f42839f"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0070500.csv",
+      "deployed_as": "data/app/city_overview/MA0070500.csv",
+      "sha256": "cba27e2a94b265431b41191433fe1400c894fa0cd8b1b18c4539673dde842588"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0071800.csv",
+      "deployed_as": "data/app/city_overview/MA0071800.csv",
+      "sha256": "293afd14ffda4c03254a66458869784bc9fe8de072894a429fc084cc3a6f8897"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0091100.csv",
+      "deployed_as": "data/app/city_overview/MA0091100.csv",
+      "sha256": "cb686e56f948f65e186cf96c6a8732b7b87ca3ec6044e35324c36435241465c5"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0091700.csv",
+      "deployed_as": "data/app/city_overview/MA0091700.csv",
+      "sha256": "cc40bbb1163e71117b5242139d7716f1fe925f435ccc08d90f1c5887c5ae548e"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0094700.csv",
+      "deployed_as": "data/app/city_overview/MA0094700.csv",
+      "sha256": "611bb5bfe27792285345d57706c7a727287024b6465a065945f27b42de1a388e"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0112000.csv",
+      "deployed_as": "data/app/city_overview/MA0112000.csv",
+      "sha256": "6945adf76ca958c1681a6b70a0d1d6de3e3ef17e16d8b628b835b9b7a9ed2e87"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0112700.csv",
+      "deployed_as": "data/app/city_overview/MA0112700.csv",
+      "sha256": "7b6b718d770c7a3670fb3d0881ea99a24e48457418f894e9d530b676ac6c314a"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0130100.csv",
+      "deployed_as": "data/app/city_overview/MA0130100.csv",
+      "sha256": "b40f02acaf8664db6ee0369f5e263c7a5b2801be0ed4f7bc3dff8551de6eec86"
+    },
+    {
+      "source": "src/data/app/city_overview/MA0130400.csv",
+      "deployed_as": "data/app/city_overview/MA0130400.csv",
+      "sha256": "9fd90a049c1ef940910d4f6f00c5eb4415d303d3c29f1b317d1eb7c1cfd0b017"
+    },
+    {
+      "source": "src/data/app/city_overview/MD0030100.csv",
+      "deployed_as": "data/app/city_overview/MD0030100.csv",
+      "sha256": "8ce55ab8f7616651bb34001c15a0ed6d4c097bc79d8ae5842dbff4e6ff5154ee"
+    },
+    {
+      "source": "src/data/app/city_overview/MD0140100.csv",
+      "deployed_as": "data/app/city_overview/MD0140100.csv",
+      "sha256": "eed8a833c5fe2167cbd8a9e731dc0f72767543c4361aa6df4f116931569fec02"
+    },
+    {
+      "source": "src/data/app/city_overview/MD0160400.csv",
+      "deployed_as": "data/app/city_overview/MD0160400.csv",
+      "sha256": "2514307fcfdae769a42c3454a26b8ff3eb6203f6543c5b92062ea7c95860d90c"
+    },
+    {
+      "source": "src/data/app/city_overview/MD0172100.csv",
+      "deployed_as": "data/app/city_overview/MD0172100.csv",
+      "sha256": "e382f41ef5df9c9c2822231257f82db29a1c5424008f8398d3b2da470b1e2df9"
+    },
+    {
+      "source": "src/data/app/city_overview/MD0220000.csv",
+      "deployed_as": "data/app/city_overview/MD0220000.csv",
+      "sha256": "29012dfd9dc3e5dde13ec3011b950a511057f90f2d9955eb2107990406032fbb"
+    },
+    {
+      "source": "src/data/app/city_overview/MDBPD0000.csv",
+      "deployed_as": "data/app/city_overview/MDBPD0000.csv",
+      "sha256": "e4a1115e547fa6bab5ff8c5bdb394c8c13ffa0cb91f90fccbd5e58967385aafe"
+    },
+    {
+      "source": "src/data/app/city_overview/MI1323700.csv",
+      "deployed_as": "data/app/city_overview/MI1323700.csv",
+      "sha256": "ef31571894d166dc4953d5ec8e8137442583d0b0a8e39b06c62e12133ad58a9f"
+    },
+    {
+      "source": "src/data/app/city_overview/MI3351900.csv",
+      "deployed_as": "data/app/city_overview/MI3351900.csv",
+      "sha256": "7f1044c8abce6f7dc1a353abc88de03599c94574151dc767aa5ecfb72e6d3997"
+    },
+    {
+      "source": "src/data/app/city_overview/MI3913900.csv",
+      "deployed_as": "data/app/city_overview/MI3913900.csv",
+      "sha256": "22d9e8b9c0a9cea61a25e5d5a5cde84a3781a7cbf19e0246851d31c6163c6e83"
+    },
+    {
+      "source": "src/data/app/city_overview/MI4114100.csv",
+      "deployed_as": "data/app/city_overview/MI4114100.csv",
+      "sha256": "82dd0fc21dfb46ca03bb81938a62b47d09ef99cb7199cb9d5ce592fa5955bfbf"
+    },
+    {
+      "source": "src/data/app/city_overview/MI4143600.csv",
+      "deployed_as": "data/app/city_overview/MI4143600.csv",
+      "sha256": "3ea3c6edea21a3d9a3d4a684dd1f1f87dd1a0ee92537f8497c342b11ade0d653"
+    },
+    {
+      "source": "src/data/app/city_overview/MI4183400.csv",
+      "deployed_as": "data/app/city_overview/MI4183400.csv",
+      "sha256": "d91b4adb9e960ed83d3003f3b43c97a7e3d408af5e0b4ff334136d8569b0e66a"
+    },
+    {
+      "source": "src/data/app/city_overview/MI5015000.csv",
+      "deployed_as": "data/app/city_overview/MI5015000.csv",
+      "sha256": "e98e099ace0d696a0b26b26fa1cf0b6313e24df24f63399e798efaa22297a69f"
+    },
+    {
+      "source": "src/data/app/city_overview/MI5072200.csv",
+      "deployed_as": "data/app/city_overview/MI5072200.csv",
+      "sha256": "eb5ef7ddc507e539ada54aa52d212d4d62899ff46bcac4069882f15bbd602e0a"
+    },
+    {
+      "source": "src/data/app/city_overview/MI5074000.csv",
+      "deployed_as": "data/app/city_overview/MI5074000.csv",
+      "sha256": "5ed170d7edce0ccaf069ec69fc41de1f7252b5d423420ab5aa62ecacb43afc5e"
+    },
+    {
+      "source": "src/data/app/city_overview/MI5076500.csv",
+      "deployed_as": "data/app/city_overview/MI5076500.csv",
+      "sha256": "3f38447be04e06c4de256da858e2febd2ccc82010ce8282555360be8ffb03ec8"
+    },
+    {
+      "source": "src/data/app/city_overview/MI5080600.csv",
+      "deployed_as": "data/app/city_overview/MI5080600.csv",
+      "sha256": "ed7c9d3efbb9affea6fefe2d3e1510ee936ba385f9cf620d48e028b4306c9fd3"
+    },
+    {
+      "source": "src/data/app/city_overview/MI631910X.csv",
+      "deployed_as": "data/app/city_overview/MI631910X.csv",
+      "sha256": "201a040619bfc2463e0c07f0bd420320ef0c91513d0494fbf1175839d9775113"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6338900.csv",
+      "deployed_as": "data/app/city_overview/MI6338900.csv",
+      "sha256": "628eb91bcbc72b43dabbfe57d85312b642e1f65fdb67b1a89633337b9d3e19c8"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6362700.csv",
+      "deployed_as": "data/app/city_overview/MI6362700.csv",
+      "sha256": "5a8b69643910edcfeaf9c637a0081f87a9afeca19f8cd2ffc46273c8c386332f"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6367300.csv",
+      "deployed_as": "data/app/city_overview/MI6367300.csv",
+      "sha256": "8e7c0e56f0d9745d20a86bc59c07a5f30288ef664a1f0af2fc476e477c9f39e5"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6371400.csv",
+      "deployed_as": "data/app/city_overview/MI6371400.csv",
+      "sha256": "c6e54ba8c99a685d60f46f3130867a8705c93eb8582aa5515e16c51989a06573"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6375100.csv",
+      "deployed_as": "data/app/city_overview/MI6375100.csv",
+      "sha256": "5202d2b6ff4befaaa3acbd45fdce7174521070e1f6abb7307c15e3aeb183e05a"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6378400.csv",
+      "deployed_as": "data/app/city_overview/MI6378400.csv",
+      "sha256": "f73293f1a13009bdbfbd880ab7eab5ee0afb43aee62d1625228f3beba6def752"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6380800.csv",
+      "deployed_as": "data/app/city_overview/MI6380800.csv",
+      "sha256": "194dc9fd9c1317f9177f8ceb6b7c76a6adc60695236e5623826da81b3da9fda5"
+    },
+    {
+      "source": "src/data/app/city_overview/MI6381500.csv",
+      "deployed_as": "data/app/city_overview/MI6381500.csv",
+      "sha256": "d2eead8a95f4cfd41891a782f3668cf55b839a653e68ce34d1f6bbac08e1ba16"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8118100.csv",
+      "deployed_as": "data/app/city_overview/MI8118100.csv",
+      "sha256": "6321e9a7566fb68ef08ff5bde5e20021430746f405c09729785fe06ff1a3dca4"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8121800.csv",
+      "deployed_as": "data/app/city_overview/MI8121800.csv",
+      "sha256": "5b96dac500e891f8dc578c60f10ee12cd1c59bf4337ca28eaf855a270e53ccb4"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8234300.csv",
+      "deployed_as": "data/app/city_overview/MI8234300.csv",
+      "sha256": "207329bc3dad58eaf7b7411ec51058b5aee7369ffb1ae42ebec4e80b0604ecbf"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8234400.csv",
+      "deployed_as": "data/app/city_overview/MI8234400.csv",
+      "sha256": "96b2b31fe56b8f762c7182d3acd78dbf2b8814cf677cf73524c3fad9147bd023"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8234900.csv",
+      "deployed_as": "data/app/city_overview/MI8234900.csv",
+      "sha256": "1c7ac9e474446a563ca172e0b2a5a68d71718ef1c2f1419750dcd058c8265c5a"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8253800.csv",
+      "deployed_as": "data/app/city_overview/MI8253800.csv",
+      "sha256": "c9e56d9959e8a970718b2219fb6a80542a1cad45bb129e08e1536115119054e6"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8277500.csv",
+      "deployed_as": "data/app/city_overview/MI8277500.csv",
+      "sha256": "70534e9e1cc4673015e08041494ffdcdf9f36cca8ce033824cd02a11c093aa0e"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8281700.csv",
+      "deployed_as": "data/app/city_overview/MI8281700.csv",
+      "sha256": "16ceac107f7bdb95e3b0e65fe48c52e7e4b6f303806b1e78ed05acc250793764"
+    },
+    {
+      "source": "src/data/app/city_overview/MI8290800.csv",
+      "deployed_as": "data/app/city_overview/MI8290800.csv",
+      "sha256": "036ded5aa16e8366056640fe7217dc575b2d64fcfbdc5e6ad660c27fec3a9679"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0020200.csv",
+      "deployed_as": "data/app/city_overview/MN0020200.csv",
+      "sha256": "07affc07bd2e157a205b2d87c3c1691d9e46873678a5470a5fec8e1555bea585"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0020500.csv",
+      "deployed_as": "data/app/city_overview/MN0020500.csv",
+      "sha256": "d9bba0dc65452ee1f0663ffc0113e2de932c3e553355484d3e71f1bf2aac0327"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0190100.csv",
+      "deployed_as": "data/app/city_overview/MN0190100.csv",
+      "sha256": "217e348de187a8c0f0a7715a84843c990bb65f1c754e3e9c83f047eecc89af2e"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0191000.csv",
+      "deployed_as": "data/app/city_overview/MN0191000.csv",
+      "sha256": "8b74b32a2bf0d04106591d4223fddcbd4fe6da89fc211251b583766552070994"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0191100.csv",
+      "deployed_as": "data/app/city_overview/MN0191100.csv",
+      "sha256": "818c383d9d49d00b3014b390019334348f9b1d6ec975f9924819d9555236892b"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0270100.csv",
+      "deployed_as": "data/app/city_overview/MN0270100.csv",
+      "sha256": "02bd93e1e0f74301a142c30c3453e15c408f45dfc8fef8e930e0856005b0753b"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0270300.csv",
+      "deployed_as": "data/app/city_overview/MN0270300.csv",
+      "sha256": "19e9f1535a97d2f08d703f418b37d73114b6d1007a6c4cff49a8e113e4d36e58"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0270600.csv",
+      "deployed_as": "data/app/city_overview/MN0270600.csv",
+      "sha256": "2b0b3d0f4e0b4b76f2ecc55b9182ad373966e7046205276d54b4ae85670116f1"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0271100.csv",
+      "deployed_as": "data/app/city_overview/MN0271100.csv",
+      "sha256": "838d4d5623ced11bf6e811a4bacd3bef836d01acd3c7d1b0396e5fd5137e9c11"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0271700.csv",
+      "deployed_as": "data/app/city_overview/MN0271700.csv",
+      "sha256": "2e9ab3b60eb3617e8a1b14f4b91b3f47e7146f31e42cfd0a2d4fef5b7526b249"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0272600.csv",
+      "deployed_as": "data/app/city_overview/MN0272600.csv",
+      "sha256": "53579f1dbb0c3373139c6977a7ba74d8fd50f8bd5db5ec3f2706d68a9dbf290e"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0272700.csv",
+      "deployed_as": "data/app/city_overview/MN0272700.csv",
+      "sha256": "dce1b7c75c6b47484ad81db731e2348e480bc028ff99f03fe900310adf23e014"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0550100.csv",
+      "deployed_as": "data/app/city_overview/MN0550100.csv",
+      "sha256": "a8c18bbf89500f8f151561108a9f6fedd8eeec61c164522fe1f22a9d37b9f6dc"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0620900.csv",
+      "deployed_as": "data/app/city_overview/MN0620900.csv",
+      "sha256": "b40d1200174e4eec0c73bed5d71610be7c58c737c2d4887206c0d8ad0bf963ee"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0690600.csv",
+      "deployed_as": "data/app/city_overview/MN0690600.csv",
+      "sha256": "d6875c1573e7277585ea22f6c5ba0756ff1a3c152052801483aa62965025d73c"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0730400.csv",
+      "deployed_as": "data/app/city_overview/MN0730400.csv",
+      "sha256": "8587b7abb2027ab411ef40404c408a47cee0376e2255b6c281da560bc1b43dcb"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0821100.csv",
+      "deployed_as": "data/app/city_overview/MN0821100.csv",
+      "sha256": "6af200dc6f65268de07e5e55bad3bc6abd4f1f5aedbe809e44608348ba72f6b8"
+    },
+    {
+      "source": "src/data/app/city_overview/MN0860000.csv",
+      "deployed_as": "data/app/city_overview/MN0860000.csv",
+      "sha256": "ab9e72180c0100b9d98345c44758c151b54453745e3ced81cc4681dbb6267822"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0100200.csv",
+      "deployed_as": "data/app/city_overview/MO0100200.csv",
+      "sha256": "2d1b45ace0f838356d50d56e4ecaffbb769ada5c6cead536b6abf008a413ac24"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0110100.csv",
+      "deployed_as": "data/app/city_overview/MO0110100.csv",
+      "sha256": "dcdf61b2c780a9774d6fb2b260f96ff2e3eec7a6af22d64234a169422826c0ef"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0390300.csv",
+      "deployed_as": "data/app/city_overview/MO0390300.csv",
+      "sha256": "93f37b3fab43c2b16fb819a24f5188294ac5acbcc2ada33b2e2f2bd6ce29bbdc"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0480100.csv",
+      "deployed_as": "data/app/city_overview/MO0480100.csv",
+      "sha256": "0a16a9c622e15ee9a93790ccd733dc856e97fe7a5c9203fda0bab30d4ab12b2d"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0480600.csv",
+      "deployed_as": "data/app/city_overview/MO0480600.csv",
+      "sha256": "d010d0108d9788eaa704512536f36680931665a3f4b701b10da55e5a772d8759"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0490700.csv",
+      "deployed_as": "data/app/city_overview/MO0490700.csv",
+      "sha256": "be3db7ec99df96f95da6dcec8313afd3e3ff41ade9a00a197c68e3644654d0f0"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0500000.csv",
+      "deployed_as": "data/app/city_overview/MO0500000.csv",
+      "sha256": "d47817bbf8d0951c165ec8e601c9f9eb7378e4e2fdc36475ea3b67fc2fbaafcc"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0920100.csv",
+      "deployed_as": "data/app/city_overview/MO0920100.csv",
+      "sha256": "8ebe251049d574e7db8264930bbe78cb2cdd30beb1a29a0eb2f04e7935619381"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0920300.csv",
+      "deployed_as": "data/app/city_overview/MO0920300.csv",
+      "sha256": "6dd6d2b2392502512df527eaa132ab4864edf2f978d2ba15492678a52a1acd74"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0920400.csv",
+      "deployed_as": "data/app/city_overview/MO0920400.csv",
+      "sha256": "ad458182d7dadc89883a7867af8186d8ac04b368b158adfe9b34b601db11164a"
+    },
+    {
+      "source": "src/data/app/city_overview/MO0950000.csv",
+      "deployed_as": "data/app/city_overview/MO0950000.csv",
+      "sha256": "e93963928e37099beed548bbc2068f41a6c742d51faf57978fdaecf9b24059cf"
+    },
+    {
+      "source": "src/data/app/city_overview/MOKPD0000.csv",
+      "deployed_as": "data/app/city_overview/MOKPD0000.csv",
+      "sha256": "e1b57422084246d4aa471c940aa4828e05d30554a190c8340e83e327f4e5ae5e"
+    },
+    {
+      "source": "src/data/app/city_overview/MOSPD0000.csv",
+      "deployed_as": "data/app/city_overview/MOSPD0000.csv",
+      "sha256": "555aedf3572f938f113b76525907450ca2fb742cefc3b99239f225228765317f"
+    },
+    {
+      "source": "src/data/app/city_overview/MS0170100.csv",
+      "deployed_as": "data/app/city_overview/MS0170100.csv",
+      "sha256": "96eefd5ea8c213b68931774a0d33f2f69f03a095dafab9c8c87c2c40a16172c3"
+    },
+    {
+      "source": "src/data/app/city_overview/MT0070100.csv",
+      "deployed_as": "data/app/city_overview/MT0070100.csv",
+      "sha256": "56121b45f63e658b293ddb856a701d52b0593d1168dc74e310bb0b8313720cb9"
+    },
+    {
+      "source": "src/data/app/city_overview/MT0160100.csv",
+      "deployed_as": "data/app/city_overview/MT0160100.csv",
+      "sha256": "ea47059046a13807d254b6c9165c03c24ab8819a2c0eb8893c1afdd341e3f9cc"
+    },
+    {
+      "source": "src/data/app/city_overview/MT0320100.csv",
+      "deployed_as": "data/app/city_overview/MT0320100.csv",
+      "sha256": "0c283a420a819d2fcf168be2da6864c41eb4fc50f8f127868f340c1119859984"
+    },
+    {
+      "source": "src/data/app/city_overview/MT0560100.csv",
+      "deployed_as": "data/app/city_overview/MT0560100.csv",
+      "sha256": "3be873c10562392b9e5ac8d43c88f5cc181aa78cc3a49acc1b6d9d7e5297dec9"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0280000.csv",
+      "deployed_as": "data/app/city_overview/NB0280000.csv",
+      "sha256": "07b9b000c262e5f4548b02eeb29d5eff771a838e8b7016a0995477bbe77f940f"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0280200.csv",
+      "deployed_as": "data/app/city_overview/NB0280200.csv",
+      "sha256": "219e818f089028f6107d5513f52dfa3408f0430c3cfdd8584b3f1e0c85da69bb"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0400100.csv",
+      "deployed_as": "data/app/city_overview/NB0400100.csv",
+      "sha256": "c08dda32141725dd85a1371102e1125952e6773f0dc518538de6576131d5eb36"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0550100.csv",
+      "deployed_as": "data/app/city_overview/NB0550100.csv",
+      "sha256": "c290ecdb893652ec037c62f7b2a69310c16c4b6bf4a6b21e28bad3e613bd4201"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0770000.csv",
+      "deployed_as": "data/app/city_overview/NB0770000.csv",
+      "sha256": "4bdcf4bca907c84f51b0e2be761e4123944076279c63bc1067dc70fa2bf99fba"
+    },
+    {
+      "source": "src/data/app/city_overview/NB0770100.csv",
+      "deployed_as": "data/app/city_overview/NB0770100.csv",
+      "sha256": "f8ed06d7522e030c5c5229d2481f9874c3b5cc66d016acbf5a0aee23b776caf7"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0010100.csv",
+      "deployed_as": "data/app/city_overview/NC0010100.csv",
+      "sha256": "8de452d2cec9c36a17956e930ba576d59c7daee71b5ce89aa8ac00e380ce4473"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0110000.csv",
+      "deployed_as": "data/app/city_overview/NC0110000.csv",
+      "sha256": "52fa3f7c776a8d21769e0f91c782b036cc4b12fbcff7f81c7479b50db08cdb78"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0110100.csv",
+      "deployed_as": "data/app/city_overview/NC0110100.csv",
+      "sha256": "cbd1fe650cd4bf50963920ced2c2ef2ef8ab6cb7ccd51fdc9ee1d0546076f011"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0130100.csv",
+      "deployed_as": "data/app/city_overview/NC0130100.csv",
+      "sha256": "34297d94a83fd195b567fe45c294e48d1d412d2b0c6c4806dc0ad44137fda3eb"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0130200.csv",
+      "deployed_as": "data/app/city_overview/NC0130200.csv",
+      "sha256": "76bec568db0fd9a7b153a6e0360f747a1d465b8b926637676e6484905440df23"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0320100.csv",
+      "deployed_as": "data/app/city_overview/NC0320100.csv",
+      "sha256": "2fdbc602a81b03fd42b93202fac47c4ad247fce843854b9979acad3933cd271e"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0330100.csv",
+      "deployed_as": "data/app/city_overview/NC0330100.csv",
+      "sha256": "178277df5850e7e3aa4431bbd5aabf68132362d2fabe578746ba8297858adde1"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0340000.csv",
+      "deployed_as": "data/app/city_overview/NC0340000.csv",
+      "sha256": "92d002b2ef96eabc9ee16ff694d6b2768763b7204090be0b85905ac2be684ddc"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0360600.csv",
+      "deployed_as": "data/app/city_overview/NC0360600.csv",
+      "sha256": "3f65e8fb1ddbfecf69a31df60e816529542b65068765ac7eba264984305ed811"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0410000.csv",
+      "deployed_as": "data/app/city_overview/NC0410000.csv",
+      "sha256": "d0b2baaeaa14fe3119d1474da9b6fda383d38800f8ed48d2757509b624d7e2b3"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0410300.csv",
+      "deployed_as": "data/app/city_overview/NC0410300.csv",
+      "sha256": "877f6052c2bb415ed6711c9651bc4dc879057fc5840a3c96158703174fbb8d56"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0490000.csv",
+      "deployed_as": "data/app/city_overview/NC0490000.csv",
+      "sha256": "eb7ac76ac6b03898512c12bce682abe1fbe965713412cba7009122bb2e4a0188"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0490100.csv",
+      "deployed_as": "data/app/city_overview/NC0490100.csv",
+      "sha256": "e51c666842b29d1d0e490fca1dd670d7b68fc0911a9a166959cd33619eb8c4bc"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0510000.csv",
+      "deployed_as": "data/app/city_overview/NC0510000.csv",
+      "sha256": "35043e1d251d11c5bf740f3500b880bf886997680219e06f005ce375682b9e7c"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0600100.csv",
+      "deployed_as": "data/app/city_overview/NC0600100.csv",
+      "sha256": "25745ae4036ad91bf6505756cdbd3a35d3ccc80c199383f864c018c8163f33db"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0600600.csv",
+      "deployed_as": "data/app/city_overview/NC0600600.csv",
+      "sha256": "7f88fa14c3729ee90ebccbdb2a02538698adaaa90e642d1e7f26f14ac5bf2fcf"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0650000.csv",
+      "deployed_as": "data/app/city_overview/NC0650000.csv",
+      "sha256": "ef0b34e62b71de6676f5c6cf82a96792e833b992d660963b6c6e5ff7524c8afd"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0650200.csv",
+      "deployed_as": "data/app/city_overview/NC0650200.csv",
+      "sha256": "6d2588d5f87315696ee4c73e5556e955bdedb8cf6b99f115d23561840aae00f7"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0670000.csv",
+      "deployed_as": "data/app/city_overview/NC0670000.csv",
+      "sha256": "08adf7797a6a42ed45f3bcbe11babb0624a7a9bdf7eddab0f840c902712e0393"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0680100.csv",
+      "deployed_as": "data/app/city_overview/NC0680100.csv",
+      "sha256": "30a5e5a60ac23d12a689b30c6f400ae2a84d61b388af3a5dd89e57e7f400847a"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0740300.csv",
+      "deployed_as": "data/app/city_overview/NC0740300.csv",
+      "sha256": "098ff925a65e415151df1028ddda2c4ce910ba8441e43f26f36da113ac513888"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0920000.csv",
+      "deployed_as": "data/app/city_overview/NC0920000.csv",
+      "sha256": "3828f20beb1d8e3979ab062a6dfe0bf928479b7a27adda829e534838b140f3f1"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0920100.csv",
+      "deployed_as": "data/app/city_overview/NC0920100.csv",
+      "sha256": "088af6227d5d144f3ab7703c5999f4b1841b600a2164a31a24c99085c1591be8"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0920200.csv",
+      "deployed_as": "data/app/city_overview/NC0920200.csv",
+      "sha256": "08004c2f74021a374c5c2a52c47bb5eb54286dba2a0074701e6bf965ecbd99a4"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0920300.csv",
+      "deployed_as": "data/app/city_overview/NC0920300.csv",
+      "sha256": "59161717bea03d6c8a07d7a5a6e7fa0505b1b29d050356cb2f5f6455407be746"
+    },
+    {
+      "source": "src/data/app/city_overview/NC0920700.csv",
+      "deployed_as": "data/app/city_overview/NC0920700.csv",
+      "sha256": "2a5246e38eca5bcec1e5eb1812a54a611e25110f1020a04c0f71700796dbc803"
+    },
+    {
+      "source": "src/data/app/city_overview/ND0080100.csv",
+      "deployed_as": "data/app/city_overview/ND0080100.csv",
+      "sha256": "c6e2e389376b3c7538fcdf8c0d930f8c09069950b3b9580f4eab260c84b65198"
+    },
+    {
+      "source": "src/data/app/city_overview/ND0090200.csv",
+      "deployed_as": "data/app/city_overview/ND0090200.csv",
+      "sha256": "d551b09209255cc78dcc36923ab92ef48efea8de751d2134ccf694b59186258d"
+    },
+    {
+      "source": "src/data/app/city_overview/ND0180100.csv",
+      "deployed_as": "data/app/city_overview/ND0180100.csv",
+      "sha256": "871a891a6c2e09b14ee9614a832c3c0f3f8588a67bb0e5f4b7f42e4adfd68766"
+    },
+    {
+      "source": "src/data/app/city_overview/NH0063400.csv",
+      "deployed_as": "data/app/city_overview/NH0063400.csv",
+      "sha256": "65d8153978b6880814ea5ab705a6fab5f97899493c5b8a53c77b220234661ab8"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0041200.csv",
+      "deployed_as": "data/app/city_overview/NJ0041200.csv",
+      "sha256": "567266b09166e43dec8d687e5669a91e7089b241dbe049cbfa3ce8c8859fdd1f"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0070200.csv",
+      "deployed_as": "data/app/city_overview/NJ0070200.csv",
+      "sha256": "ab3b91eba262a514709a15359e35f6cde48bd4ad6934f30f3563ae51642de756"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0090500.csv",
+      "deployed_as": "data/app/city_overview/NJ0090500.csv",
+      "sha256": "589dce06c7f0323c696ec1c0a98886127a9806ad9a58a2155bb3d8c74a4917a2"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0090600.csv",
+      "deployed_as": "data/app/city_overview/NJ0090600.csv",
+      "sha256": "3b124dcbdf803bf4fb7f0817ee0ab86c333b84e93d889f0947e5c9068eb18b60"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0090800.csv",
+      "deployed_as": "data/app/city_overview/NJ0090800.csv",
+      "sha256": "e1ea99837ebc8086950696ec9dd7d47126534d0c3463c1fbc1f23cd70c41c2d5"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0091200.csv",
+      "deployed_as": "data/app/city_overview/NJ0091200.csv",
+      "sha256": "2632682cd268ee981e3b77b7df45c95e55b5fefe52f3355a47c39c63486d0ccf"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0160200.csv",
+      "deployed_as": "data/app/city_overview/NJ0160200.csv",
+      "sha256": "c841d0e3b266083b5319c975837b713d18a0d89f420674359817f65f237ce27f"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0160800.csv",
+      "deployed_as": "data/app/city_overview/NJ0160800.csv",
+      "sha256": "8d5b53f2a58c34de9a0746a5a05c3f95babb4aa80e81d4db8d50deaffb781fbb"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0161400.csv",
+      "deployed_as": "data/app/city_overview/NJ0161400.csv",
+      "sha256": "da238e14999e304cb4b739697482f7cf9d65a92b868c6d414c39b64309d08623"
+    },
+    {
+      "source": "src/data/app/city_overview/NJ0200400.csv",
+      "deployed_as": "data/app/city_overview/NJ0200400.csv",
+      "sha256": "7cda90240c1da91e80a1d40a757d19e548d6c3e7c1a87ef003e7e0fb255c2e9b"
+    },
+    {
+      "source": "src/data/app/city_overview/NJNPD0000.csv",
+      "deployed_as": "data/app/city_overview/NJNPD0000.csv",
+      "sha256": "086f7bb9489616de4ef752005e5614bcfc460399404ee845ca282843f2a8a93f"
+    },
+    {
+      "source": "src/data/app/city_overview/NM0010100.csv",
+      "deployed_as": "data/app/city_overview/NM0010100.csv",
+      "sha256": "63548b50a9acc5492bfc839124222843e76fd997fa44e25b02597430cb29a860"
+    },
+    {
+      "source": "src/data/app/city_overview/NV0020100.csv",
+      "deployed_as": "data/app/city_overview/NV0020100.csv",
+      "sha256": "0c0415f45c7fb59c00a1510ed861c06988393aa2c1c519df9224fea040dbb176"
+    },
+    {
+      "source": "src/data/app/city_overview/NV0020300.csv",
+      "deployed_as": "data/app/city_overview/NV0020300.csv",
+      "sha256": "016bef232b81e6b30ab78b15f74da8dff1caa78c4050092055a2480266fe096e"
+    },
+    {
+      "source": "src/data/app/city_overview/NV0160000.csv",
+      "deployed_as": "data/app/city_overview/NV0160000.csv",
+      "sha256": "d605c00095943750e18f06fa565064c06cd0ace80e26915d4f5a80776db74fd8"
+    },
+    {
+      "source": "src/data/app/city_overview/NV0160200.csv",
+      "deployed_as": "data/app/city_overview/NV0160200.csv",
+      "sha256": "c8bcf95d40332a087f1bedd25f5eaf4040aa3215de454c57a079aa4c78e25f05"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0010100.csv",
+      "deployed_as": "data/app/city_overview/NY0010100.csv",
+      "sha256": "8557f3289c80fb0c21c0915eb1960041aabb8d3edef0c853f516b0f4f6c4d9f7"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0270100.csv",
+      "deployed_as": "data/app/city_overview/NY0270100.csv",
+      "sha256": "a9d5ae1f2451b4d374c0f04e889983992b054a8f4d37ed5970eeceba78c2d6ba"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0290600.csv",
+      "deployed_as": "data/app/city_overview/NY0290600.csv",
+      "sha256": "83f13bce0c70d0cd441848eb2b146e08009e6e84aa6ca1448ec94fa4cc20ebde"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0303000.csv",
+      "deployed_as": "data/app/city_overview/NY0303000.csv",
+      "sha256": "428000a634b5da23c83e8220f0912ab94f5ade01acca6242d4d3687f73daf2ab"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0320200.csv",
+      "deployed_as": "data/app/city_overview/NY0320200.csv",
+      "sha256": "c059968d6a4dd4181706653c9370f6c16ac8c68230dafda359fcc2ec9ecff760"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0450000.csv",
+      "deployed_as": "data/app/city_overview/NY0450000.csv",
+      "sha256": "db615a953ea146f334880ae66e8f5f1547b68d31852a0d678f4a7b27212d273d"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0460100.csv",
+      "deployed_as": "data/app/city_overview/NY0460100.csv",
+      "sha256": "e7ae9eb3592efbb74a422d28d6d9602dac19937692910f97076a82adc4e89738"
+    },
+    {
+      "source": "src/data/app/city_overview/NY0590400.csv",
+      "deployed_as": "data/app/city_overview/NY0590400.csv",
+      "sha256": "19cc419cd85bf447dc4f78f9fc13e61b584081dd2364eb2c446f0291a1bdafa9"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0090200.csv",
+      "deployed_as": "data/app/city_overview/OH0090200.csv",
+      "sha256": "f68312393e4a7a9bd58e66a05a5c54f43e697d10853ae6f0b76d772bb9e22f88"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0091500.csv",
+      "deployed_as": "data/app/city_overview/OH0091500.csv",
+      "sha256": "50641e41bba656bad605c5986e45cb801b0809ab906127f996defd4a99432d86"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0250300.csv",
+      "deployed_as": "data/app/city_overview/OH0250300.csv",
+      "sha256": "36dcfbec9bbf7589dc247bbd01fea9dcfd7c03c919da330d4e00fe56694f1929"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0314200.csv",
+      "deployed_as": "data/app/city_overview/OH0314200.csv",
+      "sha256": "c16e6b54b93761df8d9de93536a8de4b9c4a1229969284d3b8cf2a89ee0fcd5e"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0314400.csv",
+      "deployed_as": "data/app/city_overview/OH0314400.csv",
+      "sha256": "1ef001bef5e96aea12289177fa3554a79f9be553c4b625ad5a8037928b8b0bb3"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0470400.csv",
+      "deployed_as": "data/app/city_overview/OH0470400.csv",
+      "sha256": "20f1560285fef789c2d0a913a7b547b0a740cecb5bbd1fb664c5e04154dcb0e4"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0470500.csv",
+      "deployed_as": "data/app/city_overview/OH0470500.csv",
+      "sha256": "454e78246f77905b6f43449e4f68aa4238f9c3e6a064bf9c56e55918deb44868"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0570200.csv",
+      "deployed_as": "data/app/city_overview/OH0570200.csv",
+      "sha256": "be2afa0f9be47cfaa6d976432e4be32dbf32cd83d7b1d496a42a10b3dd7d0180"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0760000.csv",
+      "deployed_as": "data/app/city_overview/OH0760000.csv",
+      "sha256": "b7f487c7db82ba8a1b40de127ca97da262fe49f1a3c03157cf477711bd68af60"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0760400.csv",
+      "deployed_as": "data/app/city_overview/OH0760400.csv",
+      "sha256": "4825a4a9b0b2a2b5714782001e1f7705b9e01eb240c9d99c3af1739de4f1b1c4"
+    },
+    {
+      "source": "src/data/app/city_overview/OH0770100.csv",
+      "deployed_as": "data/app/city_overview/OH0770100.csv",
+      "sha256": "2b76cbb842c9da120134aba873bf64f3eaa8d45495e1168471c31c4368827c32"
+    },
+    {
+      "source": "src/data/app/city_overview/OHCIP0000.csv",
+      "deployed_as": "data/app/city_overview/OHCIP0000.csv",
+      "sha256": "da5807fc6c11c99a91d0726c2a33834044dd5a8660b84be29861eff80b47c645"
+    },
+    {
+      "source": "src/data/app/city_overview/OHCLP0000.csv",
+      "deployed_as": "data/app/city_overview/OHCLP0000.csv",
+      "sha256": "4da925941681badb53c900cf4c127822508e9ac0cffbec809884a18e0f0f06cf"
+    },
+    {
+      "source": "src/data/app/city_overview/OHCOP0000.csv",
+      "deployed_as": "data/app/city_overview/OHCOP0000.csv",
+      "sha256": "f569c51ae00baf8ad33d352a0c83623161acc062c3e59a94e8efcafef1047bc7"
+    },
+    {
+      "source": "src/data/app/city_overview/OK0140100.csv",
+      "deployed_as": "data/app/city_overview/OK0140100.csv",
+      "sha256": "0807a7556bae79e8953aea6bd2af73d51e858b1c94d32258a39b9c4ecd67b362"
+    },
+    {
+      "source": "src/data/app/city_overview/OK0550300.csv",
+      "deployed_as": "data/app/city_overview/OK0550300.csv",
+      "sha256": "c4919b9e918d153a2bdf6d2429e55f7eabefcf3662f07a94df9a61a3c08d4b95"
+    },
+    {
+      "source": "src/data/app/city_overview/OK0550400.csv",
+      "deployed_as": "data/app/city_overview/OK0550400.csv",
+      "sha256": "2f70de3bf4bdc4909fc34a4c014ca0dba138e630fd5fb586a9bd45cc7cdda740"
+    },
+    {
+      "source": "src/data/app/city_overview/OK0550600.csv",
+      "deployed_as": "data/app/city_overview/OK0550600.csv",
+      "sha256": "dc51cc902c038be3f75c2a18ceeb4c1c76e328a65454f848b6201b5dc90bc91a"
+    },
+    {
+      "source": "src/data/app/city_overview/OK0720100.csv",
+      "deployed_as": "data/app/city_overview/OK0720100.csv",
+      "sha256": "a788cf4de2301bd6ddb841d0485beeac4a935e30efb55bca50ac20045e26005f"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0020100.csv",
+      "deployed_as": "data/app/city_overview/OR0020100.csv",
+      "sha256": "5c0c5c910dae6a491f0819c59e7392103350b5e4b3fa5970ce1baba6a9277c83"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0030000.csv",
+      "deployed_as": "data/app/city_overview/OR0030000.csv",
+      "sha256": "1e1cb32f65b7e7028fcfa299e9e52e782500fb95cae6270a726841a3337bbdb8"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0090100.csv",
+      "deployed_as": "data/app/city_overview/OR0090100.csv",
+      "sha256": "5a71948fba8948ef9d850d9c3b1cda6f531ca573066bb3ea6cb4afa85f049815"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0150400.csv",
+      "deployed_as": "data/app/city_overview/OR0150400.csv",
+      "sha256": "143f150d1d8a500a72be27c637c51fb79e15cb3b63354844fe649226ec3b9c44"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0220100.csv",
+      "deployed_as": "data/app/city_overview/OR0220100.csv",
+      "sha256": "0c71389739b844e3c61b4adfe73ecb3ebaeb2bee4fb3eeccc19d8de415804776"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0240200.csv",
+      "deployed_as": "data/app/city_overview/OR0240200.csv",
+      "sha256": "67dcd51e20f4ab3125bede76025ae0e0b0f77fa47727af96f1d5068547166ed3"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0260100.csv",
+      "deployed_as": "data/app/city_overview/OR0260100.csv",
+      "sha256": "9cf6f7bce61c235707150787c37ab93c5387962bff055578b93626970217d0cd"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0260200.csv",
+      "deployed_as": "data/app/city_overview/OR0260200.csv",
+      "sha256": "9bd3ace3ad03133c467d62557f7763dfdf123b9091410855b0b69a971ef01162"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0340000.csv",
+      "deployed_as": "data/app/city_overview/OR0340000.csv",
+      "sha256": "03bac149a09da7d262b8ab8e8c19b1d1e4eaaad6aad75bbb6667621745519262"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0340100.csv",
+      "deployed_as": "data/app/city_overview/OR0340100.csv",
+      "sha256": "16e0d2a6314a4d37dacbc23c6047e0b6d4fdc9b3064b46b893f8de188959058f"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0340300.csv",
+      "deployed_as": "data/app/city_overview/OR0340300.csv",
+      "sha256": "f3127c1ea589f3f8b3b666aebcb0e501ad4a1b84563db118d2afb2ff204ee383"
+    },
+    {
+      "source": "src/data/app/city_overview/OR0340400.csv",
+      "deployed_as": "data/app/city_overview/OR0340400.csv",
+      "sha256": "cdfddc10e497c74f90413ce8ddc96fcbd245cecf15d9dd110894d6b4094ccf0b"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0061400.csv",
+      "deployed_as": "data/app/city_overview/PA0061400.csv",
+      "sha256": "7c0685362402f7bfe8582236b6be48149d8866945014866b3bb706a1632131ae"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0090100.csv",
+      "deployed_as": "data/app/city_overview/PA0090100.csv",
+      "sha256": "cd098290c31898a733b1ea6b86868bff92844d4529ad1fe32d25f2aaa2de45e8"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0140300.csv",
+      "deployed_as": "data/app/city_overview/PA0140300.csv",
+      "sha256": "4497c355740b84ca0a23c8d28ea5e9eba7060dba81566c3c4033f982bd987e0c"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0220200.csv",
+      "deployed_as": "data/app/city_overview/PA0220200.csv",
+      "sha256": "5cc6565a489eea3474808cb1e8a10ef766c600042bbf2bd37cc7337a890b28e2"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0220400.csv",
+      "deployed_as": "data/app/city_overview/PA0220400.csv",
+      "sha256": "f6e28476c1e1ae84e60db66ef4afccdcd8565c4dac28e7cc1fcca109c77d570f"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0231400.csv",
+      "deployed_as": "data/app/city_overview/PA0231400.csv",
+      "sha256": "31e1f5bbeac5e027cd62a4801df9e07083766e0c168a7ce9bd25214feef28fd3"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0233700.csv",
+      "deployed_as": "data/app/city_overview/PA0233700.csv",
+      "sha256": "3b5289e8f353946a4ec7b282375d89138eac62ebb274fa45047e3e3200b3e4a7"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0250200.csv",
+      "deployed_as": "data/app/city_overview/PA0250200.csv",
+      "sha256": "f1b5e189ed7589f81fff69271209a14d5acf7276a81c9ed0d3b4b0f01262a5b2"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0250300.csv",
+      "deployed_as": "data/app/city_overview/PA0250300.csv",
+      "sha256": "516006ded459499632f51e549a2e8a3d44e10ec8f544a0b37b8f906a8eafbba2"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0350400.csv",
+      "deployed_as": "data/app/city_overview/PA0350400.csv",
+      "sha256": "8582e095d1b910f6a4b4b86cb7146fdde527678426aab3f302656b088c92573d"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0360500.csv",
+      "deployed_as": "data/app/city_overview/PA0360500.csv",
+      "sha256": "0146cbcf3f6b00dbd0bd493105b749a23f12636ac96a7d2b8fc0fa8015ea1bff"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0390100.csv",
+      "deployed_as": "data/app/city_overview/PA0390100.csv",
+      "sha256": "9feeedf97b65be28d63b55ba31178dc576747890862bbbe102cdc0d622d144bf"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0460100.csv",
+      "deployed_as": "data/app/city_overview/PA0460100.csv",
+      "sha256": "901bbbe3c7a176194cae71824b8b486fade0cf073f053987fc6ab6e4121fe777"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0461400.csv",
+      "deployed_as": "data/app/city_overview/PA0461400.csv",
+      "sha256": "ad0a8f369dd5f2ae5dafe1445fd6a03319e1776a80692ad895978d7c0c3098f9"
+    },
+    {
+      "source": "src/data/app/city_overview/PA0480300.csv",
+      "deployed_as": "data/app/city_overview/PA0480300.csv",
+      "sha256": "859823e6878273321a4bdab023c7db84c41d7802afdc066ecbac987ec075b383"
+    },
+    {
+      "source": "src/data/app/city_overview/PAPEP0000.csv",
+      "deployed_as": "data/app/city_overview/PAPEP0000.csv",
+      "sha256": "f51e296b8d42bf6224a7ec803be964addded4fedc531f3b1ecae6cb48120ecc2"
+    },
+    {
+      "source": "src/data/app/city_overview/PAPPD0000.csv",
+      "deployed_as": "data/app/city_overview/PAPPD0000.csv",
+      "sha256": "09695b2109c47c84b3c07f250b6267617908e0f20e1019a175228d05a3efc89f"
+    },
+    {
+      "source": "src/data/app/city_overview/RI0020300.csv",
+      "deployed_as": "data/app/city_overview/RI0020300.csv",
+      "sha256": "4d30d70190173e480d88ed4c431644527f4175fe86ed29416bd53873b4c41f47"
+    },
+    {
+      "source": "src/data/app/city_overview/RI0040200.csv",
+      "deployed_as": "data/app/city_overview/RI0040200.csv",
+      "sha256": "a27ed33d39a66e641a0788460dd2b309d3995831124c2a40db163e695a0752dc"
+    },
+    {
+      "source": "src/data/app/city_overview/RI0040800.csv",
+      "deployed_as": "data/app/city_overview/RI0040800.csv",
+      "sha256": "1761111264f400a6afaf468a2de4096f9247085e83d5933c532a2fe305ea2688"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0020000.csv",
+      "deployed_as": "data/app/city_overview/SC0020000.csv",
+      "sha256": "46517ed2ff11253ad28d8bd1fd29dc255482f5fec04dd89260c3e36b29ff6a12"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0040000.csv",
+      "deployed_as": "data/app/city_overview/SC0040000.csv",
+      "sha256": "7ecb06a34791bf57ad163b09e3a9b7fd943b36dc214f242516f540a6e6e83e1c"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0070000.csv",
+      "deployed_as": "data/app/city_overview/SC0070000.csv",
+      "sha256": "9710ed82540c6836b9dc39faafab4a82c23daf0361ec82cdf0a1e383c682f7be"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0080000.csv",
+      "deployed_as": "data/app/city_overview/SC0080000.csv",
+      "sha256": "e1df37ba0960512a3b66b86959226913a43ae638ad70812fdbd1ab0c0fd5f257"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0100100.csv",
+      "deployed_as": "data/app/city_overview/SC0100100.csv",
+      "sha256": "a67950de2947ea7cebfd44696242852b03b4bb0e30d6192a78e72b861cbf7ba1"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0100300.csv",
+      "deployed_as": "data/app/city_overview/SC0100300.csv",
+      "sha256": "9567542108fcc409a1248e6851ee1ae48394c8bdf0500c24fde9c1f9e06b01b8"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0100800.csv",
+      "deployed_as": "data/app/city_overview/SC0100800.csv",
+      "sha256": "6d481947555cda153ed5aebf6ebd350ae658dc4e8cf6be5d76bc60e8b2099135"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0230000.csv",
+      "deployed_as": "data/app/city_overview/SC0230000.csv",
+      "sha256": "557219ddab7d8dcce651edb7eb7b9bc6c77143ac8bb1fedc7949755f55a2f931"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0230200.csv",
+      "deployed_as": "data/app/city_overview/SC0230200.csv",
+      "sha256": "1f4f5aa6ce8a8b797b52cfe6dbb3dc25aa80d23f85b0d33d18a9c03b5422a9d1"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0260400.csv",
+      "deployed_as": "data/app/city_overview/SC0260400.csv",
+      "sha256": "34e1898e8b6f91907fa071dc7ab886fc932abf7b3f44ac499e921762089aeaa4"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0290000.csv",
+      "deployed_as": "data/app/city_overview/SC0290000.csv",
+      "sha256": "a203937d0d55436dc5c5e1d7cec32e70ddfa43b57e0d84512c72f3a1f48773d5"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0320000.csv",
+      "deployed_as": "data/app/city_overview/SC0320000.csv",
+      "sha256": "9908e7844438db830a1e8869a501a36dd75fb79db3e0e8b8b14a2abefc3dcb9d"
+    },
+    {
+      "source": "src/data/app/city_overview/SC0460300.csv",
+      "deployed_as": "data/app/city_overview/SC0460300.csv",
+      "sha256": "5a13e533e4c30fe77949be27cbddfb71629865672ebf591913e849faa4081d6d"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0190100.csv",
+      "deployed_as": "data/app/city_overview/TN0190100.csv",
+      "sha256": "5ba0c0acece7d5f3f81481f989d8b8498cce4106228e1c9359b4f3d482f16838"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0330000.csv",
+      "deployed_as": "data/app/city_overview/TN0330000.csv",
+      "sha256": "fec72673dd9e27802f2c7787105344ab1bcbe987c628ab4d0c207fa0b267cc24"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0330100.csv",
+      "deployed_as": "data/app/city_overview/TN0330100.csv",
+      "sha256": "5d7b6b7eecd3b17d801d0bb38e07c86538fd72e2c32721ace694b707aa43da74"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0470000.csv",
+      "deployed_as": "data/app/city_overview/TN0470000.csv",
+      "sha256": "b6e4f78ad944ffff42bc4f2abd436ad98db41f1757dfd944753a5612c3747a9d"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0470100.csv",
+      "deployed_as": "data/app/city_overview/TN0470100.csv",
+      "sha256": "18e235b938b5fd27eb05d6df8af2a3d0a31b4b3ac751c35435d7c43d1987a991"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0570100.csv",
+      "deployed_as": "data/app/city_overview/TN0570100.csv",
+      "sha256": "d6f564aded6198e4f9b67bc4950835d56181bc478ab0cd60da44a34a38924976"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0600300.csv",
+      "deployed_as": "data/app/city_overview/TN0600300.csv",
+      "sha256": "f6fe0890cda279688a80c6a908dd451bf8f839642ce4ecbd85c8303025c222ec"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0630100.csv",
+      "deployed_as": "data/app/city_overview/TN0630100.csv",
+      "sha256": "b50719b6c57a26b9545642dfe0b1b3936c5f6573e0cfc0727135639900268e10"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0750000.csv",
+      "deployed_as": "data/app/city_overview/TN0750000.csv",
+      "sha256": "319133a8a462eef6eaa9e82e215014da9d22682a4a9dceb020786f334973e10a"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0750100.csv",
+      "deployed_as": "data/app/city_overview/TN0750100.csv",
+      "sha256": "fa1e732f70beacd5fb5a801f52ebd0f272c977c5ad56f90ed01c2882d4843a7e"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0750200.csv",
+      "deployed_as": "data/app/city_overview/TN0750200.csv",
+      "sha256": "fc6bb3800a88a20d7bf835f9f69cc9a7ec9edf36bbbedeb6d29422ea2cccd820"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0790000.csv",
+      "deployed_as": "data/app/city_overview/TN0790000.csv",
+      "sha256": "90fcab82f0240ace3b5f0562cf049fd28954ec610ebdde30fdcd23e132a55e94"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0790100.csv",
+      "deployed_as": "data/app/city_overview/TN0790100.csv",
+      "sha256": "1150f49d276301d7f3276c7ab0fa6a008f93e608a0f0873fbe5f67d5f7af174e"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0790600.csv",
+      "deployed_as": "data/app/city_overview/TN0790600.csv",
+      "sha256": "56bcaac8dea0d8998d21f618c7aeecf61c1593069eea6efdf4b0a066cf1767e5"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0820200.csv",
+      "deployed_as": "data/app/city_overview/TN0820200.csv",
+      "sha256": "e531c014812c2782fc896b9485eee0d7aa853f141eb187fdfde793cedceade5d"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0830400.csv",
+      "deployed_as": "data/app/city_overview/TN0830400.csv",
+      "sha256": "6700a20a389aa4227cef010db1153fb971fbbf1d4ce918cba263c982a4d1ae15"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0900100.csv",
+      "deployed_as": "data/app/city_overview/TN0900100.csv",
+      "sha256": "5a25c991f6eb28515f5b82041c580c729800ddef9c86a6bbd20fc6bc8fc4768c"
+    },
+    {
+      "source": "src/data/app/city_overview/TN0940100.csv",
+      "deployed_as": "data/app/city_overview/TN0940100.csv",
+      "sha256": "35f63f2ec7162f639bccf2df2978a50aa67a95f3903ce31f7e406bc9572973ca"
+    },
+    {
+      "source": "src/data/app/city_overview/TNMPD0000.csv",
+      "deployed_as": "data/app/city_overview/TNMPD0000.csv",
+      "sha256": "b960087b937385a6a10a8fbd7a94d860680cbe2463cfb50a974c52e2141348dc"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0150000.csv",
+      "deployed_as": "data/app/city_overview/TX0150000.csv",
+      "sha256": "3bce0508c5035b1ffbdc3993adb0755898be7f73fb5a478a44c9119bf3ff555b"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0200000.csv",
+      "deployed_as": "data/app/city_overview/TX0200000.csv",
+      "sha256": "4e96ee9deb18ecbbb51582317d493488946d9214a6d41cb3ce834d0793a69448"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0201000.csv",
+      "deployed_as": "data/app/city_overview/TX0201000.csv",
+      "sha256": "f874873640ca65107dcc4d248e25b4f27708ac1f7a5dc4cf48c6184eccd8e5b3"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0210200.csv",
+      "deployed_as": "data/app/city_overview/TX0210200.csv",
+      "sha256": "d48fc3ee42018a7e69f4c0ed3c0479e3f60fe69e88064366168ae8c668455142"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0310000.csv",
+      "deployed_as": "data/app/city_overview/TX0310000.csv",
+      "sha256": "0d5bc457abf7c921a38e3fce353fc5277e3fb5de9de0ca2a0386ac05747cb34d"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0310100.csv",
+      "deployed_as": "data/app/city_overview/TX0310100.csv",
+      "sha256": "2b8f401ea20bf7e952460b1e1067156af3a673383cb189229d7246703e5b4ea4"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0310300.csv",
+      "deployed_as": "data/app/city_overview/TX0310300.csv",
+      "sha256": "e871583a110cf26a6fd457cc6c16620170f49c7a09a0d1016c4fdb6d3c439a1d"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430000.csv",
+      "deployed_as": "data/app/city_overview/TX0430000.csv",
+      "sha256": "49a034260288e5b366d8b370e13e3be6b17cd452b5c5eb153efe474d6783b6a1"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430100.csv",
+      "deployed_as": "data/app/city_overview/TX0430100.csv",
+      "sha256": "dbfbeaf9949d237dd0bf52353e13430a1cfee2ee55ffee55844295cbfebd813e"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430400.csv",
+      "deployed_as": "data/app/city_overview/TX0430400.csv",
+      "sha256": "e4edea35b5833a49aa26b1d3eed98890cafba3d1ccfab9f4437291cb540b4a99"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430500.csv",
+      "deployed_as": "data/app/city_overview/TX0430500.csv",
+      "sha256": "bd89cebe8d19c0d31ad0a7e1eaccca0ebd11ce9a3a338ea9ae3759c4ce3033aa"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430600.csv",
+      "deployed_as": "data/app/city_overview/TX0430600.csv",
+      "sha256": "cbe4f59798512571e3daa7a7cfcc34b760328f3efeb12755e0e8799f5a243458"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0430800.csv",
+      "deployed_as": "data/app/city_overview/TX0430800.csv",
+      "sha256": "71561fc265a888f5005d46cafab21ac36c0e9ca9e571b74cd89abeacb95fe249"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0460000.csv",
+      "deployed_as": "data/app/city_overview/TX0460000.csv",
+      "sha256": "39dbf4ea0a649c226da84b65cb76b14698158de93b5d7f7ce3e15cd75d1a7db0"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0460100.csv",
+      "deployed_as": "data/app/city_overview/TX0460100.csv",
+      "sha256": "5c87a95e78b76cea55bab8a18c0f589538fd34d6f425d3e12cb890360f5767d8"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0570400.csv",
+      "deployed_as": "data/app/city_overview/TX0570400.csv",
+      "sha256": "8dfd4cb0292417dd1941bdfe559970394979e1e0b99e9c9f89955cff64dd0a4c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0570800.csv",
+      "deployed_as": "data/app/city_overview/TX0570800.csv",
+      "sha256": "f8582dd52fc81ed8a9123404cfb08692de421fda0e184a91acaf73f70c088075"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0571100.csv",
+      "deployed_as": "data/app/city_overview/TX0571100.csv",
+      "sha256": "a42f0b7eff4aeed42f5337da291b5506bc56e5266cd63394d48ad9748e2d0330"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0571200.csv",
+      "deployed_as": "data/app/city_overview/TX0571200.csv",
+      "sha256": "9beabac728e2447712f22062c1db4219add964179da4610e7d851f0c2a37bf38"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0571500.csv",
+      "deployed_as": "data/app/city_overview/TX0571500.csv",
+      "sha256": "c79924972a91386e64ac7e2eb8c1a9ed51d7b7aaf8c6c3b337abd056cfe3bc85"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0571800.csv",
+      "deployed_as": "data/app/city_overview/TX0571800.csv",
+      "sha256": "063774102326bea82577295c6d95bc87aa51e09b641fabd1389de4cc40f30c80"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0572000.csv",
+      "deployed_as": "data/app/city_overview/TX0572000.csv",
+      "sha256": "912945d37f1d8dd66c040382fc815d2f6b778d231b4f553f1b8c62f872f452dd"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0573300.csv",
+      "deployed_as": "data/app/city_overview/TX0573300.csv",
+      "sha256": "19f7570b94d4f53addfdddf5d3f5cfcd750c7ebcf6e9acecebeb06b028fc77f6"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0610000.csv",
+      "deployed_as": "data/app/city_overview/TX0610000.csv",
+      "sha256": "a3c1abd14814e4a0bfd057a772928fe52a52769975ab1fd7225196ed6abf825d"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0610600.csv",
+      "deployed_as": "data/app/city_overview/TX0610600.csv",
+      "sha256": "22f306ba316ecc11fe68ab5d8cfe8093c986606cb4b695b8c353c369d16d1a11"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0611200.csv",
+      "deployed_as": "data/app/city_overview/TX0611200.csv",
+      "sha256": "69fa3931d9fdcbc037cc789a4e5d559f45cb65ece7a8a2e260028e70b4c1bd36"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0611300.csv",
+      "deployed_as": "data/app/city_overview/TX0611300.csv",
+      "sha256": "3b51ac042037d0bb6dcff259cf3436b523fae705a04b9668c110139a51377a83"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0680200.csv",
+      "deployed_as": "data/app/city_overview/TX0680200.csv",
+      "sha256": "d8f1c9debe8ccbe608eddb3f0a1ed505ff9eedbb9efa65ea41450feef0469e63"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0710000.csv",
+      "deployed_as": "data/app/city_overview/TX0710000.csv",
+      "sha256": "9a9eab546032be570e58a3f7b8a4420227f87a9b260ae5b04289ae2b55e0283c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0710200.csv",
+      "deployed_as": "data/app/city_overview/TX0710200.csv",
+      "sha256": "04cedbe6e1883c074501723b7616684180cced0071fdaf0e94a9d9aae80efb87"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0790000.csv",
+      "deployed_as": "data/app/city_overview/TX0790000.csv",
+      "sha256": "69211d2c92eb462c95062d3a9e21a13e3ed2e618eae9cf7817b6438dec382ed7"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0790100.csv",
+      "deployed_as": "data/app/city_overview/TX0790100.csv",
+      "sha256": "153bf0cfe1091d5539bc99052c8bc3e74e2e54dbd93ed09c4dcb9837e7a8a064"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0790500.csv",
+      "deployed_as": "data/app/city_overview/TX0790500.csv",
+      "sha256": "9054ed16a7fe1c9365cc50d6b2f9c80a3c8ed3e888cf62c73841e2b28ee19e78"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0840400.csv",
+      "deployed_as": "data/app/city_overview/TX0840400.csv",
+      "sha256": "879c6782058962c0a9b2ba896083184c3c88df806cc06b30dc6f020ac55e557c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0840800.csv",
+      "deployed_as": "data/app/city_overview/TX0840800.csv",
+      "sha256": "e1518fadeb422ee11a6fe0df173af2b57526c9e179e8c17b912bac03f5d2a559"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0840900.csv",
+      "deployed_as": "data/app/city_overview/TX0840900.csv",
+      "sha256": "16ee792b0d3bd31eec245a405b0914cd2ecc0fa918a96a9089454a7ca6477c02"
+    },
+    {
+      "source": "src/data/app/city_overview/TX0920500.csv",
+      "deployed_as": "data/app/city_overview/TX0920500.csv",
+      "sha256": "9275674c7056fe2a3fcdecc5d0850ea9f3de604bb2a071aeb7e7a0d08568fa8c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1010100.csv",
+      "deployed_as": "data/app/city_overview/TX1010100.csv",
+      "sha256": "9cf1c5683fd790b39be006123fba26efc694b4354d5fe5bc06ed40dea34ab427"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1011500.csv",
+      "deployed_as": "data/app/city_overview/TX1011500.csv",
+      "sha256": "e33459cb86ed39eb8891dc468f3a4a9451cc57e5a612652a285d6d474cda10fc"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1050000.csv",
+      "deployed_as": "data/app/city_overview/TX1050000.csv",
+      "sha256": "2805a9b5aed7692210bef3c6319877623a940132c8987721449c0b8353b9cf67"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1050100.csv",
+      "deployed_as": "data/app/city_overview/TX1050100.csv",
+      "sha256": "6eaf714a03dc607303cb2a7c633c562ddca8f5c73e9159425944448568bb6419"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1050700.csv",
+      "deployed_as": "data/app/city_overview/TX1050700.csv",
+      "sha256": "bcfaed80355a7cb4076c59b86cf4b32fb91f644508f55025ccaa94de51495bba"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1080000.csv",
+      "deployed_as": "data/app/city_overview/TX1080000.csv",
+      "sha256": "aa2fd0597a0d48e6717d5f4f14c63a1c50c0c0dbc1d19ef353e3e36ceecca52a"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1080400.csv",
+      "deployed_as": "data/app/city_overview/TX1080400.csv",
+      "sha256": "cbf9c4f2b6f39d94dc4cf03aef09622a468436ecf0b077da3ebaaad983924125"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1080800.csv",
+      "deployed_as": "data/app/city_overview/TX1080800.csv",
+      "sha256": "bb6631bf4454f232bbcb2be8cedcd0085e8d9e3a219587f7c0a20ad578800033"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1081100.csv",
+      "deployed_as": "data/app/city_overview/TX1081100.csv",
+      "sha256": "c7de4532a18ecf4d0b5c9558905edcf7cb996e643b9156bedb5e658df4c14e8c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1230100.csv",
+      "deployed_as": "data/app/city_overview/TX1230100.csv",
+      "sha256": "2dd92aa27c3ed449634e7a3375116d943b540b2744e1b5f977c6409587f59e17"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1230700.csv",
+      "deployed_as": "data/app/city_overview/TX1230700.csv",
+      "sha256": "370b9a54905eda7afd2fa72dd1212cb610a4e37165d04b877825dbb5753880c5"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1260200.csv",
+      "deployed_as": "data/app/city_overview/TX1260200.csv",
+      "sha256": "fa00f1c1c624451e15571ab75d9652447ee147d37f3441fc03b79a56444e36a1"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1290000.csv",
+      "deployed_as": "data/app/city_overview/TX1290000.csv",
+      "sha256": "2ec15c8fa48c97c65840d4e54c453ecb9eb0914e6f086dacc3158091f39a7534"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1520200.csv",
+      "deployed_as": "data/app/city_overview/TX1520200.csv",
+      "sha256": "db6fbd68735d930cfa6d789e7fbc1113223d34b0e0844eda2db59f82e6c0b2bc"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1551200.csv",
+      "deployed_as": "data/app/city_overview/TX1551200.csv",
+      "sha256": "1701a6dd18165f62d73054f2c063856705f275ec6da5afbd1546b6cd835f92ce"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1650100.csv",
+      "deployed_as": "data/app/city_overview/TX1650100.csv",
+      "sha256": "3afa343b145660c06f4be54f2208247be9bb00d78d553c4d015acdd10271b5a2"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1700100.csv",
+      "deployed_as": "data/app/city_overview/TX1700100.csv",
+      "sha256": "a04f241ea739e9312b55bca4b8efc6d3767b6c10fbf044300897f987639abbcd"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1840000.csv",
+      "deployed_as": "data/app/city_overview/TX1840000.csv",
+      "sha256": "009689c0812fa52cc2f1b406e4cc478f986c708d75dc34bea5655a7e6421aeb5"
+    },
+    {
+      "source": "src/data/app/city_overview/TX1990100.csv",
+      "deployed_as": "data/app/city_overview/TX1990100.csv",
+      "sha256": "b247bc74a3f33ac9ab978464efc17545c27be7d081e4ecb9243d3836a07ea062"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2120000.csv",
+      "deployed_as": "data/app/city_overview/TX2120000.csv",
+      "sha256": "a2387bac1293a26013189a6429695774063bc555a903292e72a127c45d0019cb"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2120400.csv",
+      "deployed_as": "data/app/city_overview/TX2120400.csv",
+      "sha256": "6c9f106b77e730b89b2a8c24cd73cf945b2b665deb19833c6e22d3e030fb08ed"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2200100.csv",
+      "deployed_as": "data/app/city_overview/TX2200100.csv",
+      "sha256": "a929a0eb5fa1c5c9783ab38b7a4740dfc55076e034b42f32fa6862024af099fe"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2200900.csv",
+      "deployed_as": "data/app/city_overview/TX2200900.csv",
+      "sha256": "f80951f261d216046dd5af0d2235e5552bf49e2ca06bff5c3998cb9f42d4bf59"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2201200.csv",
+      "deployed_as": "data/app/city_overview/TX2201200.csv",
+      "sha256": "78cf9f926b10efa68f97b37f3443e609eb9f5601b91e15a104fc8dfd849c608c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2201300.csv",
+      "deployed_as": "data/app/city_overview/TX2201300.csv",
+      "sha256": "e88c70a4deef4d778a191ff961ba65965bdceae8416aef0c92c79c3a87ebfbb1"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2202000.csv",
+      "deployed_as": "data/app/city_overview/TX2202000.csv",
+      "sha256": "00014a1ff13e5fd310b1a8d00f8b08f1d3f64021351775ddddac9d5a507b6d99"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2202100.csv",
+      "deployed_as": "data/app/city_overview/TX2202100.csv",
+      "sha256": "b0c7fc3d428b7e06623b5b38bc3494d0f6f676d2fe6e96dce2ab855931e6f82e"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2210100.csv",
+      "deployed_as": "data/app/city_overview/TX2210100.csv",
+      "sha256": "ded2b0294f44212d30b8ab26bef042b736ab14b9a129500895371ce85cea5d01"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2260100.csv",
+      "deployed_as": "data/app/city_overview/TX2260100.csv",
+      "sha256": "8b6b711935b99a3be71f41c2a3c547882f44d40e382dc212e9beeac3c046a7b5"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2270000.csv",
+      "deployed_as": "data/app/city_overview/TX2270000.csv",
+      "sha256": "a3196841a2b9f9e41d87bba2661a8a5dc24e251a5d72226d5e12a730c699a52b"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2270100.csv",
+      "deployed_as": "data/app/city_overview/TX2270100.csv",
+      "sha256": "e486c418e1dba2cd604195e220282924e7f9f0e30196410b58d4cc166eff1d07"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2270900.csv",
+      "deployed_as": "data/app/city_overview/TX2270900.csv",
+      "sha256": "3654ee51fc08b0a18912641b373959ead078dcd2ed3a44d4d6b29b720674e652"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2350100.csv",
+      "deployed_as": "data/app/city_overview/TX2350100.csv",
+      "sha256": "0ef86d3293724a26777cfe68fdc61320a885c35d2825858c11ea2ce1d523bf63"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2400100.csv",
+      "deployed_as": "data/app/city_overview/TX2400100.csv",
+      "sha256": "efb3d28d2d8c9db5dfd4eb246571951c2827de0a9a302ac3e403d72fe3d5cb49"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2430500.csv",
+      "deployed_as": "data/app/city_overview/TX2430500.csv",
+      "sha256": "1aeb5135f12d6391bf017aae57386bcdb64de671bd3ecf6604bd190937c35d29"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2460000.csv",
+      "deployed_as": "data/app/city_overview/TX2460000.csv",
+      "sha256": "baadf0427269d45e2420310533c037d8fd5273f43e984f8ca2aab2fe01594a0c"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2460200.csv",
+      "deployed_as": "data/app/city_overview/TX2460200.csv",
+      "sha256": "f0687dba03d513b85dd4730023962f98875bb67402da8e67e2e1da8468ec806d"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2460900.csv",
+      "deployed_as": "data/app/city_overview/TX2460900.csv",
+      "sha256": "ba4eb3914aac3515a8d6390be45bbfb5e21e71daf74078c4e457648123446907"
+    },
+    {
+      "source": "src/data/app/city_overview/TX2461700.csv",
+      "deployed_as": "data/app/city_overview/TX2461700.csv",
+      "sha256": "ae3743dbfba151e21ef2044f1854e8bbe391b98ba2b419a9345931c902e24ed0"
+    },
+    {
+      "source": "src/data/app/city_overview/TXDPD0000.csv",
+      "deployed_as": "data/app/city_overview/TXDPD0000.csv",
+      "sha256": "6bc3418cc9ce11f6d64ea574c0e29982d8b8fce86f04306e55fb44ffc0467131"
+    },
+    {
+      "source": "src/data/app/city_overview/TXHPD0000.csv",
+      "deployed_as": "data/app/city_overview/TXHPD0000.csv",
+      "sha256": "a7185fb297d801907536bf218d3fbd0ae6e6dd133802ae49803dade1f8348ee3"
+    },
+    {
+      "source": "src/data/app/city_overview/TXSPD0000.csv",
+      "deployed_as": "data/app/city_overview/TXSPD0000.csv",
+      "sha256": "69ec77efa2c48d2d62cf8fc6b82723154d8480037a0480eb3999a5438dd4e61b"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0030100.csv",
+      "deployed_as": "data/app/city_overview/UT0030100.csv",
+      "sha256": "852c22fc9b47a6da27f02acb4214e8c6ebec2c2da5e59a645c62fc93791d87f5"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0060300.csv",
+      "deployed_as": "data/app/city_overview/UT0060300.csv",
+      "sha256": "78e0d701ad7443fd1249d74507d2d012e6dfe8baa64e0adbcd114bfd49d4ce9a"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0180500.csv",
+      "deployed_as": "data/app/city_overview/UT0180500.csv",
+      "sha256": "bae3911a5e8c8abd3e86dbb406bfc7ae738bc5a530d53e7e3dbcbad18b5012ff"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0180600.csv",
+      "deployed_as": "data/app/city_overview/UT0180600.csv",
+      "sha256": "bfa6de447f186c00033d082bb490c7223c2cc89f9e0f67a3fc256f6c6a829d61"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0181200.csv",
+      "deployed_as": "data/app/city_overview/UT0181200.csv",
+      "sha256": "d9c8e2e39e31bdceedaa0e258585b5fd0f98453e5bf49d3384b067abee682073"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0181800.csv",
+      "deployed_as": "data/app/city_overview/UT0181800.csv",
+      "sha256": "6d9675d5c1f09b57dd206220f4f89ae57eff490f842763dcc1fd728407b514a6"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0182500.csv",
+      "deployed_as": "data/app/city_overview/UT0182500.csv",
+      "sha256": "034a70330f4dc335511546144714b6d3037e187bca4097673a13c0ca77c25e01"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0250300.csv",
+      "deployed_as": "data/app/city_overview/UT0250300.csv",
+      "sha256": "aae328472995fce1b64fdbdde195e0b5463ae21f251d24b3b12e78a925e9417d"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0252200.csv",
+      "deployed_as": "data/app/city_overview/UT0252200.csv",
+      "sha256": "5f36001333699b28e2663288a16dbcdd42aa54d6394067c80d8c8f95503a387e"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0270100.csv",
+      "deployed_as": "data/app/city_overview/UT0270100.csv",
+      "sha256": "42f293e40d01905326b7cf9d2e9fd13b20ac9549cb8e343673908c0523382929"
+    },
+    {
+      "source": "src/data/app/city_overview/UT0290100.csv",
+      "deployed_as": "data/app/city_overview/UT0290100.csv",
+      "sha256": "91b9a3afdc9b882d937429bf740f4ed77a283840493801137153bdc41cfe3fff"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0020300.csv",
+      "deployed_as": "data/app/city_overview/VA0020300.csv",
+      "sha256": "10e76374d140474aea76e1a65ff951c755fa549e409d23847dab3108c216abc1"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0070100.csv",
+      "deployed_as": "data/app/city_overview/VA0070100.csv",
+      "sha256": "761a0e672c77f928e30ad03b4e18f9fdaceb9848ee81970172c0007cfc19ee24"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0210100.csv",
+      "deployed_as": "data/app/city_overview/VA0210100.csv",
+      "sha256": "9177b09d2b981df31111ac6495496e0a41b5123982e24723896efa80dae26243"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0420000.csv",
+      "deployed_as": "data/app/city_overview/VA0420000.csv",
+      "sha256": "7b88d7304fc4d1f583e4f25334ea036ea60f81e3e2aef12c206e806405722ab9"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0430100.csv",
+      "deployed_as": "data/app/city_overview/VA0430100.csv",
+      "sha256": "8c289e3aa319e93e7bd8079cbfac935ec1491d098bcfae64568da9e82a35dd74"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0530000.csv",
+      "deployed_as": "data/app/city_overview/VA0530000.csv",
+      "sha256": "ae14d014fbcebc3883ba5ee80f77e15eda71892f9670a871f77bbc708f86fc25"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0890000.csv",
+      "deployed_as": "data/app/city_overview/VA0890000.csv",
+      "sha256": "5279560fa22066144698d25aff39647ce37e4dcfe9285da00016533e8aad0e46"
+    },
+    {
+      "source": "src/data/app/city_overview/VA0990000.csv",
+      "deployed_as": "data/app/city_overview/VA0990000.csv",
+      "sha256": "7d7c327daec01c439b47a2302a7eab7c09a8b5d8ee5bccaf55d6461bac0c8f4b"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1030000.csv",
+      "deployed_as": "data/app/city_overview/VA1030000.csv",
+      "sha256": "9483ef8a34bb87e44e89b13fec6d8053c964419091a93c1c20027824aab1ed98"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1120000.csv",
+      "deployed_as": "data/app/city_overview/VA1120000.csv",
+      "sha256": "4299024ca83f059becfa88a92d0f57175e099f858417c118e9290ebe8c0ee306"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1140000.csv",
+      "deployed_as": "data/app/city_overview/VA1140000.csv",
+      "sha256": "cbf7ad9837d92e003b98688afd092eaa1badf62c34a1d3fcb83c2dad6947a926"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1170000.csv",
+      "deployed_as": "data/app/city_overview/VA1170000.csv",
+      "sha256": "c636ac435f4b5ab2d62d9b379ca49365c85f7eec7b6f3e36b8887b5b44c0097d"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1200000.csv",
+      "deployed_as": "data/app/city_overview/VA1200000.csv",
+      "sha256": "ee6a861741d6d1b85038269f87cbc20922b06fe3f5323eec47bb7d5273323b37"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1220000.csv",
+      "deployed_as": "data/app/city_overview/VA1220000.csv",
+      "sha256": "9ca8c7807958e057525fa03db8c5f901704f8a65ed6c135597c3c681b014d55c"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1230000.csv",
+      "deployed_as": "data/app/city_overview/VA1230000.csv",
+      "sha256": "791480779d6f3ec25b12af0ffff680c98493c6325520cd0db35231e2f3a5512a"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1270000.csv",
+      "deployed_as": "data/app/city_overview/VA1270000.csv",
+      "sha256": "6f78593c57c91ae2b0f69c997319039fa1f510f3f167432ef69a1c31c834483b"
+    },
+    {
+      "source": "src/data/app/city_overview/VA1280000.csv",
+      "deployed_as": "data/app/city_overview/VA1280000.csv",
+      "sha256": "d1eac65dcb5f680ee906a465a78f751c0fd7f6f10cd625a6e8a64e22f2bdf01b"
+    },
+    {
+      "source": "src/data/app/city_overview/VT0040100.csv",
+      "deployed_as": "data/app/city_overview/VT0040100.csv",
+      "sha256": "13786c16d6569f005f355f37c9c0fcc9e2b315da7f89a9bd6d3e29270ec89da8"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0030200.csv",
+      "deployed_as": "data/app/city_overview/WA0030200.csv",
+      "sha256": "719a0c5c1d20439d62773ef4eed36a6771c926145be10aeea5e6f04e5105a821"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0171200.csv",
+      "deployed_as": "data/app/city_overview/WA0171200.csv",
+      "sha256": "9cd0b38cd8f014637914bf223ef8d79174ad3b20522680ada37d485524392ffe"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0270300.csv",
+      "deployed_as": "data/app/city_overview/WA0270300.csv",
+      "sha256": "3fd55313e2c2f0bfb5cce4e855fbc296102cc441d6ec0f6260f9dde73228c529"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0310300.csv",
+      "deployed_as": "data/app/city_overview/WA0310300.csv",
+      "sha256": "85c08f54eb3ffbaf6b47f24453abdcf9ba2ecb7afd55e76879d620d793f9e56a"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0340000.csv",
+      "deployed_as": "data/app/city_overview/WA0340000.csv",
+      "sha256": "58b00c3d174e6682f0ffabc1552ab2aa27777b1bb86a926d9c6bf31eaf55f911"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0370100.csv",
+      "deployed_as": "data/app/city_overview/WA0370100.csv",
+      "sha256": "37e5205160a8e9244f1991bf1f2fb01820c326bea3614eb756aa1ccc29567dcc"
+    },
+    {
+      "source": "src/data/app/city_overview/WA0390500.csv",
+      "deployed_as": "data/app/city_overview/WA0390500.csv",
+      "sha256": "f92aafe2841f56ce8549d84efade32369d2ef7c03f2dac2dce5c6fac26a27888"
+    },
+    {
+      "source": "src/data/app/city_overview/WASPD0000.csv",
+      "deployed_as": "data/app/city_overview/WASPD0000.csv",
+      "sha256": "da26198f01da51ae8ce1d1358243aa186f848796a05010e1be044eac6059d758"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0050200.csv",
+      "deployed_as": "data/app/city_overview/WI0050200.csv",
+      "sha256": "cb7f777b99478c9713ad11bdcb163a15f0694096d0b7036082f67ab6c897740f"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0130100.csv",
+      "deployed_as": "data/app/city_overview/WI0130100.csv",
+      "sha256": "216e5a4746e23c58cd151ef9b5a7a6e7163f1c408296bda062e320937672276e"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0180100.csv",
+      "deployed_as": "data/app/city_overview/WI0180100.csv",
+      "sha256": "c47455c649ba5cda2253c019db09c3bbd9e53d162c00b7631d7cd2b4adb35661"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0300100.csv",
+      "deployed_as": "data/app/city_overview/WI0300100.csv",
+      "sha256": "8daa800b43fdebfc6b30a432a8a2dc61dd79148f0b560cb63ed2d3d9b3dc2932"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0320100.csv",
+      "deployed_as": "data/app/city_overview/WI0320100.csv",
+      "sha256": "1a7e0f191adaca65478ef17b8c4e2eb04d3f86bac3dc83651014076e3d14f4ee"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0411600.csv",
+      "deployed_as": "data/app/city_overview/WI0411600.csv",
+      "sha256": "4551a895ec4def87c4a64cd307e8d8949ff326a3e7ea4d35bc4f966067086060"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0450100.csv",
+      "deployed_as": "data/app/city_overview/WI0450100.csv",
+      "sha256": "8f23b5d142810172257f6350c7a650f50059af41517502786b10b111259d5685"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0520200.csv",
+      "deployed_as": "data/app/city_overview/WI0520200.csv",
+      "sha256": "4518ad043936587ad93383e19fbe16dfd9dc7f04e6c6713f26f62d95018bf538"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0540200.csv",
+      "deployed_as": "data/app/city_overview/WI0540200.csv",
+      "sha256": "d351b2f1c49884b9a65cb32a59e839998daec970d68a51c561d12e250e593adf"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0680500.csv",
+      "deployed_as": "data/app/city_overview/WI0680500.csv",
+      "sha256": "1b5882c2e6b8742d57909b7c3b2745dbba6c5624355e5ffa63032ea8becd39ac"
+    },
+    {
+      "source": "src/data/app/city_overview/WI0710300.csv",
+      "deployed_as": "data/app/city_overview/WI0710300.csv",
+      "sha256": "4bee14eae5d6aa06123461ca4816f4d0d3d29f824df93bf282a08e778b169468"
+    },
+    {
+      "source": "src/data/app/city_overview/WIMPD0000.csv",
+      "deployed_as": "data/app/city_overview/WIMPD0000.csv",
+      "sha256": "a5cc6a2941ec1a830689cd33240e4e6e94c511a0eefaf1eb528d21f956595f20"
+    },
+    {
+      "source": "src/data/app/city_overview/WY0110100.csv",
+      "deployed_as": "data/app/city_overview/WY0110100.csv",
+      "sha256": "01f38b5c5aea371264b6cba5e380c9059dfd4d7b6022e8e99ad83dbe2be77b1f"
+    },
+    {
+      "source": "src/data/app/city_seasons_assault.csv",
+      "deployed_as": "data/app/city_seasons_assault.csv",
+      "sha256": "1056c6d351bb7fba87dceca9a9308cb4e9369ca4cec2060685707615d5433460"
+    },
+    {
+      "source": "src/data/app/city_seasons_burglary.csv",
+      "deployed_as": "data/app/city_seasons_burglary.csv",
+      "sha256": "03da6cddc0565287500150213c6717cb5ece668edeb39b51a9b5969d8e9d77dd"
+    },
+    {
+      "source": "src/data/app/city_seasons_motor.csv",
+      "deployed_as": "data/app/city_seasons_motor.csv",
+      "sha256": "e2e2569859b02362e3307808fd2e912e4c5480a9805ff3ddb3e43e19df6b7759"
+    },
+    {
+      "source": "src/data/app/city_seasons_murder.csv",
+      "deployed_as": "data/app/city_seasons_murder.csv",
+      "sha256": "342eca0b1d1662a4aa13675d669078a7f61d92a07db8ddaef1e6ee64aaefbf81"
+    },
+    {
+      "source": "src/data/app/city_seasons_property.csv",
+      "deployed_as": "data/app/city_seasons_property.csv",
+      "sha256": "c9aced5b65728ba9364a832a82c5484a720b432ab97bbc3ecaecd5cf1a848ed0"
+    },
+    {
+      "source": "src/data/app/city_seasons_rape.csv",
+      "deployed_as": "data/app/city_seasons_rape.csv",
+      "sha256": "4343e0beb9e386bc7c39327370dcd92b35c4abe740592fdd105c3b5011677884"
+    },
+    {
+      "source": "src/data/app/city_seasons_robbery.csv",
+      "deployed_as": "data/app/city_seasons_robbery.csv",
+      "sha256": "bfb0d063c136fa6200a8d518fcefabe5b19d7458380b84c5cf885852b6208708"
+    },
+    {
+      "source": "src/data/app/city_seasons_theft.csv",
+      "deployed_as": "data/app/city_seasons_theft.csv",
+      "sha256": "383fb755a10fc295aaf9318eb4908956b6f155628fa5739eee27db938f5d8e12"
+    },
+    {
+      "source": "src/data/app/city_seasons_violent.csv",
+      "deployed_as": "data/app/city_seasons_violent.csv",
+      "sha256": "337bee38fb84f10a6a262955f067606db2efd83dad1550fa19b49d2458ccf72f"
+    },
+    {
+      "source": "src/data/app/city_trends_assault.csv",
+      "deployed_as": "data/app/city_trends_assault.csv",
+      "sha256": "0750baf4d406b0c64d069bca808bed265d480f237bc5eb56d93a642a4f714037"
+    },
+    {
+      "source": "src/data/app/city_trends_burglary.csv",
+      "deployed_as": "data/app/city_trends_burglary.csv",
+      "sha256": "4e0893858f210969cd9c5a7dcd8fa799102a4d38bdc20851af85a999fff0fddd"
+    },
+    {
+      "source": "src/data/app/city_trends_motor.csv",
+      "deployed_as": "data/app/city_trends_motor.csv",
+      "sha256": "1798c9401d2429ae86db74bdd3b93e2f835ac56441fbf98a8a8d746720a774cc"
+    },
+    {
+      "source": "src/data/app/city_trends_murder.csv",
+      "deployed_as": "data/app/city_trends_murder.csv",
+      "sha256": "cb0294b9eee66679be8d5fb493fe1630d4407f1b15362f97fa2fda9e4e8a847d"
+    },
+    {
+      "source": "src/data/app/city_trends_property.csv",
+      "deployed_as": "data/app/city_trends_property.csv",
+      "sha256": "de0a14bfd6a178ee1ad4dceebff1ceb921dedd6837ef71dbfc8fec01845b8837"
+    },
+    {
+      "source": "src/data/app/city_trends_rape.csv",
+      "deployed_as": "data/app/city_trends_rape.csv",
+      "sha256": "304ff52c1e0892eb0f89c5814a0f3b184530a1c01995071d55ce34fa2fd3c3ed"
+    },
+    {
+      "source": "src/data/app/city_trends_robbery.csv",
+      "deployed_as": "data/app/city_trends_robbery.csv",
+      "sha256": "6372fe567ce249c781741e5e2605c2ee7f071c989ba79764452a27d997ddce2a"
+    },
+    {
+      "source": "src/data/app/city_trends_theft.csv",
+      "deployed_as": "data/app/city_trends_theft.csv",
+      "sha256": "ac9c917cd7c2649da7251c1932099b241609579244e35406e7bae74c931f2482"
+    },
+    {
+      "source": "src/data/app/city_trends_violent.csv",
+      "deployed_as": "data/app/city_trends_violent.csv",
+      "sha256": "7b60746e11435fff0f1c6fa9c241eed6621672e8053b79a3b1ec44ce31eabd9e"
+    },
+    {
+      "source": "src/data/app/decomposition_assault.csv",
+      "deployed_as": "data/app/decomposition_assault.csv",
+      "sha256": "7f196dd9852171c2938add0c27b4de9878cf801413d9f3d7db077f57414e26a0"
+    },
+    {
+      "source": "src/data/app/decomposition_burglary.csv",
+      "deployed_as": "data/app/decomposition_burglary.csv",
+      "sha256": "b04f15290bc05bf523b94bf8fa577e048820bec3b1499435124b35b41d8fd049"
+    },
+    {
+      "source": "src/data/app/decomposition_motor.csv",
+      "deployed_as": "data/app/decomposition_motor.csv",
+      "sha256": "ee9d5d11dbdc2a3587106046d22467f597e488a1a04045173c97efdd1c44a6c1"
+    },
+    {
+      "source": "src/data/app/decomposition_murder.csv",
+      "deployed_as": "data/app/decomposition_murder.csv",
+      "sha256": "b91cacb2c068f492a04fddcfacb92a66855dac337c8ac9c2bfab65f7e56cc07b"
+    },
+    {
+      "source": "src/data/app/decomposition_property.csv",
+      "deployed_as": "data/app/decomposition_property.csv",
+      "sha256": "7a2d290c9c8c2304f90582d0ad3e700518ebc926c84e4f9409c6cfff18a97810"
+    },
+    {
+      "source": "src/data/app/decomposition_rape.csv",
+      "deployed_as": "data/app/decomposition_rape.csv",
+      "sha256": "de1123fe075c4306e2efffeab12fb6fd13ae82ff4f548419cd90af0aad53fa19"
+    },
+    {
+      "source": "src/data/app/decomposition_robbery.csv",
+      "deployed_as": "data/app/decomposition_robbery.csv",
+      "sha256": "a61310ac15116568678271c93b18ab8727261a7ebbfa1079e0a53b72db545167"
+    },
+    {
+      "source": "src/data/app/decomposition_theft.csv",
+      "deployed_as": "data/app/decomposition_theft.csv",
+      "sha256": "11ff62d133b19a626cd166663463b7bc6caa018cee7535c9a2423bee96c8afb0"
+    },
+    {
+      "source": "src/data/app/decomposition_violent.csv",
+      "deployed_as": "data/app/decomposition_violent.csv",
+      "sha256": "efda771ae1130ab77dca741956b9c5155fe9ffd3fd7eef2c4ecd5bb1c1d56481"
+    },
+    {
+      "source": "src/data/app/global_stl.csv",
+      "deployed_as": "data/app/global_stl.csv",
+      "sha256": "1bd09f11699a2c4a4f5d5b4d8fdd066a0394825f475c07aec19f308c272a7a19"
+    },
+    {
+      "source": "src/data/app/residual_se_assault.csv",
+      "deployed_as": "data/app/residual_se_assault.csv",
+      "sha256": "60ec53a5eb98ab286349ab8746d0e8120f098deb60bdb30dba9068ca5e198207"
+    },
+    {
+      "source": "src/data/app/residual_se_burglary.csv",
+      "deployed_as": "data/app/residual_se_burglary.csv",
+      "sha256": "02fff75fdf5ca84b91efa880178e500ce2e08b5bf800ac40676988cf6118b78c"
+    },
+    {
+      "source": "src/data/app/residual_se_motor.csv",
+      "deployed_as": "data/app/residual_se_motor.csv",
+      "sha256": "1e7f264d882f90efe28df6ea7daa056a7684331b3fcf483c301ef6183a0f5922"
+    },
+    {
+      "source": "src/data/app/residual_se_murder.csv",
+      "deployed_as": "data/app/residual_se_murder.csv",
+      "sha256": "b0c6641add5bd5c003c1a8d98f346ac389d32bbbd12da06892c8753ec48b249e"
+    },
+    {
+      "source": "src/data/app/residual_se_property.csv",
+      "deployed_as": "data/app/residual_se_property.csv",
+      "sha256": "2eb9f1a6cceee4af69a7a28d798a16b61d89a9b3fc9f9b9ebbe7d3b19dab1096"
+    },
+    {
+      "source": "src/data/app/residual_se_rape.csv",
+      "deployed_as": "data/app/residual_se_rape.csv",
+      "sha256": "a23ae50f9cf3d3096c1123848df189cd17e1513e883deea6e1cb82f5b0403d1a"
+    },
+    {
+      "source": "src/data/app/residual_se_robbery.csv",
+      "deployed_as": "data/app/residual_se_robbery.csv",
+      "sha256": "a896ac5149ec84dc29e535fc524b6d977afa86a32cb22a1be2a653f6862c6144"
+    },
+    {
+      "source": "src/data/app/residual_se_theft.csv",
+      "deployed_as": "data/app/residual_se_theft.csv",
+      "sha256": "c26522912273fc230ce4ac6a1507946121773c31fbe9bd404ae9d6e72d302679"
+    },
+    {
+      "source": "src/data/app/residual_se_violent.csv",
+      "deployed_as": "data/app/residual_se_violent.csv",
+      "sha256": "118ae965f906782e72ed9c2c3626f047f61d6d98bf761410d643aeeb3ba7ab78"
+    }
+  ]
 }
