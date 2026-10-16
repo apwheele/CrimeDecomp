@@ -150,11 +150,25 @@ try {
   if ($branch -ne "main") {
     throw "The scheduled release requires branch main (current branch: $branch)."
   }
+  # Tracked files must be unchanged. Untracked files already present (a stray
+  # screenshot, say) are left alone: they are never committed, and only files
+  # the release creates count as unexpected after the render.
   $initialStatus = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
-    "-C", $repositoryRoot, "status", "--porcelain=v1", "--untracked-files=all"
+    "-C", $repositoryRoot, "status", "--porcelain=v1", "--untracked-files=no"
   )
   if ($initialStatus) {
-    throw "The worktree must be clean before the scheduled release:`n$initialStatus"
+    throw "Tracked files must be unchanged before the scheduled release:`n$initialStatus"
+  }
+  $initialUntrackedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+    "-C", $repositoryRoot, "ls-files", "--others", "--exclude-standard"
+  )
+  $initialUntracked = @($initialUntrackedText -split "`r?`n" | Where-Object { $_ })
+  $untrackedInRelease = @($initialUntracked | Where-Object { Test-AllowedReleasePath -Path $_ })
+  if ($untrackedInRelease.Count -gt 0) {
+    throw "Untracked files inside the release paths would be committed:`n$($untrackedInRelease -join "`n")"
+  }
+  if ($initialUntracked.Count -gt 0) {
+    Write-Host "Leaving untracked files alone: $($initialUntracked -join ', ')"
   }
 
   Invoke-External -FilePath $gitExecutable -Arguments @(
@@ -276,7 +290,8 @@ try {
   $untrackedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
     "-C", $repositoryRoot, "ls-files", "--others", "--exclude-standard"
   )
-  $untrackedPaths = @($untrackedText -split "`r?`n" | Where-Object { $_ })
+  $untrackedPaths = @($untrackedText -split "`r?`n" |
+    Where-Object { $_ -and $_ -notin $initialUntracked })
   $unexpectedPaths = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
     Where-Object { -not (Test-AllowedReleasePath -Path $_) })
   if ($unexpectedPaths.Count -gt 0) {
@@ -324,6 +339,10 @@ try {
   )
   Write-Host "Scheduled release completed at $([DateTime]::Now.ToString('s'))."
   Write-Host "Published main commit: $finalCommit"
+} catch {
+  # Record why in the log; the task itself only reports an exit code
+  Write-Host "Scheduled release FAILED at $([DateTime]::Now.ToString('s')): $($_.Exception.Message)"
+  throw
 } finally {
   if ($transcriptStarted) {
     Stop-Transcript | Out-Null

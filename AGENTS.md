@@ -158,8 +158,11 @@ coordinates are a warning, not an error. See `src/README.md`.
 Run R from PowerShell, not Git Bash: Git Bash's DLLs on `PATH` stop `readr`
 (via `tzdb`) and `testthat` from loading in the `r2026` environment.
 
-The weekly scheduled release refuses to run unless the worktree is completely
-clean, including untracked files.
+The weekly scheduled release ("CrimeDecomp Weekly Release", Mondays 9:00,
+`src/run_scheduled_release.ps1`) requires tracked files to be unchanged and
+`main` to match `origin/main`. Untracked files already present are left alone
+unless they sit in the paths it commits. Its log is
+`src/data/model/scheduled-release.log`; failures are written there.
 
 When the upstream RTCI data changes, use this order from the repository root.
 It keeps the paper, the ignored app CSVs, `main`, and the published site tied to
