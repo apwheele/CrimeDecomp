@@ -197,7 +197,10 @@ if (metadata_inputs_changed && build_metadata) {
 }
 
 now <- format(Sys.time(), tz = "UTC")
-downloaded_at <- if (any(vapply(file_results, `[[`, logical(1), "changed"))) {
+# The paper reports this date; the FBI name list alone (updated monthly)
+# does not change the data the build uses
+data_files <- setdiff(names(file_results), "agency_names")
+downloaded_at <- if (any(vapply(file_results[data_files], `[[`, logical(1), "changed"))) {
   now
 } else if (!is.null(prior_metadata$downloaded_at_utc)) {
   prior_metadata$downloaded_at_utc

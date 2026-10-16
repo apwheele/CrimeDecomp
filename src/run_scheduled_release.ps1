@@ -234,123 +234,165 @@ try {
     return
   }
 
+  # Check for new RTCI data first (the render does the same check, and skips
+  # it within five minutes of this one). With no new data, current model
+  # outputs, and no paper change since the last render, there is nothing to
+  # render, validate, or commit.
   Invoke-External -FilePath $CondaExecutable -Arguments @(
     "run", "--no-capture-output", "-n", $CondaEnvironment,
-    "quarto", "render", "paper.qmd", "--to", "all"
+    "Rscript", "src/sync_latest_data.R", "--ref=main"
   )
-
-  $wslRoot = Convert-WindowsPathToWsl -Path $repositoryRoot
-  $escapedWslRoot = $wslRoot.Replace("'", "'\''")
-  $validationCommand = "cd '$escapedWslRoot' && Rscript src/validate_outputs.R"
-  Invoke-External -FilePath $wslExecutable -Arguments @(
-    "-d", "Ubuntu", "--", "bash", "--noprofile", "--norc", "-c",
-    $validationCommand
+  $rawStatus = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+    "-C", $repositoryRoot, "status", "--porcelain=v1", "--", "src/data/raw"
   )
+  $rawChangedFiles = @($rawStatus -split "`r?`n" | Where-Object { $_ } | ForEach-Object { $_.Substring(3) })
+  # source_metadata.json alone changes when only the FBI agency name list was
+  # updated (monthly); that is recorded without a render
+  $rawChanges = @($rawChangedFiles | Where-Object { $_ -ne "src/data/raw/source_metadata.json" })
+  & $CondaExecutable run -n $CondaEnvironment Rscript -e `
+    "source('src/model_signature.R'); quit(status = if (isTRUE(rtci_output_status()`$current)) 0 else 3)"
+  $outputsCurrent = $LASTEXITCODE -eq 0
+  $paperRendered = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+    "-C", $repositoryRoot, "log", "-1", "--format=%ct", "--", "paper.md"
+  )
+  $paperSourcesChanged = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+    "-C", $repositoryRoot, "log", "-1", "--format=%ct", "--",
+    "paper.qmd", "references.bib", "ggplot_theme.txt", "src/plots.R",
+    "src/github-math.lua", "src/docx-clearpage.lua"
+  )
+  $paperCurrent = [long]$paperSourcesChanged -le [long]$paperRendered
+  $nothingNew = ($rawChanges.Count -eq 0) -and $outputsCurrent -and $paperCurrent
 
-  foreach ($artifact in @("paper.pdf", "paper.docx", "paper.md")) {
-    if (-not (Test-Path -LiteralPath $artifact -PathType Leaf) -or
-        (Get-Item -LiteralPath $artifact).Length -eq 0) {
-      throw "Rendered artifact is missing or empty: $artifact"
+  if ($nothingNew) {
+    Write-Host "No new RTCI data, the model outputs are current, and the paper is up to date; nothing to render."
+    if ($rawChangedFiles.Count -gt 0) {
+      Invoke-External -FilePath $gitExecutable -Arguments @(
+        "-C", $repositoryRoot, "commit", "-m", "Record upstream file revisions", "--",
+        "src/data/raw/source_metadata.json"
+      )
     }
-  }
-  $pdfInfo = Invoke-ExternalCapture -FilePath $pdfInfoExecutable -Arguments @("paper.pdf")
-  $pageMatch = [regex]::Match($pdfInfo, "(?m)^Pages:\s+(\d+)\s*$")
-  if (-not $pageMatch.Success -or [int]$pageMatch.Groups[1].Value -lt 1) {
-    throw "Could not verify the page count in paper.pdf."
-  }
-  $pageCount = [int]$pageMatch.Groups[1].Value
-  # Keep disposable rasterized pages outside the Dropbox-synced repository.
-  # Sync clients can briefly hold directory handles after pdftoppm exits.
-  $temporaryParent = [System.IO.Path]::GetFullPath((Join-Path (
-    [System.IO.Path]::GetTempPath()
-  ) "CrimeDecomp"))
-  $qaDirectory = [System.IO.Path]::GetFullPath((Join-Path $temporaryParent (
-    "scheduled-paper-qa-" + [guid]::NewGuid().ToString("N")
-  )))
-  $temporaryPrefix = $temporaryParent + [System.IO.Path]::DirectorySeparatorChar
-  if (-not $qaDirectory.StartsWith(
-      $temporaryPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
-    throw "Refusing to use an unexpected PDF QA directory: $qaDirectory"
-  }
-  try {
-    New-Item -ItemType Directory -Path $qaDirectory -Force | Out-Null
-    $qaPrefix = Join-Path $qaDirectory "paper-page"
-    Invoke-External -FilePath $pdfToPpmExecutable -Arguments @(
-      "-png", "-r", "110", "paper.pdf", $qaPrefix
+    $releaseResult = "no update"
+  } else {
+    Write-Host ("Releasing: new RTCI inputs = $($rawChanges.Count -gt 0), model outputs current = $outputsCurrent, " +
+      "paper current = $paperCurrent.")
+    Invoke-External -FilePath $CondaExecutable -Arguments @(
+      "run", "--no-capture-output", "-n", $CondaEnvironment,
+      "quarto", "render", "paper.qmd", "--to", "all"
     )
-    $pageImages = @(Get-ChildItem -LiteralPath $qaDirectory -Filter "paper-page-*.png" -File)
-    if ($pageImages.Count -ne $pageCount -or
-        @($pageImages | Where-Object { $_.Length -eq 0 }).Count -gt 0) {
-      throw "PDF rasterization produced $($pageImages.Count) valid pages; expected $pageCount."
+
+    $wslRoot = Convert-WindowsPathToWsl -Path $repositoryRoot
+    $escapedWslRoot = $wslRoot.Replace("'", "'\''")
+    $validationCommand = "cd '$escapedWslRoot' && Rscript src/validate_outputs.R"
+    Invoke-External -FilePath $wslExecutable -Arguments @(
+      "-d", "Ubuntu", "--", "bash", "--noprofile", "--norc", "-c",
+      $validationCommand
+    )
+
+    foreach ($artifact in @("paper.pdf", "paper.docx", "paper.md")) {
+      if (-not (Test-Path -LiteralPath $artifact -PathType Leaf) -or
+          (Get-Item -LiteralPath $artifact).Length -eq 0) {
+        throw "Rendered artifact is missing or empty: $artifact"
+      }
     }
-    Write-Host "Verified and rasterized all $pageCount pages of paper.pdf."
-  } finally {
-    if (Test-Path -LiteralPath $qaDirectory) {
-      for ($cleanupAttempt = 1; $cleanupAttempt -le 5; $cleanupAttempt++) {
-        try {
-          Remove-Item -LiteralPath $qaDirectory -Recurse -Force -ErrorAction Stop
-          break
-        } catch {
-          if ($cleanupAttempt -eq 5) {
-            Write-Warning (
-              "Could not remove disposable PDF QA directory after 5 attempts: " +
-              "$qaDirectory. Release processing will continue. $($_.Exception.Message)"
-            )
-          } else {
-            Start-Sleep -Milliseconds (250 * $cleanupAttempt)
+    $pdfInfo = Invoke-ExternalCapture -FilePath $pdfInfoExecutable -Arguments @("paper.pdf")
+    $pageMatch = [regex]::Match($pdfInfo, "(?m)^Pages:\s+(\d+)\s*$")
+    if (-not $pageMatch.Success -or [int]$pageMatch.Groups[1].Value -lt 1) {
+      throw "Could not verify the page count in paper.pdf."
+    }
+    $pageCount = [int]$pageMatch.Groups[1].Value
+    # Keep disposable rasterized pages outside the Dropbox-synced repository.
+    # Sync clients can briefly hold directory handles after pdftoppm exits.
+    $temporaryParent = [System.IO.Path]::GetFullPath((Join-Path (
+      [System.IO.Path]::GetTempPath()
+    ) "CrimeDecomp"))
+    $qaDirectory = [System.IO.Path]::GetFullPath((Join-Path $temporaryParent (
+      "scheduled-paper-qa-" + [guid]::NewGuid().ToString("N")
+    )))
+    $temporaryPrefix = $temporaryParent + [System.IO.Path]::DirectorySeparatorChar
+    if (-not $qaDirectory.StartsWith(
+        $temporaryPrefix, [System.StringComparison]::OrdinalIgnoreCase)) {
+      throw "Refusing to use an unexpected PDF QA directory: $qaDirectory"
+    }
+    try {
+      New-Item -ItemType Directory -Path $qaDirectory -Force | Out-Null
+      $qaPrefix = Join-Path $qaDirectory "paper-page"
+      Invoke-External -FilePath $pdfToPpmExecutable -Arguments @(
+        "-png", "-r", "110", "paper.pdf", $qaPrefix
+      )
+      $pageImages = @(Get-ChildItem -LiteralPath $qaDirectory -Filter "paper-page-*.png" -File)
+      if ($pageImages.Count -ne $pageCount -or
+          @($pageImages | Where-Object { $_.Length -eq 0 }).Count -gt 0) {
+        throw "PDF rasterization produced $($pageImages.Count) valid pages; expected $pageCount."
+      }
+      Write-Host "Verified and rasterized all $pageCount pages of paper.pdf."
+    } finally {
+      if (Test-Path -LiteralPath $qaDirectory) {
+        for ($cleanupAttempt = 1; $cleanupAttempt -le 5; $cleanupAttempt++) {
+          try {
+            Remove-Item -LiteralPath $qaDirectory -Recurse -Force -ErrorAction Stop
+            break
+          } catch {
+            if ($cleanupAttempt -eq 5) {
+              Write-Warning (
+                "Could not remove disposable PDF QA directory after 5 attempts: " +
+                "$qaDirectory. Release processing will continue. $($_.Exception.Message)"
+              )
+            } else {
+              Start-Sleep -Milliseconds (250 * $cleanupAttempt)
+            }
           }
         }
       }
     }
-  }
 
-  $changedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
-    "-C", $repositoryRoot, "diff", "--name-only", "HEAD", "--"
-  )
-  $changedPaths = @($changedText -split "`r?`n" | Where-Object { $_ })
-  $untrackedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
-    "-C", $repositoryRoot, "ls-files", "--others", "--exclude-standard"
-  )
-  $untrackedPaths = @($untrackedText -split "`r?`n" |
-    Where-Object { $_ -and $_ -notin $initialUntracked })
-  $unexpectedPaths = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
-    Where-Object { -not (Test-AllowedReleasePath -Path $_) })
-  if ($unexpectedPaths.Count -gt 0) {
-    throw "Unexpected worktree changes were produced; nothing was committed:`n$($unexpectedPaths -join "`n")"
-  }
-  # Each render rewrites paper.pdf and paper.docx (they embed timestamps), so
-  # they are only committed along with a real change
-  $contentChanges = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
-    Where-Object { $_ -notin @("paper.pdf", "paper.docx") })
-  if ($contentChanges.Count -eq 0) {
-    Invoke-External -FilePath $gitExecutable -Arguments @(
-      "-C", $repositoryRoot, "checkout", "--", "paper.pdf", "paper.docx"
+    $changedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+      "-C", $repositoryRoot, "diff", "--name-only", "HEAD", "--"
     )
-  }
-  $newData = $changedPaths -contains "src/data/raw/rtci_crime_trends.csv"
+    $changedPaths = @($changedText -split "`r?`n" | Where-Object { $_ })
+    $untrackedText = Invoke-ExternalCapture -FilePath $gitExecutable -Arguments @(
+      "-C", $repositoryRoot, "ls-files", "--others", "--exclude-standard"
+    )
+    $untrackedPaths = @($untrackedText -split "`r?`n" |
+      Where-Object { $_ -and $_ -notin $initialUntracked })
+    $unexpectedPaths = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
+      Where-Object { -not (Test-AllowedReleasePath -Path $_) })
+    if ($unexpectedPaths.Count -gt 0) {
+      throw "Unexpected worktree changes were produced; nothing was committed:`n$($unexpectedPaths -join "`n")"
+    }
+    # Each render rewrites paper.pdf and paper.docx (they embed timestamps), so
+    # they are only committed along with a real change
+    $contentChanges = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
+      Where-Object { $_ -notin @("paper.pdf", "paper.docx") })
+    if ($contentChanges.Count -eq 0) {
+      Invoke-External -FilePath $gitExecutable -Arguments @(
+        "-C", $repositoryRoot, "checkout", "--", "paper.pdf", "paper.docx"
+      )
+    }
+    $newData = $changedPaths -contains "src/data/raw/rtci_crime_trends.csv"
 
-  Invoke-External -FilePath $gitExecutable -Arguments @(
-    "-C", $repositoryRoot, "add", "-A", "--",
-    "src/data/raw", "paper.pdf", "paper.docx", "paper.md",
-    "output/markdown/images"
-  )
-  & $gitExecutable -C $repositoryRoot diff --cached --quiet
-  $hasReleaseChanges = $LASTEXITCODE -eq 1
-  if ($LASTEXITCODE -notin @(0, 1)) {
-    throw "Unable to inspect the staged scheduled-release changes."
-  }
-  if ($hasReleaseChanges) {
     Invoke-External -FilePath $gitExecutable -Arguments @(
-      "-C", $repositoryRoot, "diff", "--cached", "--check"
+      "-C", $repositoryRoot, "add", "-A", "--",
+      "src/data/raw", "paper.pdf", "paper.docx", "paper.md",
+      "output/markdown/images"
     )
-    $commitMessage = "Refresh RTCI outputs $([DateTime]::Now.ToString('yyyy-MM-dd'))"
-    Invoke-External -FilePath $gitExecutable -Arguments @(
-      "-C", $repositoryRoot, "commit", "-m", $commitMessage
-    )
-    $releaseResult = if ($newData) { "updated with new RTCI data" } else { "paper updated (no new RTCI data)" }
-  } else {
-    Write-Host "The RTCI snapshot and rendered paper are unchanged; no release commit is needed."
-    $releaseResult = "no update"
+    & $gitExecutable -C $repositoryRoot diff --cached --quiet
+    $hasReleaseChanges = $LASTEXITCODE -eq 1
+    if ($LASTEXITCODE -notin @(0, 1)) {
+      throw "Unable to inspect the staged scheduled-release changes."
+    }
+    if ($hasReleaseChanges) {
+      Invoke-External -FilePath $gitExecutable -Arguments @(
+        "-C", $repositoryRoot, "diff", "--cached", "--check"
+      )
+      $commitMessage = "Refresh RTCI outputs $([DateTime]::Now.ToString('yyyy-MM-dd'))"
+      Invoke-External -FilePath $gitExecutable -Arguments @(
+        "-C", $repositoryRoot, "commit", "-m", $commitMessage
+      )
+      $releaseResult = if ($newData) { "updated with new RTCI data" } else { "paper updated (no new RTCI data)" }
+    } else {
+      Write-Host "The RTCI snapshot and rendered paper are unchanged; no release commit is needed."
+      $releaseResult = "no update"
+    }
   }
 
   Invoke-External -FilePath $gitExecutable -Arguments @(
