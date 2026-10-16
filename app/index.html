@@ -120,7 +120,7 @@
       <div class="card about-card">
         <h2>About this explorer</h2>
         <p>This application was created by <a href="https://crimede-coder.com/">Andrew Wheeler</a> to separate reported crime patterns into long-run trends, recurring seasonality, broad monthly changes, and city-specific departures.</p>
-        <p>The reported monthly crime data come from AH Datalytics' <a href="https://github.com/AH-Datalytics/rtci">Real-Time Crime Index (RTCI)</a>.</p>
+        <p>The reported monthly crime data come from AH Datalytics' <a href="https://crimeindex.org/download">Crime Index</a> (formerly the Real-Time Crime Index, RTCI).</p>
 
         <h2>Methodology</h2>
         <p>Each offense is estimated separately with an aggregated-binomial mixed model. A natural cubic spline captures the national long-run trend, and three sine/cosine harmonic pairs capture annual seasonality. Random effects allow cities to have different average levels, trends, and seasonal patterns, while separate terms capture monthly movement shared across cities and remaining city-by-month variation. Violent crime (murder, rape, robbery, and assault) and property crime (burglary, theft, and motor vehicle theft) are modeled the same way: each city-month's component offense counts are summed first, and that combined count gets its own trend, season, and city terms, rather than averaging the seven separate model outputs after the fact.</p>
