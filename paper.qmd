@@ -47,6 +47,11 @@ figure_path <- if (knitr::is_latex_output()) {
 knitr::opts_chunk$set(fig_crop = FALSE, fig.path = figure_path)
 global <- read_csv("src/data/model/global_stl.csv", show_col_types = FALSE)
 decomposition <- read_csv("src/data/model/decomposition.csv", show_col_types = FALSE)
+if (!"PAPEP0000" %in% decomposition$city_id) {
+  stop("Philadelphia (PAPEP0000), the paper's worked example, is not in the current ",
+       "RTCI sample (agencies drop out in months when their latest data are late). ",
+       "The model outputs are current; render the paper after the next RTCI update.")
+}
 philly_burglary_source <- read_csv(
   "src/data/raw/rtci_crime_trends.csv",
   col_select = c(id, year, month, population, burglary_total),
@@ -79,6 +84,17 @@ trend_deviations <- read_csv(
 latest_residual_se <- read_csv(
   "src/data/model/latest_residual_se.csv", show_col_types = FALSE
 )
+model_rows <- nrow(decomposition)
+model_cities <- n_distinct(decomposition$city_id)
+# The paper covers the seven reported offenses; the combined violent and
+# property categories are modeled the same way but shown only in the app
+paper_offenses <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor")
+global <- filter(global, crime_type %in% paper_offenses)
+decomposition <- filter(decomposition, crime_type %in% paper_offenses)
+city_components <- filter(city_components, crime_type %in% paper_offenses)
+seasonal_deviations <- filter(seasonal_deviations, crime_type %in% paper_offenses)
+trend_deviations <- filter(trend_deviations, crime_type %in% paper_offenses)
+latest_residual_se <- filter(latest_residual_se, crime_type %in% paper_offenses)
 global$date <- as.Date(global$date)
 decomposition$date <- as.Date(decomposition$date)
 analysis_rows <- nrow(decomposition)
@@ -116,8 +132,8 @@ source_downloaded_label <- sub(
   " 0", " ", format(source_downloaded_at, "%B %d, %Y at %H:%M UTC"),
   fixed = TRUE
 )
-if (!identical(as.integer(metadata$rows), analysis_rows) ||
-    !identical(as.integer(metadata$cities), analysis_cities)) {
+if (!identical(as.integer(metadata$rows), model_rows) ||
+    !identical(as.integer(metadata$cities), model_cities)) {
   stop("Model metadata sample counts do not match the decomposition.")
 }
 if (!"global_residual_rate" %in% names(global) && "remainder_rate" %in% names(global)) {
@@ -156,7 +172,7 @@ trend_changes <- global |>
 trend_change <- function(crime) {
   trend_changes$percent_change[trend_changes$crime_type == crime]
 }
-crime_order <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor")
+crime_order <- paper_offenses
 trend_outliers <- trend_deviations |>
   group_by(crime_type) |>
   slice_max(robust_z, n = 2, with_ties = FALSE) |>

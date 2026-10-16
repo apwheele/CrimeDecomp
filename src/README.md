@@ -33,9 +33,28 @@ conda run -n r2026 Rscript src/sync_latest_data.R
 wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp' && exec bash src/run_models_sequential.sh"
 ```
 
-`sync_latest_data.R` discovers the current crime CSV on the upstream `main`
-branch, compares Git blob revisions and local checksums, and atomically replaces
-only changed inputs. It rebuilds agency metadata when its upstream inputs
+`sync_latest_data.R` finds the newest monthly crime sample linked from
+<https://crimeindex.org/download> (the RTCI moved there from GitHub after the
+June 2026 sample) and reads the agency name and coordinate files from the
+`main` branch of <https://github.com/AH-Datalytics/rtci>. It compares upstream
+revisions (the S3 ETag for the crime sample, Git blob SHAs for the GitHub
+files) and local checksums, and atomically replaces only changed inputs.
+
+Each monthly sample is the full history from January 2017, revised, with the
+newest month appended. A new crime file is only used if it starts no later and
+ends no earlier than the current one; otherwise the refresh stops and keeps the
+current file. The modeled cities are the current sample (`sample == 1`), which
+changes every month: agencies whose latest month is late drop out until they
+catch up, and new agencies join (between 445 and 590 agencies per sample from
+August 2025 to August 2026). The RTCI agency file (`pre_processed.csv`) is no
+longer updated, so agencies that joined since are named from AH Datalytics'
+copy of the FBI agency list (`cde_populations.csv` in
+<https://github.com/AH-Datalytics/cde-population>). Coordinates for them come
+from the RTCI city coordinate file when the name matches, or from
+`src/data/raw/agency_coordinate_overrides.csv`; cities without coordinates are
+reported but still modeled, since the app has no map. If Philadelphia, the
+paper's worked example, is not in a month's sample, `build_city_examples.R`
+skips it and the paper render stops with a message saying so. It rebuilds agency metadata when its upstream inputs
 change. The QMD calls this check automatically and runs the sequential workflow
 only when the resulting model signature differs. `download_data.R` remains
 available for intentionally reproducing the older pinned snapshot.
@@ -45,6 +64,10 @@ available for intentionally reproducing the older pinned snapshot.
 ```powershell
 conda run -n r2026 Rscript -e "source('src/data_prep.R'); testthat::test_file('src/test-data-prep.R')"
 ```
+
+Run the whole suite from `src/` with `conda run -n r2026 Rscript run_tests.R`
+(from PowerShell: under Git Bash, its own DLLs on `PATH` stop `readr` and
+`testthat` from loading).
 
 The default runner fits one sparse aggregated-binomial `glmmTMB` model at a
 time per crime type. Each model has a global intercept, a five-column natural

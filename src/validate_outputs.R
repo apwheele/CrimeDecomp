@@ -59,10 +59,13 @@ stopifnot(
   nrow(decomposition) == nrow(data),
   setequal(unique(decomposition$crime_type), crimes),
   nrow(cities) == dplyr::n_distinct(data$city_id),
-  all(cities$agency_type %in% c("City", "County")),
-  all(is.finite(cities$latitude)),
-  all(is.finite(cities$longitude))
+  all(cities$agency_type %in% c("City", "County"))
 )
+# Agencies new to the RTCI sample may lack coordinates; the app has no map
+missing_coordinates <- sum(!is.finite(cities$latitude) | !is.finite(cities$longitude))
+if (missing_coordinates > 0) {
+  warning(missing_coordinates, " cities have no coordinates.", call. = FALSE)
+}
 for (crime in crimes) {
   app_path <- file.path("src/data/app", paste0("decomposition_", crime, ".csv"))
   trend_path <- file.path("src/data/app", paste0("city_trends_", crime, ".csv"))

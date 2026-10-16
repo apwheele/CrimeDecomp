@@ -100,9 +100,12 @@ rtci_validate_stacked <- function(data) {
     cities_missing_coordinates = dplyr::n_distinct(data$city_id[is.na(data$latitude) | is.na(data$longitude)])
   )
   if (checks$invalid_counts > 0 || checks$missing_names > 0) stop("Prepared data failed validation.")
+  # New agencies join the RTCI sample every month and may not be in the
+  # coordinate files yet; the app has no map, so they are still modeled
   if (checks$cities_missing_coordinates > 0) {
-    stop(checks$cities_missing_coordinates,
-         " modeled cities have no cached coordinates; run src/download_data.R and src/build_metadata.R.")
+    warning(checks$cities_missing_coordinates,
+            " modeled cities have no coordinates; add them to ",
+            "src/data/raw/agency_coordinate_overrides.csv if needed.", call. = FALSE)
   }
   checks
 }

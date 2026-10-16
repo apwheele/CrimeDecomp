@@ -284,6 +284,16 @@ overview <- decomposition[, c(
   "city_id", "crime_type", "date", "observed_rate", "global_rate", "city_fitted_rate"
 ), drop = FALSE]
 overview_columns <- setdiff(names(overview), "city_id")
+# Cities leave the RTCI sample in months when their latest data are late;
+# remove the files of cities that are no longer modeled
+stale_overviews <- setdiff(
+  list.files(city_overview_dir, pattern = "[.]csv$"),
+  paste0(unique(overview$city_id), ".csv")
+)
+if (length(stale_overviews)) {
+  unlink(file.path(city_overview_dir, stale_overviews))
+  message("Removed ", length(stale_overviews), " overview files for cities no longer in the sample.")
+}
 for (city in unique(overview$city_id)) {
   readr::write_csv(
     overview[overview$city_id == city, overview_columns, drop = FALSE],

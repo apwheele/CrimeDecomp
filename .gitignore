@@ -5,6 +5,7 @@ __pycache__/
 tmp/
 src/data/raw/rtci_pre_processed.csv
 src/data/raw/rtci_city_coords.csv
+src/data/raw/cde_agency_names.csv
 src/data/model/
 src/data/app/*.csv
 src/data/app/city_overview/

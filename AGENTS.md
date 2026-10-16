@@ -2,12 +2,14 @@
 
 ## Current state
 
-The seven production crime models and merged outputs completed successfully on
-2026-08-07. No model process should normally be running. Do not start duplicate
-fits, and never fit crime types in parallel.
+The nine production models (seven offenses plus combined violent and property)
+and merged outputs completed successfully on 2026-10-16 from the August 2026
+RTCI sample. No model process should normally be running. Do not start
+duplicate fits, and never fit crime types in parallel.
 
-Production contains 458,392 city-month-offense rows from 586 cities. All 586
-cities have finite cached coordinates. `src/validate_outputs.R` independently
+Production contains 563,600 city-month-offense rows from 547 cities, January
+2017 through August 2026. All 547 cities have finite cached coordinates. The
+paper reports only the seven offenses (439,016 rows); the app shows all nine. `src/validate_outputs.R` independently
 reloads every saved model and verifies convergence, the Hessian, run signatures,
 finite components, and equality between the reconstructed linear predictor and
 `predict(fit, type = "link")`.
@@ -142,6 +144,22 @@ The redirect is implemented by the server, so a root `index.html` is
 unnecessary.
 
 ## RTCI refresh, paper release, and GitHub Pages deployment
+
+The RTCI (now the Crime Index) stopped publishing monthly samples to GitHub
+after June 2026. `src/sync_latest_data.R` takes the newest crime sample linked
+from <https://crimeindex.org/download> (S3 files; the bucket cannot be listed,
+so the page is read). Each sample is the full history, revised; a new file
+that starts later or ends earlier than the current one is refused. The modeled
+cities (`sample == 1`) change every month: agencies with a late latest month
+drop out until they catch up, and new agencies join. New agencies are named
+from `cde_populations.csv` in AH-Datalytics/cde-population; missing
+coordinates are a warning, not an error. See `src/README.md`.
+
+Run R from PowerShell, not Git Bash: Git Bash's DLLs on `PATH` stop `readr`
+(via `tzdb`) and `testthat` from loading in the `r2026` environment.
+
+The weekly scheduled release refuses to run unless the worktree is completely
+clean, including untracked files.
 
 When the upstream RTCI data changes, use this order from the repository root.
 It keeps the paper, the ignored app CSVs, `main`, and the published site tied to

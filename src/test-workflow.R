@@ -16,7 +16,8 @@ testthat::test_that("output freshness follows content signatures", {
   writeLines("prep-v1", "src/data_prep.R")
   signature <- rtci_model_signature()
 
-  crimes <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor")
+  crimes <- c("murder", "rape", "robbery", "assault", "burglary", "theft", "motor",
+              "violent", "property")
   for (crime in crimes) {
     saveRDS(
       list(run_signature = signature),

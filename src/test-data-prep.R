@@ -23,3 +23,30 @@ testthat::test_that("stacked preparation creates one row per component crime", {
   testthat::expect_equal(violent_month1, 2 + 4 + 6 + 8)
   testthat::expect_equal(property_month1, 10 + 12 + 14)
 })
+
+testthat::test_that("agencies joining or leaving the sample and new months are handled", {
+  rows <- function(id, months, sample = 1) {
+    data.frame(
+      id = id, size = "all", year = 2026, month = months, population = 100000,
+      sample = sample, murder_total = 1, rape_total = 2, robbery_total = 3,
+      assault_total = 4, burglary_total = 5, theft_total = 6, motor_total = 7
+    )
+  }
+  raw <- rbind(
+    rows("A", 1:3),              # in the sample, with a newly appended month
+    rows("B", 1:2, sample = 0),  # left the sample: its latest month is late
+    rows("C", 2:3)               # joined, with no name or coordinates yet
+  )
+  metadata <- data.frame(
+    city_id = c("A", "B"), city_name = c("Alpha", "Beta"),
+    city_state = c("Alpha,TT", "Beta,TT"), state = "TT", latitude = 1, longitude = 2
+  )
+  out <- rtci_prepare_stacked(raw, metadata)
+  testthat::expect_setequal(as.character(unique(out$city_id)), c("A", "C"))
+  testthat::expect_equal(max(out$date), as.Date("2026-03-01"))
+  testthat::expect_identical(unique(out$city_label[out$city_id == "C"]), "Unknown agency (C)")
+  testthat::expect_warning(rtci_validate_stacked(out), "1 modeled cities have no coordinates")
+  checks <- suppressWarnings(rtci_validate_stacked(out))
+  testthat::expect_equal(checks$cities, 2)
+  testthat::expect_equal(checks$cities_missing_coordinates, 1)
+})

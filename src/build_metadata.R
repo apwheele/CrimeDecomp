@@ -38,6 +38,44 @@ metadata <- readr::read_csv(source_path, show_col_types = FALSE) |>
   dplyr::select(-priority, -source_type) |>
   dplyr::arrange(city_name, state, city_id)
 
+# pre_processed.csv is no longer updated, so agencies that joined the RTCI
+# sample since then are named from the FBI agency list. Their coordinates
+# come from the city coordinate file below when the name matches.
+names_path <- "src/data/raw/cde_agency_names.csv"
+crime_path <- "src/data/raw/rtci_crime_trends.csv"
+override_path <- "src/data/raw/agency_coordinate_overrides.csv"
+if (file.exists(names_path) && file.exists(crime_path)) {
+  source("src/rtci_source.R")
+  known <- metadata$city_id
+  if (file.exists(override_path)) {
+    known <- c(known, readr::read_csv(override_path, show_col_types = FALSE)$city_id)
+  }
+  new_ids <- setdiff(rtci_sample_agencies(crime_path), known)
+  fbi <- readr::read_csv(names_path, show_col_types = FALSE) |>
+    dplyr::filter(ori %in% new_ids) |>
+    dplyr::distinct(ori, .keep_all = TRUE)
+  if (nrow(fbi)) {
+    added <- dplyr::tibble(
+      city_id = fbi$ori,
+      city_name = rtci_clean_agency_name(fbi$agency_name),
+      state = fbi$state,
+      city_state = paste(city_name, state, sep = ","),
+      latitude = NA_real_,
+      longitude = NA_real_,
+      population = as.numeric(fbi$population),
+      is_county = grepl(" County$", city_name)
+    )
+    metadata <- dplyr::bind_rows(metadata, added) |>
+      dplyr::arrange(city_name, state, city_id)
+    message("Named ", nrow(added), " agencies from the FBI agency list: ",
+            paste(added$city_id, collapse = ", "))
+  }
+  unnamed <- setdiff(new_ids, fbi$ori)
+  if (length(unnamed)) {
+    message("No name for ", length(unnamed), " sample agencies: ", paste(unnamed, collapse = ", "))
+  }
+}
+
 coords_path <- if (file.exists("src/data/raw/rtci_city_coords.csv")) {
   "src/data/raw/rtci_city_coords.csv"
 } else {
@@ -69,7 +107,6 @@ if (file.exists(coords_path)) {
     dplyr::select(-state_full, -place_key, -latitude_coords, -longitude_coords)
 }
 
-override_path <- "src/data/raw/agency_coordinate_overrides.csv"
 if (file.exists(override_path)) {
   overrides <- readr::read_csv(override_path, show_col_types = FALSE) |>
     dplyr::transmute(

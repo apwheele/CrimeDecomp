@@ -52,7 +52,9 @@ wsl -d Ubuntu -- bash -lc "cd '/mnt/d/Dropbox/Dropbox/PublicCode_Git/CrimeDecomp
 ```
 
 This uses every `size == "all"`, `sample == 1` city and applies no population
-threshold. A sparse `glmmTMB` model is fit separately for each crime type. Each
+threshold. That sample changes with every monthly RTCI update: agencies whose
+latest month is late drop out until they catch up, and new agencies join (see
+`src/README.md`). A sparse `glmmTMB` model is fit separately for each crime type. Each
 contains a global intercept, a global natural-spline trend, a global cyclic
 Fourier season, a city random intercept, and shared-variance city trend and
 seasonal deviations. A `(1 | time_period)` effect captures

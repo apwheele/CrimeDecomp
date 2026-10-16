@@ -15,11 +15,19 @@ seasonal_top <- seasonal |>
   dplyr::slice_max(robust_z, n = 2, with_ties = FALSE) |>
   dplyr::ungroup() |>
   dplyr::select(city_id, crime_type)
+# The paper's worked example. Agencies leave the RTCI sample in months when
+# their latest data are late, so it is only requested when it was modeled.
+paper_example <- data.frame(
+  city_id = "PAPEP0000",
+  crime_type = c("robbery", "burglary")
+)
+if (!all(paper_example$city_id %in% trends$city_id)) {
+  message("Philadelphia (PAPEP0000) is not in the current RTCI sample; ",
+          "skipping the paper's worked example.")
+  paper_example <- paper_example[0, ]
+}
 requests <- dplyr::bind_rows(
-  data.frame(
-    city_id = "PAPEP0000",
-    crime_type = c("robbery", "burglary")
-  ),
+  paper_example,
   trend_top,
   seasonal_top
 ) |>
