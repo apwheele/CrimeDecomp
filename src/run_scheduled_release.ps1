@@ -91,6 +91,24 @@ function Convert-WindowsPathToWsl {
   throw "Could not convert the repository path to WSL format: $fullPath"
 }
 
+# Every run (but -PreflightOnly) emails its result; see src/release_mail.ps1
+. (Join-Path $PSScriptRoot "release_mail.ps1")
+$releaseMailSent = $false
+trap {
+  # Failures before the main block below (a missing tool, say)
+  if (-not $PreflightOnly -and -not $releaseMailSent) {
+    try {
+      Send-ReleaseMail -Subject "CrimeDecomp weekly release FAILED" -Body (
+        "The weekly release on $env:COMPUTERNAME failed before it started:`n`n" +
+        $_.Exception.Message
+      )
+    } catch {
+      Write-Warning "Could not send the release email: $($_.Exception.Message)"
+    }
+  }
+  break
+}
+
 $candidateRoot = [System.IO.Path]::GetFullPath(
   (Join-Path -Path $PSScriptRoot -ChildPath "..")
 )
@@ -125,6 +143,9 @@ $lockPath = Join-Path $modelDirectory "scheduled-release.lock"
 $logPath = Join-Path $modelDirectory "scheduled-release.log"
 $releaseLock = $null
 $transcriptStarted = $false
+$logStartLine = if (Test-Path -LiteralPath $logPath) { @(Get-Content -LiteralPath $logPath).Count } else { 0 }
+$releaseResult = $null
+$releaseError = $null
 
 try {
   try {
@@ -297,6 +318,16 @@ try {
   if ($unexpectedPaths.Count -gt 0) {
     throw "Unexpected worktree changes were produced; nothing was committed:`n$($unexpectedPaths -join "`n")"
   }
+  # Each render rewrites paper.pdf and paper.docx (they embed timestamps), so
+  # they are only committed along with a real change
+  $contentChanges = @($changedPaths + $untrackedPaths | Sort-Object -Unique |
+    Where-Object { $_ -notin @("paper.pdf", "paper.docx") })
+  if ($contentChanges.Count -eq 0) {
+    Invoke-External -FilePath $gitExecutable -Arguments @(
+      "-C", $repositoryRoot, "checkout", "--", "paper.pdf", "paper.docx"
+    )
+  }
+  $newData = $changedPaths -contains "src/data/raw/rtci_crime_trends.csv"
 
   Invoke-External -FilePath $gitExecutable -Arguments @(
     "-C", $repositoryRoot, "add", "-A", "--",
@@ -316,8 +347,10 @@ try {
     Invoke-External -FilePath $gitExecutable -Arguments @(
       "-C", $repositoryRoot, "commit", "-m", $commitMessage
     )
+    $releaseResult = if ($newData) { "updated with new RTCI data" } else { "paper updated (no new RTCI data)" }
   } else {
     Write-Host "The RTCI snapshot and rendered paper are unchanged; no release commit is needed."
+    $releaseResult = "no update"
   }
 
   Invoke-External -FilePath $gitExecutable -Arguments @(
@@ -341,7 +374,8 @@ try {
   Write-Host "Published main commit: $finalCommit"
 } catch {
   # Record why in the log; the task itself only reports an exit code
-  Write-Host "Scheduled release FAILED at $([DateTime]::Now.ToString('s')): $($_.Exception.Message)"
+  $releaseError = $_.Exception.Message
+  Write-Host "Scheduled release FAILED at $([DateTime]::Now.ToString('s')): $releaseError"
   throw
 } finally {
   if ($transcriptStarted) {
@@ -349,5 +383,42 @@ try {
   }
   if ($null -ne $releaseLock) {
     $releaseLock.Dispose()
+  }
+  if (-not $PreflightOnly) {
+    $releaseMailSent = $true
+    try {
+      # This run's part of the cumulative log
+      $runLog = Join-Path $modelDirectory "scheduled-release-last-run.log"
+      if (Test-Path -LiteralPath $logPath) {
+        Get-Content -LiteralPath $logPath | Select-Object -Skip $logStartLine |
+          Set-Content -LiteralPath $runLog -Encoding UTF8
+      }
+      $facts = @()
+      try {
+        $source = Get-Content -Raw (Join-Path $repositoryRoot "src\data\raw\source_metadata.json") | ConvertFrom-Json
+        $model = Get-Content -Raw (Join-Path $modelDirectory "model_metadata.json") | ConvertFrom-Json
+        $facts += "RTCI sample: $($source.files.crime_data.name), downloaded $($source.downloaded_at_utc) UTC"
+        $facts += "Modeled: $($model.cities) cities, $('{0:N0}' -f $model.rows) city-month-offense rows"
+      } catch {
+        $facts += "(Could not read the data summary: $($_.Exception.Message))"
+      }
+      $commit = (& $gitExecutable -C $repositoryRoot log -1 --format="%h %s") -join ""
+      if ($null -eq $releaseError -and $null -ne $releaseResult) {
+        $subject = "CrimeDecomp weekly release: $releaseResult"
+        $body = @("The weekly release on $env:COMPUTERNAME finished: $releaseResult.", "") + $facts +
+          @("Main: $commit", "App: https://apwheele.github.io/CrimeDecomp/", "", "Log: $runLog")
+        Send-ReleaseMail -Subject $subject -Body ($body -join "`n")
+      } else {
+        $reason = if ($null -ne $releaseError) { $releaseError } else { "it stopped without finishing" }
+        $body = @("The weekly release on $env:COMPUTERNAME failed:", "", $reason, "") + $facts +
+          @("Main: $commit", "", "This run's log is attached.")
+        Send-ReleaseMail -Subject "CrimeDecomp weekly release FAILED" -Body ($body -join "`n") `
+          -Attachments @($runLog)
+      }
+    } catch {
+      $mailError = "Could not send the release email: $($_.Exception.Message)"
+      Write-Warning $mailError
+      try { Add-Content -LiteralPath $logPath -Value $mailError } catch { }
+    }
   }
 }

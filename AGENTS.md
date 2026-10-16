@@ -162,7 +162,14 @@ The weekly scheduled release ("CrimeDecomp Weekly Release", Mondays 9:00,
 `src/run_scheduled_release.ps1`) requires tracked files to be unchanged and
 `main` to match `origin/main`. Untracked files already present are left alone
 unless they sit in the paths it commits. Its log is
-`src/data/model/scheduled-release.log`; failures are written there.
+`src/data/model/scheduled-release.log`; failures are written there. It only
+commits re-rendered `paper.pdf`/`paper.docx` along with a real change (they
+embed timestamps). Each run emails its result (updated, no update, or failed
+with `scheduled-release-last-run.log` attached) via `src/release_mail.ps1`,
+which needs a one-time `powershell -ExecutionPolicy Bypass -File
+src\release_mail.ps1 -Setup` to store the Titan mailbox password (DPAPI, in
+`%LOCALAPPDATA%\CrimeDecomp`); that also sets SynthRTCI's `SMTP_PASSWORD`
+secret. A missing password only logs a warning.
 
 When the upstream RTCI data changes, use this order from the repository root.
 It keeps the paper, the ignored app CSVs, `main`, and the published site tied to
